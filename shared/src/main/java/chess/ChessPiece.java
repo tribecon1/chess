@@ -15,7 +15,7 @@ public class ChessPiece {
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
-        this.type = type;
+        this.type = type; //why the double declaration? is it not declared in the constructor?
     }
 
     /**
