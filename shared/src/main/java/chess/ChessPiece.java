@@ -10,7 +10,7 @@ import java.util.Collection;
  */
 public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
-    private final PieceType type;
+    private PieceType type; //NOT final because piece could be a pawn, gets changed at promotion. should be public?
 
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
