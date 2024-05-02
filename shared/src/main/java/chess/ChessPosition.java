@@ -7,8 +7,8 @@ package chess;
  * signature of the existing methods.
  */
 public class ChessPosition {
-    private int row; //neither should be final, given they will inherently change? Or is
-    private int col; //each new location a new instance of a ChessPosition obj?
+    private int row;
+    private int col;
 
     public ChessPosition(int row, int col) {
         this.row = row;

@@ -1,6 +1,8 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
+import chess.PieceMoveCalculator; //stores methods for each piece
 
 /**
  * Represents a single chess piece
@@ -44,6 +46,12 @@ public class ChessPiece {
         return type;
     }
 
+    @Override //to easily represent a ChessPiece object and get its information
+    public String toString() {
+        return "ChessPiece(" + type + ", " + pieceColor + ")";
+        //why doesn't ChessPiece not have Chess Position as stored element
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -51,7 +59,15 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
+    //Collection can be any sort of data grouping
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        throw new RuntimeException("Not implemented");
+        HashSet<ChessMove> possibleMoves = new HashSet<>(); //diamond format, since datatype is implied
+        PieceType[] possiblePromotion = {PieceType.QUEEN, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK};
+        //^^above is to calculate the POTENTIAL moves of the POTENTIAL promotions of a pawn (as a separate case in 'switch')
+        //switch
+
+
+        return possibleMoves;
     }
 }
+        //use switch *if this.type is "certain piece," then calculate the appropriate moves

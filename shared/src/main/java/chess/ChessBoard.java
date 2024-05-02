@@ -9,7 +9,7 @@ package chess;
 public class ChessBoard {
 
     public ChessBoard() {
-        
+        //create 2D array of 8x8
     }
 
     /**
@@ -22,6 +22,13 @@ public class ChessBoard {
         throw new RuntimeException("Not implemented");
     }
 
+
+    /*
+    @Override
+    public boolean equals(Object obj) {} //to be able to compare a ChessPiece obj. at ChessBoard array
+    //position to other object
+    */
+
     /**
      * Gets a chess piece on the chessboard
      *
@@ -30,6 +37,9 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
+        //if (ChessBoard) call getPosition, check array at this position if equals a ChessPiece obj.
+
+
         throw new RuntimeException("Not implemented");
     }
 
