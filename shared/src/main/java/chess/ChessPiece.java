@@ -52,6 +52,11 @@ public class ChessPiece {
         //why doesn't ChessPiece not have Chess Position as stored element
     }
 
+    @Override
+    public boolean equals(Object piece) {
+        return piece instanceof ChessPiece;
+    }
+
     /*
     @Override
     public int HashCode() //WHY and HOW?

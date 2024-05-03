@@ -1,6 +1,9 @@
 package chess;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
+import chess.ChessGame.*;
 
 /**
  * A chessboard that can hold and rearrange chess pieces.
@@ -9,11 +12,13 @@ import java.util.ArrayList;
  * signature of the existing methods.
  */
 public class ChessBoard {
+    private ChessPiece[][] board;
 
     public ChessBoard() {
         //create 2D array of 8x8
-        ArrayList<ArrayList<ChessPiece>> board = new ArrayList<>(8);
+        board = new ChessPiece[8][8]; //an 8x8 2D array that is built to hold ChessPiece objs. or null
     }
+
 
     /**
      * Adds a chess piece to the chessboard
@@ -22,17 +27,24 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-
-        throw new RuntimeException("Not implemented");
+        if( !(position instanceof ChessPosition) || !(piece instanceof ChessPiece)){
+            //making sure nothing passed in as anything BUT a ChessPosition or -Piece object
+            throw new IllegalArgumentException();
+        }
+        board[position.getRow()-1][position.getColumn()-1] = piece;
     }
-
-
 
     @Override
-    public boolean equals(ChessPiece piece) {
-        return piece instanceof ChessPiece; //checking at specific position on board to see if null or ChessPiece
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessBoard that)) return false;
+        return Objects.deepEquals(board, that.board);
     }
 
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(board);
+    }
 
     /**
      * Gets a chess piece on the chessboard
@@ -43,9 +55,10 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         //if (ChessBoard) call getPosition, check array at this position if equals a ChessPiece obj.
-
-
-        throw new RuntimeException("Not implemented");
+        if (board[position.getRow()-1][position.getColumn()-1] != null){
+            return board[position.getRow()-1][position.getColumn()-1];
+        }
+        return null;
     }
 
     /**
@@ -53,6 +66,30 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        for (int col = 0; col < 8; col++) {//inserting black and white pawns in 2nd and 7th rows
+            board[1][col] = new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.PAWN);
+            board[6][col] = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.PAWN);
+        }
+        int[] rookIndices = {0,7};
+        for (int index : rookIndices){
+            board[0][index] = new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.ROOK);
+            board[7][index] = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.ROOK);
+        }
+        int[] knightIndices = {1,6};
+        for (int index : knightIndices){
+            board[0][index] = new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.KNIGHT);
+            board[7][index] = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.KNIGHT);
+        }
+        int[] bishopIndices = {2,5};
+        for (int index : bishopIndices){
+            board[0][index] = new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.BISHOP);
+            board[7][index] = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.BISHOP);
+        }
+        //Queen Pieces set
+        board[0][3] = new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.QUEEN);
+        board[7][3] = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.QUEEN);
+        //King Pieces set
+        board[0][4] = new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.KING);
+        board[7][4] = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.KING);
     }
 }
