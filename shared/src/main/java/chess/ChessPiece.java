@@ -52,6 +52,11 @@ public class ChessPiece {
         //why doesn't ChessPiece not have Chess Position as stored element
     }
 
+    /*
+    @Override
+    public int HashCode() //WHY and HOW?
+     */
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
