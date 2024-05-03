@@ -2,6 +2,8 @@ package chess;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
+
 import chess.PieceMoveCalculator; //stores methods for each piece
 
 /**
@@ -53,14 +55,16 @@ public class ChessPiece {
     }
 
     @Override
-    public boolean equals(Object piece) {
-        return piece instanceof ChessPiece;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ChessPiece that)) return false;
+        return pieceColor == that.pieceColor && type == that.type;
     }
 
-    /*
     @Override
-    public int HashCode() //WHY and HOW?
-     */
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
+    }
 
     /**
      * Calculates all the positions a chess piece can move to
