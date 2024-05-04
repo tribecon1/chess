@@ -77,21 +77,14 @@ public class ChessPiece {
         HashSet<ChessMove> possibleMoves = new HashSet<>(); //diamond format, since datatype is implied
         PieceType[] possiblePromotion = {PieceType.QUEEN, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK};
         //^^above is to calculate the POTENTIAL moves of the POTENTIAL promotions of a pawn (as a separate case in 'switch')
-        switch (this.type){
-            case BISHOP:
-                return BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
-            case KING:
-                return possibleMoves;
-            case KNIGHT:
-                return possibleMoves;
-            case ROOK:
-                return possibleMoves;
-            case QUEEN:
-                return possibleMoves;
-            case PAWN:
-                return possibleMoves;
-            default:
-                throw new IllegalArgumentException();
-            }
+        return switch (this.type) {
+            case BISHOP -> BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
+            case KING -> KingMoveCalculator.KingMoves(board, myPosition, possibleMoves);
+            case KNIGHT -> possibleMoves;
+            case ROOK -> possibleMoves;
+            case QUEEN -> possibleMoves;
+            case PAWN -> possibleMoves;
+            default -> throw new IllegalArgumentException();
+        };
     }
 }
