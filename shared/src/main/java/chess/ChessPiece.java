@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 
-import chess.PieceMoveCalculator; //stores methods for each piece
 
 /**
  * Represents a single chess piece
@@ -80,8 +79,10 @@ public class ChessPiece {
         //^^above is to calculate the POTENTIAL moves of the POTENTIAL promotions of a pawn (as a separate case in 'switch')
         switch (this.type){
             case BISHOP:
+                return BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
 
-        }
+
+            }
 
 
 

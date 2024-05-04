@@ -38,9 +38,6 @@ public class PieceMoveCalculator {
         else{
             ChessPosition newPosition = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+1);
         }
+        return givenHashSet;
     }
-
-
-
-
 }
