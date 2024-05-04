@@ -61,8 +61,8 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() {
-        if (currPiece == ChessPiece.PieceType.PAWN && (end.getRow() == 0 || end.getRow() == 7)){
-            return ChessPiece.PieceType.PAWN;//Not sure of purpose
+        if (currPiece == ChessPiece.PieceType.PAWN && (end.getRow() == 1 || end.getRow() == 8)){
+            return ChessPiece.PieceType.PAWN;//HOW TO HANDLE COLOR, IF NECESSARY?
         }
         else{
             return null;

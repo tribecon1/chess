@@ -81,15 +81,15 @@ public class ChessPiece {
             case BISHOP:
                 return BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
             case KING:
-                return;
+                return possibleMoves;
             case KNIGHT:
-                return;
+                return possibleMoves;
             case ROOK:
-                return;
+                return possibleMoves;
             case QUEEN:
-                return;
+                return possibleMoves;
             case PAWN:
-                return;
+                return possibleMoves;
             default:
                 throw new IllegalArgumentException();
             }
