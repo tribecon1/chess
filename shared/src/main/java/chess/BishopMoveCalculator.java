@@ -65,31 +65,38 @@ public class BishopMoveCalculator {
         ChessMove DownRight = DownRightMethod(board, myPosition, board.getPiece(myPosition).getTeamColor());
         ChessMove DownLeft = DownLeftMethod(board, myPosition, board.getPiece(myPosition).getTeamColor());
 
-        System.out.println(UpRight);
+        /*System.out.println(UpRight);
         System.out.println(UpLeft);
         System.out.println(DownRight);
-        System.out.println(DownLeft);
+        System.out.println(DownLeft);*/
 
+        ChessPosition tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
         while(UpRight != null){
             givenHashSet.add(UpRight);
-            ChessPosition tempPosition = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+1);
+            tempPosition = new ChessPosition(tempPosition.getRow()+1, tempPosition.getColumn()+1);
             UpRight = UpRightMethod(board, tempPosition, board.getPiece(myPosition).getTeamColor());
         }
+        tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
         while(UpLeft != null){
             givenHashSet.add(UpLeft);
-            ChessPosition tempPosition = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-1);
-            UpLeft = UpRightMethod(board, tempPosition, board.getPiece(myPosition).getTeamColor());
+            tempPosition = new ChessPosition(tempPosition.getRow()+1, tempPosition.getColumn()-1);
+            UpLeft = UpLeftMethod(board, tempPosition, board.getPiece(myPosition).getTeamColor());
         }
+        tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
         while(DownRight != null){
             givenHashSet.add(DownRight);
-            ChessPosition tempPosition = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+1);
-            DownRight = UpRightMethod(board, tempPosition, board.getPiece(myPosition).getTeamColor());
+            tempPosition = new ChessPosition(tempPosition.getRow()-1, tempPosition.getColumn()+1);
+            DownRight = DownRightMethod(board, tempPosition, board.getPiece(myPosition).getTeamColor());
         }
+        tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
         while(DownLeft != null){
             givenHashSet.add(DownLeft);
-            ChessPosition tempPosition = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-1);
-            DownLeft = UpRightMethod(board, tempPosition, board.getPiece(myPosition).getTeamColor());
+            tempPosition = new ChessPosition(tempPosition.getRow()-1, tempPosition.getColumn()-1);
+            DownLeft = DownLeftMethod(board, tempPosition, board.getPiece(myPosition).getTeamColor());
         }
+        /*for (ChessMove move : givenHashSet) {
+            System.out.println(move);
+        }*/
         return givenHashSet;
     }
 }

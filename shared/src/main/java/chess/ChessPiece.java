@@ -80,13 +80,18 @@ public class ChessPiece {
         switch (this.type){
             case BISHOP:
                 return BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
-
-
+            case KING:
+                return;
+            case KNIGHT:
+                return;
+            case ROOK:
+                return;
+            case QUEEN:
+                return;
+            case PAWN:
+                return;
+            default:
+                throw new IllegalArgumentException();
             }
-
-
-
-        return possibleMoves;
     }
 }
-        //use switch *if this.type is "certain piece," then calculate the appropriate moves
