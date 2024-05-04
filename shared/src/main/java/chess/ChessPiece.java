@@ -67,7 +67,7 @@ public class ChessPiece {
     }
 
     /**
-     * Calculates all the positions a chess piece can move to
+     * Calculates all the positions a chess piece can move to //from that position?
      * Does not take into account moves that are illegal due to leaving the king in
      * danger
      *
@@ -78,7 +78,11 @@ public class ChessPiece {
         HashSet<ChessMove> possibleMoves = new HashSet<>(); //diamond format, since datatype is implied
         PieceType[] possiblePromotion = {PieceType.QUEEN, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK};
         //^^above is to calculate the POTENTIAL moves of the POTENTIAL promotions of a pawn (as a separate case in 'switch')
-        //switch
+        switch (this.type){
+            case BISHOP:
+
+        }
+
 
 
         return possibleMoves;

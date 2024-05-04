@@ -71,7 +71,7 @@ public class ChessBoard {
                 board[i][j] = null;
             }
         }
-
+        //White Rook represents (0,0) or Row 1, Column 1 in the chessboard!
         for (int col = 0; col < 8; col++) {//inserting black and white pawns in 2nd and 7th rows
             board[1][col] = new ChessPiece(TeamColor.WHITE, ChessPiece.PieceType.PAWN);
             board[6][col] = new ChessPiece(TeamColor.BLACK, ChessPiece.PieceType.PAWN);
