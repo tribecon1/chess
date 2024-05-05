@@ -75,15 +75,13 @@ public class ChessPiece {
     //Collection can be any sort of data grouping
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         HashSet<ChessMove> possibleMoves = new HashSet<>(); //diamond format, since datatype is implied
-        PieceType[] possiblePromotion = {PieceType.QUEEN, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK};
-        //^^above is to calculate the POTENTIAL moves of the POTENTIAL promotions of a pawn (as a separate case in 'switch')
         return switch (this.type) {
             case BISHOP -> BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
             case KING -> KingMoveCalculator.KingMoves(board, myPosition, possibleMoves);
             case KNIGHT -> KnightMoveCalculator.KnightMoves(board, myPosition, possibleMoves);
             case ROOK -> RookMoveCalculator.RookMoves(board, myPosition, possibleMoves);
             case QUEEN -> QueenMoveCalculator.QueenMoves(board, myPosition, possibleMoves);
-            case PAWN -> possibleMoves;//Pass in param: this.pieceColor
+            case PAWN -> PawnMoveCalculator.PawnMoves(board, myPosition, possibleMoves, this.pieceColor);//Pass in param: this.pieceColor
             default -> throw new IllegalArgumentException();
         };
     }
