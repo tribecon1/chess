@@ -81,7 +81,7 @@ public class ChessPiece {
             case BISHOP -> BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
             case KING -> KingMoveCalculator.KingMoves(board, myPosition, possibleMoves);
             case KNIGHT -> possibleMoves;
-            case ROOK -> possibleMoves;
+            case ROOK -> RookMoveCalculator.RookMoves(board, myPosition, possibleMoves);
             case QUEEN -> possibleMoves;
             case PAWN -> possibleMoves;
             default -> throw new IllegalArgumentException();

@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.HashSet;
-import chess.PossibleMoves;
 
 public class BishopMoveCalculator {
 
