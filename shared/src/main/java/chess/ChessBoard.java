@@ -54,6 +54,9 @@ public class ChessBoard {
      */
     public ChessPiece getPiece(ChessPosition position) {
         //if (ChessBoard) call getPosition, check array at this position if equals a ChessPiece obj.
+        if (position.getRow() < 1 || position.getColumn() < 1 || position.getRow() > 8 || position.getColumn() > 8){
+            return null;
+        } //trying this out!
         if (board[position.getRow()-1][position.getColumn()-1] != null){
             return board[position.getRow()-1][position.getColumn()-1];
         }
