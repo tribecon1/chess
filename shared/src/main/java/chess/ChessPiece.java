@@ -80,10 +80,10 @@ public class ChessPiece {
         return switch (this.type) {
             case BISHOP -> BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
             case KING -> KingMoveCalculator.KingMoves(board, myPosition, possibleMoves);
-            case KNIGHT -> possibleMoves;
+            case KNIGHT -> KnightMoveCalculator.KnightMoves(board, myPosition, possibleMoves);
             case ROOK -> RookMoveCalculator.RookMoves(board, myPosition, possibleMoves);
             case QUEEN -> QueenMoveCalculator.QueenMoves(board, myPosition, possibleMoves);
-            case PAWN -> possibleMoves;
+            case PAWN -> possibleMoves;//Pass in param: this.pieceColor
             default -> throw new IllegalArgumentException();
         };
     }
