@@ -1,6 +1,7 @@
 package chess;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -9,16 +10,22 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
+    private TeamColor currTeam;
+    private ChessBoard board;
+    private static Collection<ChessMove> validMoves;
+
+
 
     public ChessGame() {
-
+        this.board = new ChessBoard();
+        this.currTeam = TeamColor.WHITE; //White always starts in Chess
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return this.currTeam;
     }
 
     /**
@@ -27,7 +34,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        this.currTeam = team;
     }
 
     /**
@@ -46,7 +53,16 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece currPiece = board.getPiece(startPosition);
+        if (currPiece == null) {
+            return null;
+        }
+        else{
+            validMoves = currPiece.pieceMoves(board, startPosition);
+            //calculate check, checkmate, king undefended etc.
+            //FINISH!!
+            return validMoves;
+        }
     }
 
     /**
@@ -56,7 +72,15 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        boolean addedSuccess = validMoves.add(move);
+        if(addedSuccess){ //any valid move should already be in Valid moves, and return false
+            throw new InvalidMoveException();
+        }
+        else{
+            //delete ChessPiece object at start pos of ChessMove in ChessBoard array, set to null.
+            //Then set reference at end pos of ChessMove in ChessBoard array
+            throw new RuntimeException("Not implemented");
+        }
     }
 
     /**

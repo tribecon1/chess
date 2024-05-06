@@ -26,7 +26,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        if( !(position instanceof ChessPosition) || !(piece instanceof ChessPiece)){
+        if(position == null || piece == null){
             //making sure nothing passed in as anything BUT a ChessPosition or -Piece object
             throw new IllegalArgumentException();
         }
