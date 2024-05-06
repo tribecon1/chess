@@ -15,7 +15,7 @@ public class ChessBoard {
 
     public ChessBoard() {
         //create 2D array of 8x8
-        board = new ChessPiece[8][8]; //an 8x8 2D array that is built to hold ChessPiece objs. or null
+        board = new ChessPiece[8][8]; //a 8x8 2D array that is built to hold ChessPiece objs. or null
     }
 
 

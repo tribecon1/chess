@@ -13,12 +13,12 @@ import java.util.Objects;
  */
 public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
-    private PieceType type; //NOT final because piece could be a pawn, gets changed at promotion. should be public?
+    private PieceType type; //NOT final because piece could be a pawn, gets changed at promotion.
 
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
         this.pieceColor = pieceColor;
-        this.type = type; //why the double declaration? is it not declared in the constructor?
+        this.type = type;
     }
 
     /**

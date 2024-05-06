@@ -62,4 +62,8 @@ public class ChessPosition {
     public int getColumn() {
         return col;
     }
+
+    public String getOfficialPosition() {
+        return officialPosition;
+    }
 }
