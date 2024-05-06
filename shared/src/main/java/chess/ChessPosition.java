@@ -12,7 +12,7 @@ import java.util.Objects;
 public class ChessPosition {
     private int row;
     private int col;
-    private HashMap<Integer, String> colConverter = new HashMap<>() {{
+    private static final HashMap<Integer, String> colConverter = new HashMap<>() {{
         put(1, "A");
         put(2, "B");
         put(3, "C");
