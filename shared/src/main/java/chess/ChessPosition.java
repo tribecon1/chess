@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -11,7 +12,17 @@ import java.util.Objects;
 public class ChessPosition {
     private int row;
     private int col;
-
+    private HashMap<Integer, String> colConverter = new HashMap<>() {{
+        put(1, "A");
+        put(2, "B");
+        put(3, "C");
+        put(4, "D");
+        put(5, "E");
+        put(6, "F");
+        put(7, "G");
+        put(8, "H");
+    }};
+    private String officialPosition;
 
     @Override
     public boolean equals(Object o) {
@@ -27,12 +38,13 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "[row: " + row + ", col: " + col + "]";
+        return "[row: " + row + ", col: " + col + "board pos.: " + officialPosition + "]";
     }
 
     public ChessPosition(int row, int col) {
         this.row = row;
         this.col = col;
+        this.officialPosition = String.format("%s%d", colConverter.get(col), row);//added in by TA rec.
     }
 
     /**

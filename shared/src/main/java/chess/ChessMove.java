@@ -62,7 +62,7 @@ public class ChessMove {
      */
     public ChessPiece.PieceType getPromotionPiece() {
         if (currPiece == ChessPiece.PieceType.PAWN && (end.getRow() == 1 || end.getRow() == 8)){
-            return ChessPiece.PieceType.PAWN;//HOW TO HANDLE COLOR, IF NECESSARY?
+            return ChessPiece.PieceType.PAWN;//HOW TO HANDLE COLOR, IF NECESSARY? WHEN NEEDED??
         }
         else{
             return null;
