@@ -9,9 +9,9 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessMove {
-    ChessPosition start;
-    ChessPosition end;
-    ChessPiece.PieceType currPiece;
+    private final ChessPosition start;
+    private final ChessPosition end;
+    private final ChessPiece.PieceType currPiece;
 
 
     @Override

@@ -10,19 +10,9 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPosition {
-    private int row;
-    private int col;
-    private static final HashMap<Integer, String> colConverter = new HashMap<>() {{
-        put(1, "A");
-        put(2, "B");
-        put(3, "C");
-        put(4, "D");
-        put(5, "E");
-        put(6, "F");
-        put(7, "G");
-        put(8, "H");
-    }};
-    private String officialPosition;
+    private final int row;
+    private final int col;
+    private String coordPosition;
 
     @Override
     public boolean equals(Object o) {
@@ -38,13 +28,18 @@ public class ChessPosition {
 
     @Override
     public String toString() {
-        return "[row: " + row + ", col: " + col + "board pos.: " + officialPosition + "]";
+        return "[row: " + row + ", col: " + col + "]";
     }
 
     public ChessPosition(int row, int col) {
         this.row = row;
         this.col = col;
-        this.officialPosition = String.format("%s%d", colConverter.get(col), row);//added in by TA rec.
+    }
+
+    public ChessPosition(String coordPosition) { //2nd Constructor, should it receive "A3" as a position
+        char first = Character.toUpperCase(coordPosition.charAt(0));
+        this.row = Integer.parseInt(coordPosition.substring(1));
+        this.col = first - '@';
     }
 
     /**
@@ -63,7 +58,4 @@ public class ChessPosition {
         return col;
     }
 
-    public String getOfficialPosition() {
-        return officialPosition;
-    }
 }

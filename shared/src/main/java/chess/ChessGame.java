@@ -61,7 +61,7 @@ public class ChessGame {
             validMoves = currPiece.pieceMoves(board, startPosition);
             //calculate check, checkmate, king undefended etc.
             //FINISH!!
-            return validMoves;
+            return validMoves; //make sure will be reset to match piece each time
         }
     }
 
@@ -74,6 +74,9 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         boolean addedSuccess = validMoves.add(move);
         if(addedSuccess){ //any valid move should already be in Valid moves, and return false
+            throw new InvalidMoveException();
+        }
+        else if(board.getPiece(move.getStartPosition()).getTeamColor() != currTeam){ //not player's turn
             throw new InvalidMoveException();
         }
         else{
@@ -120,7 +123,7 @@ public class ChessGame {
      * @param board the new board to use
      */
     public void setBoard(ChessBoard board) {
-        throw new RuntimeException("Not implemented");
+        this.board = board;
     }
 
     /**
@@ -129,6 +132,6 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        throw new RuntimeException("Not implemented");
+        return this.board;
     }
 }
