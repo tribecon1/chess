@@ -5,23 +5,17 @@ import java.util.HashSet;
 public class PawnMoveCalculator {
 
     public static HashSet<ChessMove> PawnMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet, ChessGame.TeamColor pawnColor){
-        ChessPosition oneUp = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn());
-        ChessPosition twoUp = new ChessPosition(myPosition.getRow()+2, myPosition.getColumn());
-        ChessPosition upRight = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+1);
-        ChessPosition upLeft = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-1);
-
-        //Black Pawn Positions
-        ChessPosition oneDown = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn());
-        ChessPosition twoDown = new ChessPosition(myPosition.getRow()-2, myPosition.getColumn());
-        ChessPosition downRight = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+1);
-        ChessPosition downLeft = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-1);
-
-
 
         ChessPiece.PieceType[] possiblePromotion = {ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
         //^^above is to calculate the POTENTIAL moves of the POTENTIAL promotions of a pawn (as a separate case in 'switch')
 
         if (pawnColor == ChessGame.TeamColor.WHITE){
+            ChessPosition oneUp = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn());
+            ChessPosition twoUp = new ChessPosition(myPosition.getRow()+2, myPosition.getColumn());
+            ChessPosition upRight = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+1);
+            ChessPosition upLeft = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-1);
+
+
             if (myPosition.getRow() == 8){ //PROMOTION Edge Case, White
                 //Or better to do a switch based on the promotionPiece type? But how does that function work?
                 QueenMoveCalculator.QueenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
@@ -65,6 +59,12 @@ public class PawnMoveCalculator {
             }
         }
         else { //BLACK
+            //Black Pawn Positions
+            ChessPosition oneDown = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn());
+            ChessPosition twoDown = new ChessPosition(myPosition.getRow()-2, myPosition.getColumn());
+            ChessPosition downRight = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+1);
+            ChessPosition downLeft = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-1);
+
             if (myPosition.getRow() == 1){ //PROMOTION Edge Case, Black
                 QueenMoveCalculator.QueenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
                 BishopMoveCalculator.BishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen

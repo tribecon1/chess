@@ -12,7 +12,6 @@ import java.util.Objects;
 public class ChessPosition {
     private final int row;
     private final int col;
-    private String coordPosition;
 
     @Override
     public boolean equals(Object o) {
@@ -36,7 +35,7 @@ public class ChessPosition {
         this.col = col;
     }
 
-    public ChessPosition(String coordPosition) { //2nd Constructor, should it receive "A3" as a position
+    public ChessPosition(String coordPosition) { //2nd Constructor, should it receive "A3"/"a3" as a position
         char first = Character.toUpperCase(coordPosition.charAt(0));
         this.row = Integer.parseInt(coordPosition.substring(1));
         this.col = first - '@';

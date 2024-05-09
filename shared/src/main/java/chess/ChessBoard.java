@@ -33,6 +33,15 @@ public class ChessBoard {
         board[position.getRow()-1][position.getColumn()-1] = piece;
     }
 
+    public void removePiece(ChessPosition position) {
+        if (position == null){
+            throw new IllegalArgumentException();
+        }
+        else {
+            board[position.getRow()-1][position.getColumn()-1] = null;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,15 +70,6 @@ public class ChessBoard {
             return board[position.getRow()-1][position.getColumn()-1];
         }
         return null;
-    }
-
-    public void removePiece(ChessPosition position) {
-        if (position == null){
-            throw new IllegalArgumentException();
-        }
-        else {
-            board[position.getRow()-1][position.getColumn()-1] = null;
-        }
     }
 
     /**

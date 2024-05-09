@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -10,7 +9,7 @@ import java.util.HashSet;
  * signature of the existing methods.
  */
 public class ChessGame {
-    private TeamColor currTeam;
+    private TeamColor thisTeamsTurn;
     private ChessBoard board;
     private static Collection<ChessMove> validMoves;
 
@@ -18,14 +17,14 @@ public class ChessGame {
 
     public ChessGame() {
         this.board = new ChessBoard();
-        this.currTeam = TeamColor.WHITE; //White always starts in Chess
+        this.thisTeamsTurn = TeamColor.WHITE; //White always starts in Chess
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        return this.currTeam;
+        return this.thisTeamsTurn;
     }
 
     /**
@@ -34,7 +33,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        this.currTeam = team;
+        this.thisTeamsTurn = team;
     }
 
     /**
@@ -59,7 +58,9 @@ public class ChessGame {
         }
         else{
             validMoves = currPiece.pieceMoves(board, startPosition);
-            //calculate check, checkmate, king undefended etc.
+            //calculate check, checkmate, king undefended etc. ie. look down a straight line, down a diagonal, etc.
+            //do while loop, while col < 8, go up, in while loop check if rook, for while loop of diagonal, check pawn, etc.
+            //ignore the piece of the king's team
             //FINISH!!
             return validMoves; //make sure will be reset to match piece each time
         }
@@ -68,21 +69,23 @@ public class ChessGame {
     /**
      * Makes a move in a chess game
      *
-     * @param move chess move to preform
+     * @param move chess move to perform
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         boolean addedSuccess = validMoves.add(move);
+        ChessPiece pieceBeingMoved = this.board.getPiece(move.getStartPosition());
         if(addedSuccess){ //any valid move should already be in Valid moves, and return false
             throw new InvalidMoveException();
         }
-        else if(board.getPiece(move.getStartPosition()).getTeamColor() != currTeam){ //not player's turn
+        else if(board.getPiece(move.getStartPosition()).getTeamColor() != thisTeamsTurn){ //not player's turn
             throw new InvalidMoveException();
         }
         else{
+            this.board.removePiece(move.getStartPosition());
+            this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
             //delete ChessPiece object at start pos of ChessMove in ChessBoard array, set to null.
             //Then set reference at end pos of ChessMove in ChessBoard array
-            throw new RuntimeException("Not implemented");
         }
     }
 
