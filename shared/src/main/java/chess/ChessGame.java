@@ -13,11 +13,26 @@ public class ChessGame {
     private ChessBoard board;
     private static Collection<ChessMove> validMoves;
 
+    private static boolean WinCheck; //WHITE in Check
+    private static boolean BinCheck;
+
+    private static boolean WinCheckmate;
+    private static boolean BinCheckmate;
+
+    private static boolean WinStalemate;
+    private static boolean BinStalemate;
+
+    private ChessPosition WKingPos;
+    private ChessPosition BKingPos;
+
+
 
 
     public ChessGame() {
         this.board = new ChessBoard();
         this.thisTeamsTurn = TeamColor.WHITE; //White always starts in Chess
+        this.WKingPos = new ChessPosition(1,5);
+        this.BKingPos = new ChessPosition(8,5); //modified in MakeMove if King is moving
     }
 
     /**
@@ -51,18 +66,36 @@ public class ChessGame {
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-    public Collection<ChessMove> validMoves(ChessPosition startPosition) {
+    public Collection<ChessMove> validMoves(ChessPosition startPosition) throws CloneNotSupportedException{
         ChessPiece currPiece = board.getPiece(startPosition);
         if (currPiece == null) {
             return null;
         }
         else{
+            ChessBoard clonedBoard = (ChessBoard) this.board.clone();
             validMoves = currPiece.pieceMoves(board, startPosition);
+
+            if (currPiece.getPieceType() == ChessPiece.PieceType.KING){
+                //to see if any moves of King endanger itself by OTHER TEAM and are not valid
+            }
+            else{ //to see if any moves of a piece endanger the King of its OWN TEAM and are not valid
+                for (ChessMove move : validMoves) {
+                    clonedBoard.removePiece(move.getStartPosition());
+                    clonedBoard.addPiece(move.getEndPosition(), currPiece);
+
+                }
+            }
+            //for each move in validMoves, check USING CLONED BOARD if: a piece checks King
+            //OR
+            //King would put itself in Check if king is moving.
+            //check for each move
+
             //calculate check, checkmate, king undefended etc. ie. look down a straight line, down a diagonal, etc.
             //do while loop, while col < 8, go up, in while loop check if rook, for while loop of diagonal, check pawn, etc.
             //ignore the piece of the king's team
             //FINISH!!
             return validMoves; //make sure will be reset to match piece each time
+
         }
     }
 
@@ -81,9 +114,21 @@ public class ChessGame {
         else if(board.getPiece(move.getStartPosition()).getTeamColor() != thisTeamsTurn){ //not player's turn
             throw new InvalidMoveException();
         }
+        else if(pieceBeingMoved.getPieceType() == ChessPiece.PieceType.KING){
+            switch (pieceBeingMoved.getTeamColor()){
+                case WHITE:
+                    this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
+                    this.board.removePiece(move.getStartPosition());
+                    WKingPos = move.getEndPosition();
+                case BLACK:
+                    this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
+                    this.board.removePiece(move.getStartPosition());
+                    BKingPos = move.getEndPosition();
+            }
+        }
         else{
-            this.board.removePiece(move.getStartPosition());
             this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
+            this.board.removePiece(move.getStartPosition());
             //delete ChessPiece object at start pos of ChessMove in ChessBoard array, set to null.
             //Then set reference at end pos of ChessMove in ChessBoard array
         }
@@ -96,8 +141,10 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
-    }
+        return switch(teamColor){
+            case WHITE -> WinCheck;
+            case BLACK -> BinCheck;
+        };    }
 
     /**
      * Determines if the given team is in checkmate
@@ -106,7 +153,10 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        return switch(teamColor){
+            case WHITE -> WinCheckmate;
+            case BLACK -> BinCheckmate;
+        };
     }
 
     /**
@@ -117,8 +167,10 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
-    }
+        return switch(teamColor){
+            case WHITE -> WinStalemate;
+            case BLACK -> BinStalemate;
+        };    }
 
     /**
      * Sets this game's chessboard with a given board

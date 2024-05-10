@@ -11,8 +11,8 @@ import java.util.Objects;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessPiece {
-    private final ChessGame.TeamColor pieceColor;
+public class ChessPiece implements Cloneable {
+    private ChessGame.TeamColor pieceColor;
     private PieceType type; //NOT final because piece could be a pawn, gets changed at promotion.
 
 
@@ -64,6 +64,16 @@ public class ChessPiece {
     public int hashCode() {
         return Objects.hash(pieceColor, type);
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ChessPiece clone = (ChessPiece) super.clone();
+        clone.pieceColor = pieceColor;
+        clone.type = type;
+        return clone;
+        //return new ChessPiece(this.pieceColor, this.type); //do I need to call .super() if this overwrite does the job?
+    }
+
 
     /**
      * Calculates all the positions a chess piece can move to //from that position?

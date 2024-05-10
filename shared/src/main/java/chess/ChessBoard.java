@@ -10,7 +10,7 @@ import chess.ChessGame.*;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard implements Cloneable {
     private ChessPiece[][] board;
 
     public ChessBoard() {
@@ -53,6 +53,21 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(board);
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ChessBoard clone = (ChessBoard) super.clone();
+
+        clone.board = new ChessPiece[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                clone.board[i][j] = (ChessPiece) board[i][j].clone();
+            }
+        }
+        return clone;
+    }
+
+
 
     /**
      * Gets a chess piece on the chessboard
