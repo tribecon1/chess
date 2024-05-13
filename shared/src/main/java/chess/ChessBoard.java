@@ -55,13 +55,13 @@ public class ChessBoard implements Cloneable {
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public ChessBoard clone() throws CloneNotSupportedException {
         ChessBoard clone = (ChessBoard) super.clone();
 
         clone.board = new ChessPiece[8][8];
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                clone.board[i][j] = (ChessPiece) board[i][j].clone();
+                clone.board[i][j] = this.board[i][j];
             }
         }
         return clone;
