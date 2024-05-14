@@ -182,7 +182,21 @@ public class ChessGame {
         }
     }
 
-
+    private boolean wouldLandOnKing (Collection<ChessMove> movesProvided, TeamColor teamColor){
+        for (ChessMove potentialMove : movesProvided) {
+            if (teamColor == TeamColor.WHITE){
+                if (potentialMove.getEndPosition().equals(WKingPos)) {
+                    return true;
+                }
+            }
+            else if (teamColor == TeamColor.BLACK){
+                if (potentialMove.getEndPosition().equals(BKingPos)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 
     /**
@@ -201,17 +215,8 @@ public class ChessGame {
                     ChessPosition opponentPosition = new ChessPosition(i, j);
                     ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
                     Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                    for (ChessMove potentialMove : possibleCaptureMoves) {
-                        if (teamColor == TeamColor.WHITE){
-                            if (potentialMove.getEndPosition().equals(WKingPos)) {
-                                return true;
-                            }
-                        }
-                        else if (teamColor == TeamColor.BLACK){
-                            if (potentialMove.getEndPosition().equals(BKingPos)) {
-                                return true;
-                            }
-                        }
+                    if (wouldLandOnKing(possibleCaptureMoves, teamColor)){
+                        return true;
                     }
                 }
             }
@@ -228,17 +233,8 @@ public class ChessGame {
                     ChessPosition opponentPosition = new ChessPosition(i, j);
                     ChessPiece opponentPiece = clonedBoard.getPiece(opponentPosition);
                     Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(clonedBoard, opponentPosition);
-                    for (ChessMove potentialMove : possibleCaptureMoves) {
-                        if (teamColor == TeamColor.WHITE){
-                            if (potentialMove.getEndPosition().equals(WKingPos)) {
-                                return true;
-                            }
-                        }
-                        else if (teamColor == TeamColor.BLACK){
-                            if (potentialMove.getEndPosition().equals(BKingPos)) {
-                                return true;
-                            }
-                        }
+                    if (wouldLandOnKing(possibleCaptureMoves, teamColor)){
+                        return true;
                     }
                 }
             }
