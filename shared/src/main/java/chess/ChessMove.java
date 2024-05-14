@@ -11,24 +11,24 @@ import java.util.Objects;
 public class ChessMove {
     private final ChessPosition start;
     private final ChessPosition end;
-    private final ChessPiece.PieceType currPiece;
+    private final ChessPiece.PieceType promotionPiece;
 
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChessMove chessMove)) return false;
-        return Objects.equals(start, chessMove.start) && Objects.equals(end, chessMove.end) && currPiece == chessMove.currPiece;
+        return Objects.equals(start, chessMove.start) && Objects.equals(end, chessMove.end) && promotionPiece == chessMove.promotionPiece;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(start, end, currPiece);
+        return Objects.hash(start, end, promotionPiece);
     }
 
     @Override
     public String toString() {
-        return "ChessMove(Start: " + start + ", End: " + end + ", Piece: " + currPiece + ")";
+        return "ChessMove(Start: " + start + ", End: " + end + ", Piece: " + promotionPiece + ")";
     }
 
 
@@ -36,7 +36,7 @@ public class ChessMove {
                      ChessPiece.PieceType promotionPiece) {
         this.start = startPosition;
         this.end = endPosition;
-        this.currPiece = promotionPiece;
+        this.promotionPiece = promotionPiece;
 
     }
 
@@ -61,11 +61,6 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() {
-        if (currPiece == ChessPiece.PieceType.PAWN && (end.getRow() == 1 || end.getRow() == 8)){
-            return ChessPiece.PieceType.PAWN;//HOW TO HANDLE COLOR, IF NECESSARY? WHEN NEEDED??
-        }
-        else{
-            return null;
-        }
+        return promotionPiece;
     }
 }
