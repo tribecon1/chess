@@ -322,6 +322,7 @@ public class ChessGame {
         }
         else { //all test cases passed, a move now will be made
             if(pieceBeingMoved.getPieceType() == ChessPiece.PieceType.KING){
+
                 if (move.getEndPosition().getColumn()+1 < move.getStartPosition().getColumn()) { //castling move LEFT
                     switch (pieceBeingMoved.getTeamColor()) {
                         case WHITE:
@@ -352,7 +353,7 @@ public class ChessGame {
 
                             this.board.addPiece(new ChessPosition(1, 6), this.board.getPiece(new ChessPosition(1, 1)));//moving ROOK
                             this.board.removePiece(new ChessPosition(1, 1));
-                            LWRookHasMoved = true;
+                            RWRookHasMoved = true;
 
                         case BLACK:
                             this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
@@ -361,7 +362,7 @@ public class ChessGame {
 
                             this.board.addPiece(new ChessPosition(8, 6), this.board.getPiece(new ChessPosition(8, 1)));//moving ROOK
                             this.board.removePiece(new ChessPosition(8, 1));
-                            LBRookHasMoved = true;
+                            RBRookHasMoved = true;
                     }
                 }
                 else{
@@ -382,7 +383,6 @@ public class ChessGame {
 
                 WKingHasMoved = true;
                 BKingHasMoved = true;
-
             }
             else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.PAWN && move.getPromotionPiece() != null){
                 ChessPiece newlyPromotedPawn = new ChessPiece(pieceBeingMoved.getTeamColor(), move.getPromotionPiece());
