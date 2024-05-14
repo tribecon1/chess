@@ -14,8 +14,8 @@ public class ChessGame {
     private TeamColor thisTeamsTurn;
     private ChessBoard board;
 
-    private ChessPosition WKingPos;
-    private ChessPosition BKingPos;
+    private ChessPosition WKingPos = new ChessPosition(1,5);
+    private ChessPosition BKingPos = new ChessPosition(8,5);
 
 
 
@@ -23,8 +23,18 @@ public class ChessGame {
     public ChessGame() {
         this.board = new ChessBoard();
         this.thisTeamsTurn = TeamColor.WHITE; //White always starts in Chess
-        WKingPos = new ChessPosition(1,5);
-        BKingPos = new ChessPosition(8,5); //modified in MakeMove if King is moving
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (this.board.getPiece(new ChessPosition(i, j)) != null && this.board.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING){
+                    if (this.board.getPiece(new ChessPosition(i, j)).getTeamColor() == TeamColor.WHITE){
+                        this.WKingPos = new ChessPosition(i, j);
+                    }
+                    else{
+                        this.BKingPos = new ChessPosition(i, j);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -68,12 +78,12 @@ public class ChessGame {
             Collection <ChessMove> possibleMoves = currPiece.pieceMoves(board, startPosition);
             Collection <ChessMove> validMoves = new HashSet<>();
             try {
-                if (isInCheck(currPieceTeam)) {
+                if (isInCheck(currPieceTeam)) { //checking if in check on CURRENT board, not cloned board
                     for (ChessMove move : possibleMoves) {
                         ChessBoard clonedBoard = this.board.clone();
                         clonedBoard.addPiece(move.getEndPosition(), currPiece);
                         clonedBoard.removePiece(move.getStartPosition());
-                        if (!isInCheck(currPieceTeam)) {
+                        if (!isInCheck(clonedBoard, currPieceTeam)) { //using overloaded isInCheck to check potential consequences of a move
                             validMoves.add(move);
                             //if the piece could make a move that takes it OUT of check, that makes it valid
                         }
@@ -84,7 +94,7 @@ public class ChessGame {
                         ChessBoard clonedBoard = this.board.clone();
                         clonedBoard.addPiece(move.getEndPosition(), currPiece);
                         clonedBoard.removePiece(move.getStartPosition());
-                        if (isInCheck(currPieceTeam)){
+                        if (isInCheck(clonedBoard, currPieceTeam)){ //using overloaded isInCheck to check potential consequences of a move
                             possibleMoves.remove(move);
                         }
                     }
@@ -106,7 +116,7 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece pieceBeingMoved = this.board.getPiece(move.getStartPosition());
-        Collection<ChessMove> currValidMoves = validMoves(move.getStartPosition());
+        Collection<ChessMove> currValidMoves = validMoves(move.getStartPosition()); //what if currValidMoves is empty?
         if(!currValidMoves.contains(move)){ //any valid move should already be in Valid moves, and return false
             throw new InvalidMoveException();
         }
@@ -161,6 +171,31 @@ public class ChessGame {
                     ChessPosition opponentPosition = new ChessPosition(i, j);
                     ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
                     Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
+                    for (ChessMove potentialMove : possibleCaptureMoves) {
+                        if (teamColor == TeamColor.WHITE){
+                            if (potentialMove.getEndPosition() == WKingPos) {
+                                return true;
+                            }
+                        }
+                        else if (teamColor == TeamColor.BLACK){
+                            if (potentialMove.getEndPosition() == BKingPos) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isInCheck(ChessBoard clonedBoard, TeamColor teamColor) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (clonedBoard.getPiece(new ChessPosition(i, j)) != null && clonedBoard.getPiece(new ChessPosition(i, j)).getTeamColor() != teamColor) {
+                    ChessPosition opponentPosition = new ChessPosition(i, j);
+                    ChessPiece opponentPiece = clonedBoard.getPiece(opponentPosition);
+                    Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(clonedBoard, opponentPosition);
                     for (ChessMove potentialMove : possibleCaptureMoves) {
                         if (teamColor == TeamColor.WHITE){
                             if (potentialMove.getEndPosition() == WKingPos) {
