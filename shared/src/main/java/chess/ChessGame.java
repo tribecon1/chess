@@ -113,49 +113,73 @@ public class ChessGame {
         if(board.getPiece(move.getStartPosition()) == null){
             throw new InvalidMoveException();
         }
+        else if (currValidMoves.isEmpty()){ //can't make a move that can't possibly exist
+            throw new InvalidMoveException();
+        }
         else if(!currValidMoves.contains(move)){ //any valid move should already be in Valid moves, and return false
             throw new InvalidMoveException();
         }
         else if(board.getPiece(move.getStartPosition()).getTeamColor() != thisTeamsTurn){ //not player's turn
             throw new InvalidMoveException();
         }
-        else if(pieceBeingMoved.getPieceType() == ChessPiece.PieceType.KING){
-            switch (pieceBeingMoved.getTeamColor()){
-                case WHITE:
-                    this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
-                    this.board.removePiece(move.getStartPosition());
-                    WKingPos = move.getEndPosition();
-                case BLACK:
-                    this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
-                    this.board.removePiece(move.getStartPosition());
-                    BKingPos = move.getEndPosition();
+        else { //all test cases passed, a move now will be made
+            if(pieceBeingMoved.getPieceType() == ChessPiece.PieceType.KING){
+                switch (pieceBeingMoved.getTeamColor()){
+                    case WHITE:
+                        this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
+                        this.board.removePiece(move.getStartPosition());
+                        WKingPos = move.getEndPosition();
+                    case BLACK:
+                        this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
+                        this.board.removePiece(move.getStartPosition());
+                        BKingPos = move.getEndPosition();
+                }
             }
-        }
-        else{
-            this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
-            this.board.removePiece(move.getStartPosition());
-            //delete ChessPiece object at start pos of ChessMove in ChessBoard array, set to null.
-            //Then set reference at end pos of ChessMove in ChessBoard array
+            else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.PAWN && move.getPromotionPiece() != null){
+                ChessPiece newlyPromotedPawn = new ChessPiece(pieceBeingMoved.getTeamColor(), move.getPromotionPiece());
+                this.board.addPiece(move.getEndPosition(), newlyPromotedPawn);
+                this.board.removePiece(move.getStartPosition());
+            }
+            else{
+                this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
+                this.board.removePiece(move.getStartPosition());
+                //delete ChessPiece object at start pos of ChessMove in ChessBoard array, set to null.
+                //Then set reference at end pos of ChessMove in ChessBoard array
+            }
+            //switches turns at the end of a move
+            if (this.thisTeamsTurn == TeamColor.WHITE){
+                this.thisTeamsTurn = TeamColor.BLACK;
+            }
+            else{
+                this.thisTeamsTurn = TeamColor.WHITE;
+            }
         }
     }
 
 
     private void kingsFinder(ChessBoard clonedBoard){
+        //for autograder test scenarios
+        boolean WKingFound = false;
+        boolean BKingFound = false;
+
         for (int i = 1; i < 9; i++) { //Treat as row/column #s, not index values/one less
             for (int j = 1; j < 9; j++) {
                 if (clonedBoard.getPiece(new ChessPosition(i, j)) != null && clonedBoard.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING){
                     if (clonedBoard.getPiece(new ChessPosition(i, j)).getTeamColor() == TeamColor.WHITE){
                         this.WKingPos = new ChessPosition(i, j);
+                        WKingFound = true;
                     }
                     else{
                         this.BKingPos = new ChessPosition(i, j);
+                        BKingFound = true;
                     }
                 }
             }
         }
-        //if no kings are found (only ever possible for these tests)
-        WKingPos = null;
-        BKingPos = null;
+        if (!WKingFound && !BKingFound){ //literally only for the test scenarios, this would never happen in a game
+            WKingPos = null;
+            BKingPos = null;
+        }
     }
 
 
