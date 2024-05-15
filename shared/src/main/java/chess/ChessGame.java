@@ -115,7 +115,7 @@ public class ChessGame {
     private void castlingMoves (ChessPiece currPiece, ChessPosition startPosition, Collection<ChessMove> validMoves){
         TeamColor currPieceTeam = currPiece.getTeamColor();
         //Castling move checks
-        if (currPieceTeam == TeamColor.WHITE && startPosition.equals(WKingPos) && !WKingHasMoved && !isInCheck(currPieceTeam)){
+        if (currPieceTeam == TeamColor.WHITE && startPosition.equals(WKingPos) && !WKingHasMoved){ //we've already checked that we aren't already in check, otherwise castling code wouldn't have run
             if (this.board.getPiece(new ChessPosition(1,1)).getPieceType() == ChessPiece.PieceType.ROOK && !LWRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,1))){
                 ChessMove castlingKingLeftW = new ChessMove(WKingPos, new ChessPosition(1,3), null);
                 ChessMove castlingRookRightW = new ChessMove(new ChessPosition(1,1), new ChessPosition(1,4), null);
@@ -123,7 +123,7 @@ public class ChessGame {
                     ChessBoard clonedBoard = this.board.clone();
                     clonedBoard.addPiece(castlingKingLeftW.getEndPosition(), currPiece);
                     clonedBoard.removePiece(castlingKingLeftW.getStartPosition());
-                    clonedBoard.addPiece(castlingRookRightW.getEndPosition(), currPiece);
+                    clonedBoard.addPiece(castlingRookRightW.getEndPosition(), clonedBoard.getPiece(new ChessPosition(1,1)));
                     clonedBoard.removePiece(castlingRookRightW.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
                         for (int i = 1; i < 9; i++) {
@@ -144,6 +144,7 @@ public class ChessGame {
                     throw new RuntimeException("Bug in cloning for castling");
                 }
             }
+            kingsFinder(this.board);
             if (this.board.getPiece(new ChessPosition(1,8)).getPieceType() == ChessPiece.PieceType.ROOK && !RWRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,8))){
                 ChessMove castlingKingRightW = new ChessMove(WKingPos, new ChessPosition(1,7), null);
                 ChessMove castlingRookLeftW = new ChessMove(new ChessPosition(1,8), new ChessPosition(1,6), null);
@@ -151,7 +152,7 @@ public class ChessGame {
                     ChessBoard clonedBoard = this.board.clone();
                     clonedBoard.addPiece(castlingKingRightW.getEndPosition(), currPiece);
                     clonedBoard.removePiece(castlingKingRightW.getStartPosition());
-                    clonedBoard.addPiece(castlingRookLeftW.getEndPosition(), currPiece);
+                    clonedBoard.addPiece(castlingRookLeftW.getEndPosition(), clonedBoard.getPiece(new ChessPosition(1,8)));
                     clonedBoard.removePiece(castlingRookLeftW.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
                         for (int i = 1; i < 9; i++) {
@@ -160,7 +161,7 @@ public class ChessGame {
                                     ChessPosition opponentPosition = new ChessPosition(i, j);
                                     ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
                                     Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnPiece(possibleCaptureMoves, new ChessPosition(1,6))){
+                                    if (!wouldLandOnPiece(possibleCaptureMoves, new ChessPosition(1,6))){
                                         validMoves.add(castlingKingRightW);
                                     }
                                 }
@@ -173,7 +174,7 @@ public class ChessGame {
                 }
             }
         }
-        else if (currPieceTeam == TeamColor.BLACK && startPosition.equals(BKingPos) && !BKingHasMoved && !isInCheck(currPieceTeam)){
+        else if (currPieceTeam == TeamColor.BLACK && startPosition.equals(BKingPos) && !BKingHasMoved){
             if (this.board.getPiece(new ChessPosition(8,1)).getPieceType() == ChessPiece.PieceType.ROOK && !LBRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,1))){
                 ChessMove castlingKingLeftB = new ChessMove(BKingPos, new ChessPosition(8,3), null);
                 ChessMove castlingRookRightB = new ChessMove(new ChessPosition(8,1), new ChessPosition(8,4), null);
@@ -181,7 +182,7 @@ public class ChessGame {
                     ChessBoard clonedBoard = this.board.clone();
                     clonedBoard.addPiece(castlingKingLeftB.getEndPosition(), currPiece);
                     clonedBoard.removePiece(castlingKingLeftB.getStartPosition());
-                    clonedBoard.addPiece(castlingRookRightB.getEndPosition(), currPiece);
+                    clonedBoard.addPiece(castlingRookRightB.getEndPosition(), clonedBoard.getPiece(new ChessPosition(8,1)));
                     clonedBoard.removePiece(castlingRookRightB.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
                         for (int i = 1; i < 9; i++) {
@@ -202,6 +203,7 @@ public class ChessGame {
                     throw new RuntimeException("Bug in cloning for castling");
                 }
             }
+            kingsFinder(this.board);
             if (this.board.getPiece(new ChessPosition(8,8)).getPieceType() == ChessPiece.PieceType.ROOK && !RBRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,8))){
                 ChessMove castlingKingRightB = new ChessMove(BKingPos, new ChessPosition(8,7), null);
                 ChessMove castlingRookLeftB = new ChessMove(new ChessPosition(8,8), new ChessPosition(8,6), null);
@@ -209,7 +211,7 @@ public class ChessGame {
                     ChessBoard clonedBoard = this.board.clone();
                     clonedBoard.addPiece(castlingKingRightB.getEndPosition(), currPiece);
                     clonedBoard.removePiece(castlingKingRightB.getStartPosition());
-                    clonedBoard.addPiece(castlingRookLeftB.getEndPosition(), currPiece);
+                    clonedBoard.addPiece(castlingRookLeftB.getEndPosition(), clonedBoard.getPiece(new ChessPosition(8,8)));
                     clonedBoard.removePiece(castlingRookLeftB.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
                         for (int i = 1; i < 9; i++) {
@@ -218,7 +220,7 @@ public class ChessGame {
                                     ChessPosition opponentPosition = new ChessPosition(i, j);
                                     ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
                                     Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnPiece(possibleCaptureMoves, new ChessPosition(8,6))){
+                                    if (!wouldLandOnPiece(possibleCaptureMoves, new ChessPosition(8,6))){
                                         validMoves.add(castlingKingRightB);
                                     }
                                 }
@@ -278,23 +280,23 @@ public class ChessGame {
                         }
                     }
                     validMoves = possibleMoves_TEMPLATE;
+                    kingsFinder(this.board);//to set it back to original board
 
                     //Castling code
-                    /*if (currPiece.getPieceType() == ChessPiece.PieceType.KING){
+                    if (currPiece.getPieceType() == ChessPiece.PieceType.KING){
                         if (currPieceTeam == TeamColor.WHITE){
-                            castlingMoves(currPiece, WKingPos, validMoves);
+                            castlingMoves(currPiece, startPosition, validMoves);
                         }
                         else{
-                            castlingMoves(currPiece, BKingPos, validMoves);
+                            castlingMoves(currPiece, startPosition, validMoves);
                         }
-                    }*/
+                    }
 
                 }
             }
             catch (CloneNotSupportedException e) {
                 throw new RuntimeException("Bug in the code");
             }
-            kingsFinder(this.board);//to set it back to original board
             return validMoves;
         }
     }
@@ -329,6 +331,7 @@ public class ChessGame {
                             this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
                             this.board.removePiece(move.getStartPosition());
                             WKingPos = move.getEndPosition();
+                            WKingHasMoved = true;
 
                             this.board.addPiece(new ChessPosition(1, 4), this.board.getPiece(new ChessPosition(1, 1)));//moving ROOK
                             this.board.removePiece(new ChessPosition(1, 1));
@@ -338,6 +341,7 @@ public class ChessGame {
                             this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
                             this.board.removePiece(move.getStartPosition());
                             BKingPos = move.getEndPosition();
+                            BKingHasMoved = true;
 
                             this.board.addPiece(new ChessPosition(8, 4), this.board.getPiece(new ChessPosition(8, 1)));//moving ROOK
                             this.board.removePiece(new ChessPosition(8, 1));
@@ -350,6 +354,7 @@ public class ChessGame {
                             this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
                             this.board.removePiece(move.getStartPosition());
                             WKingPos = move.getEndPosition();
+                            WKingHasMoved = true;
 
                             this.board.addPiece(new ChessPosition(1, 6), this.board.getPiece(new ChessPosition(1, 1)));//moving ROOK
                             this.board.removePiece(new ChessPosition(1, 1));
@@ -359,6 +364,7 @@ public class ChessGame {
                             this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
                             this.board.removePiece(move.getStartPosition());
                             BKingPos = move.getEndPosition();
+                            BKingHasMoved = true;
 
                             this.board.addPiece(new ChessPosition(8, 6), this.board.getPiece(new ChessPosition(8, 1)));//moving ROOK
                             this.board.removePiece(new ChessPosition(8, 1));
@@ -371,18 +377,18 @@ public class ChessGame {
                             this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
                             this.board.removePiece(move.getStartPosition());
                             WKingPos = move.getEndPosition();
+                            WKingHasMoved = true;
                         case BLACK:
                             this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
                             this.board.removePiece(move.getStartPosition());
                             BKingPos = move.getEndPosition();
+                            BKingHasMoved = true;
 
                             //SET BOOLEAN VARIABLES THAT KING MOVED
                             //DO A CHECK AND SEE IF THE MOVE IN QUESTION FOR THE KING IS 2+ SPACES, MUST BE A CASTLING MOVE
                     }
                 }
 
-                WKingHasMoved = true;
-                BKingHasMoved = true;
             }
             else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.PAWN && move.getPromotionPiece() != null){
                 ChessPiece newlyPromotedPawn = new ChessPiece(pieceBeingMoved.getTeamColor(), move.getPromotionPiece());
@@ -425,8 +431,10 @@ public class ChessGame {
                 }
             }
         }
-        if (!WKingFound && !BKingFound){ //literally only for the test scenarios, this would never happen in a game
+        if (!WKingFound){ //literally only for the test scenarios, this would never happen in a game
             WKingPos = null;
+        }
+        if (!BKingFound){
             BKingPos = null;
         }
     }
@@ -554,6 +562,16 @@ public class ChessGame {
     public void setBoard(ChessBoard board) {
         this.board = board;
         kingsFinder(this.board); //finds Kings' positions in a provided board/game (for the auto-grader tests
+
+        //EXTRA CREDIT VARIABLES for Castling (resetting for testing purposes, CHECK IF THIS WORKS
+//        //validMoves isn't returning all 7 for the 2nd Castling move
+//        WKingHasMoved = false;
+//        LWRookHasMoved = false;
+//        RWRookHasMoved = false;
+//
+//        BKingHasMoved = false;
+//        LBRookHasMoved = false;
+//        RBRookHasMoved = false;
     }
 
     /**
