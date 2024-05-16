@@ -84,7 +84,6 @@ public class ChessPiece {
             case ROOK -> RookMoveCalculator.RookMoves(board, myPosition, possibleMoves);
             case QUEEN -> QueenMoveCalculator.QueenMoves(board, myPosition, possibleMoves);
             case PAWN -> PawnMoveCalculator.PawnMoves(board, myPosition, possibleMoves, this.pieceColor);//Pass in param: this.pieceColor
-            default -> throw new IllegalArgumentException();
         };
     }
 }

@@ -26,6 +26,17 @@ public class ChessGame {
     private boolean LBRookHasMoved;
     private boolean RBRookHasMoved;
 
+    //En Passant
+    private ChessPosition blackPawnForWhiteEnPassant;
+    private ChessPosition whitePawnForBlackEnPassant;
+
+    private boolean doubleMoveJustMade;
+
+    private ChessMove whiteEnPassantMove;
+    private ChessMove blackEnPassantMove;
+
+
+
 
 
     public ChessGame() {
@@ -43,6 +54,15 @@ public class ChessGame {
         BKingHasMoved = false;
         LBRookHasMoved = false;
         RBRookHasMoved = false;
+
+        //EXTRA CREDIT VARIABLES for En Passant
+        blackPawnForWhiteEnPassant = null;
+        whitePawnForBlackEnPassant = null;
+
+        doubleMoveJustMade = false;
+
+        whiteEnPassantMove = null; //testing
+        blackEnPassantMove = null;
     }
 
     /**
@@ -315,6 +335,33 @@ public class ChessGame {
                             castlingMoves(currPiece, startPosition, validMoves);
                         }
                     }
+                    //En Passant code
+                    if (currPiece.getPieceType() == ChessPiece.PieceType.PAWN){
+                        if (doubleMoveJustMade && currPieceTeam == TeamColor.BLACK && whitePawnForBlackEnPassant != null){
+                            if (startPosition.getColumn()-1 == whitePawnForBlackEnPassant.getColumn()){ //to the immediate left, black going down
+                                ChessMove enPassantLeftBlack = new ChessMove(startPosition, new ChessPosition(startPosition.getRow()-1, startPosition.getColumn()-1), null);
+                                validMoves.add(enPassantLeftBlack);
+                                blackEnPassantMove = enPassantLeftBlack;
+                            }
+                            else if (startPosition.getColumn()+1 == whitePawnForBlackEnPassant.getColumn()){ //to the immediate right, black going down
+                                ChessMove enPassantRightBlack = new ChessMove(startPosition, new ChessPosition(startPosition.getRow()-1, startPosition.getColumn()+1), null);
+                                validMoves.add(enPassantRightBlack);
+                                blackEnPassantMove = enPassantRightBlack;
+                            }
+                        }
+                        else if (doubleMoveJustMade && currPieceTeam == TeamColor.WHITE && blackPawnForWhiteEnPassant != null){
+                            if (startPosition.getColumn()-1 == blackPawnForWhiteEnPassant.getColumn()){ //to the immediate left, white going up
+                                ChessMove enPassantLeftWhite = new ChessMove(startPosition, new ChessPosition(startPosition.getRow()+1, startPosition.getColumn()-1), null);
+                                validMoves.add(enPassantLeftWhite);
+                                whiteEnPassantMove = enPassantLeftWhite;
+                            }
+                            else if (startPosition.getColumn()+1 == blackPawnForWhiteEnPassant.getColumn()){ //to the immediate right, white going up
+                                ChessMove enPassantRightWhite = new ChessMove(startPosition, new ChessPosition(startPosition.getRow()+1, startPosition.getColumn()+1), null);
+                                validMoves.add(enPassantRightWhite);
+                                whiteEnPassantMove = enPassantRightWhite;
+                            }
+                        }
+                    }
 
                 }
             }
@@ -334,7 +381,7 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece pieceBeingMoved = this.board.getPiece(move.getStartPosition());
-        Collection<ChessMove> currValidMoves = validMoves(move.getStartPosition()); //what if currValidMoves is empty?
+        Collection<ChessMove> currValidMoves = validMoves(move.getStartPosition());
         if(board.getPiece(move.getStartPosition()) == null){
             throw new InvalidMoveException();
         }
@@ -349,7 +396,6 @@ public class ChessGame {
         }
         else { //all test cases passed, a move now will be made
             if(pieceBeingMoved.getPieceType() == ChessPiece.PieceType.KING){
-
                 if (move.getEndPosition().getColumn()+1 < move.getStartPosition().getColumn()) { //castling move LEFT
                     switch (pieceBeingMoved.getTeamColor()) {
                         case WHITE:
@@ -403,9 +449,45 @@ public class ChessGame {
                 }
 
             }
-            else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.PAWN && move.getPromotionPiece() != null){
-                //ChessPiece newlyPromotedPawn = new ChessPiece(pieceBeingMoved.getTeamColor(), move.getPromotionPiece());
-                pieceBeingMoved = new ChessPiece(pieceBeingMoved.getTeamColor(), move.getPromotionPiece());
+            else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.PAWN){
+                if (pieceBeingMoved.getTeamColor()==TeamColor.BLACK && blackEnPassantMove != null && !move.equals(blackEnPassantMove)){
+                    doubleMoveJustMade = false;
+                }
+                if (pieceBeingMoved.getTeamColor()==TeamColor.WHITE && whiteEnPassantMove != null && !move.equals(whiteEnPassantMove)){
+                    doubleMoveJustMade = false;
+                }
+
+                if (move.getPromotionPiece() != null){
+                    pieceBeingMoved = new ChessPiece(pieceBeingMoved.getTeamColor(), move.getPromotionPiece());
+                }
+                if (Math.abs(move.getEndPosition().getRow() - move.getStartPosition().getRow()) == 2){
+                    doubleMoveJustMade = true;
+                    switch (pieceBeingMoved.getTeamColor()) {
+                        case WHITE -> whitePawnForBlackEnPassant = move.getEndPosition();
+                        //White Pawn just made a first move of 2 spaces up instead of 1, chance for black to perform en passant
+                        case BLACK -> blackPawnForWhiteEnPassant = move.getEndPosition();
+                        //Black Pawn just made a first move of 2 spaces down instead of 1, chance for white to perform en passant
+                    }
+                }
+                else {
+                    if (doubleMoveJustMade){
+                        if (pieceBeingMoved.getTeamColor()==TeamColor.BLACK && whitePawnForBlackEnPassant != null && move.getEndPosition().getRow()+1 == whitePawnForBlackEnPassant.getRow()){
+                            this.board.removePiece(whitePawnForBlackEnPassant);
+                            whitePawnForBlackEnPassant = null;
+                        }
+                        else if (pieceBeingMoved.getTeamColor()==TeamColor.WHITE && blackPawnForWhiteEnPassant != null && move.getEndPosition().getRow()-1 == blackPawnForWhiteEnPassant.getRow()){
+                            this.board.removePiece(blackPawnForWhiteEnPassant);
+                            blackPawnForWhiteEnPassant = null;
+                        }
+                        doubleMoveJustMade = false;
+                    }
+                    else{
+                        whitePawnForBlackEnPassant = null;
+                        whiteEnPassantMove = null;
+                        blackPawnForWhiteEnPassant = null;
+                        blackEnPassantMove = null;
+                    }
+                }
             }
             else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.ROOK){
                 switch (pieceBeingMoved.getTeamColor()){
