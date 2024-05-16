@@ -147,21 +147,26 @@ public class ChessGame {
                     clonedBoard.removePiece(castlingRookRightW.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
                         boolean enemyFound = false; //only for tests, since they have a board with no enemy pieces
-                        boolean wouldLandOnPiece = false;
-                        for (int i = 1; i < 9; i++) {
+                        //boolean wouldLandOnPiece = false;
+                        if (wouldLandOnThisPiece(new ChessPosition(1,4), clonedBoard, currPieceTeam)){
+                            //wouldLandOnPiece = true;
+                            enemyFound = true;
+                        }
+                        /*for (int i = 1; i < 9; i++) {
                             for (int j = 1; j < 9; j++) {
                                 if (this.board.getPiece(new ChessPosition(i, j)) != null && this.board.getPiece(new ChessPosition(i, j)).getTeamColor() != currPieceTeam) {
                                     enemyFound = true;
                                     ChessPosition opponentPosition = new ChessPosition(i, j);
-                                    ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
-                                    Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
+                                    //ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
+                                    //Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
                                     if (wouldLandOnThisPiece(new ChessPosition(1,4), clonedBoard, currPieceTeam)){
                                         wouldLandOnPiece = true;
+                                        enemyFound = true;
                                     }
                                 }
                             }
-                        }
-                        if (!enemyFound || !wouldLandOnPiece){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
+                        }*/
+                        if (!enemyFound){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
                             validMoves.add(castlingKingLeftW);
                         }
                     }
@@ -182,21 +187,10 @@ public class ChessGame {
                     clonedBoard.removePiece(castlingRookLeftW.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
                         boolean enemyFound = false; //only for tests, since they have a board with no enemy pieces
-                        boolean wouldLandOnPiece = false;
-                        for (int i = 1; i < 9; i++) {
-                            for (int j = 1; j < 9; j++) {
-                                if (this.board.getPiece(new ChessPosition(i, j)) != null && this.board.getPiece(new ChessPosition(i, j)).getTeamColor() != currPieceTeam) {
-                                    enemyFound = true;
-                                    ChessPosition opponentPosition = new ChessPosition(i, j);
-                                    ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
-                                    Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnThisPiece(new ChessPosition(1,6), clonedBoard, currPieceTeam)){
-                                        wouldLandOnPiece = true;
-                                    }
-                                }
-                            }
+                        if (wouldLandOnThisPiece(new ChessPosition(1,6), clonedBoard, currPieceTeam)){
+                            enemyFound = true;
                         }
-                        if (!enemyFound || !wouldLandOnPiece){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
+                        if (!enemyFound){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
                             validMoves.add(castlingKingRightW);
                         }
                     }
@@ -218,21 +212,10 @@ public class ChessGame {
                     clonedBoard.removePiece(castlingRookRightB.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
                         boolean enemyFound = false; //only for tests, since they have a board with no enemy pieces
-                        boolean wouldLandOnPiece = false;
-                        for (int i = 1; i < 9; i++) {
-                            for (int j = 1; j < 9; j++) {
-                                if (this.board.getPiece(new ChessPosition(i, j)) != null && this.board.getPiece(new ChessPosition(i, j)).getTeamColor() != currPieceTeam) {
-                                    enemyFound = true;
-                                    ChessPosition opponentPosition = new ChessPosition(i, j);
-                                    ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
-                                    Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnThisPiece(new ChessPosition(8,4), clonedBoard, currPieceTeam)){
-                                        wouldLandOnPiece = true;
-                                    }
-                                }
-                            }
+                        if (wouldLandOnThisPiece(new ChessPosition(8,4), clonedBoard, currPieceTeam)){
+                            enemyFound = true;
                         }
-                        if (!enemyFound || !wouldLandOnPiece){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
+                        if (!enemyFound){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
                             validMoves.add(castlingKingLeftB);
                         }
                     }
@@ -253,21 +236,10 @@ public class ChessGame {
                     clonedBoard.removePiece(castlingRookLeftB.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
                         boolean enemyFound = false; //only for tests, since they have a board with no enemy pieces
-                        boolean wouldLandOnPiece = false;
-                        for (int i = 1; i < 9; i++) {
-                            for (int j = 1; j < 9; j++) {
-                                if (this.board.getPiece(new ChessPosition(i, j)) != null && this.board.getPiece(new ChessPosition(i, j)).getTeamColor() != currPieceTeam) {
-                                    enemyFound = true;
-                                    ChessPosition opponentPosition = new ChessPosition(i, j);
-                                    ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
-                                    Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnThisPiece(new ChessPosition(8,6), clonedBoard, currPieceTeam)){
-                                          wouldLandOnPiece = true;
-                                    }
-                                }
-                            }
+                        if (wouldLandOnThisPiece(new ChessPosition(8,6), clonedBoard, currPieceTeam)){
+                            enemyFound = true;
                         }
-                        if (!enemyFound || !wouldLandOnPiece){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
+                        if (!enemyFound){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
                             validMoves.add(castlingKingRightB);
                         }
                     }
