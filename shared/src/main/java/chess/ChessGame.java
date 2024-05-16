@@ -147,25 +147,9 @@ public class ChessGame {
                     clonedBoard.removePiece(castlingRookRightW.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
                         boolean enemyFound = false; //only for tests, since they have a board with no enemy pieces
-                        //boolean wouldLandOnPiece = false;
                         if (wouldLandOnThisPiece(new ChessPosition(1,4), clonedBoard, currPieceTeam)){
-                            //wouldLandOnPiece = true;
                             enemyFound = true;
                         }
-                        /*for (int i = 1; i < 9; i++) {
-                            for (int j = 1; j < 9; j++) {
-                                if (this.board.getPiece(new ChessPosition(i, j)) != null && this.board.getPiece(new ChessPosition(i, j)).getTeamColor() != currPieceTeam) {
-                                    enemyFound = true;
-                                    ChessPosition opponentPosition = new ChessPosition(i, j);
-                                    //ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
-                                    //Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnThisPiece(new ChessPosition(1,4), clonedBoard, currPieceTeam)){
-                                        wouldLandOnPiece = true;
-                                        enemyFound = true;
-                                    }
-                                }
-                            }
-                        }*/
                         if (!enemyFound){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
                             validMoves.add(castlingKingLeftW);
                         }
@@ -410,8 +394,6 @@ public class ChessGame {
                         case BLACK:
                             BKingPos = move.getEndPosition();
                             BKingHasMoved = true;
-                            //SET BOOLEAN VARIABLES THAT KING MOVED
-                            //DO A CHECK AND SEE IF THE MOVE IN QUESTION FOR THE KING IS 2+ SPACES, MUST BE A CASTLING MOVE
                     }
                 }
 
@@ -519,17 +501,7 @@ public class ChessGame {
         }
     }
 
-    //capable of being used for both Kings (for isInCheck) AND to check if a rook would be captured after an attempted Castling move
-    /*private boolean wouldLandOnPiece (Collection<ChessMove> movesProvided, ChessPosition posOfPieceInDanger){
-        for (ChessMove potentialMove : movesProvided) {
-                if (potentialMove.getEndPosition().equals(posOfPieceInDanger)) {
-                    return true;
-                    }
-                }
-        return false;
-    }*/
 
-    //better version of wouldLandOnPiece
     private boolean wouldLandOnThisPiece (ChessPosition posOfPieceInDanger, ChessBoard givenBoard, TeamColor currTeam) {
         for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
@@ -574,27 +546,6 @@ public class ChessGame {
 
     public boolean isInCheck(ChessBoard clonedBoard, TeamColor teamColor) { //OVERLOADED isInCheck FUNCTION
         kingsFinder(clonedBoard);
-
-        /*for (int i = 1; i < 9; i++) {
-            for (int j = 1; j < 9; j++) {
-                if (clonedBoard.getPiece(new ChessPosition(i, j)) != null && clonedBoard.getPiece(new ChessPosition(i, j)).getTeamColor() != teamColor) {
-                    ChessPosition opponentPosition = new ChessPosition(i, j);
-                    ChessPiece opponentPiece = clonedBoard.getPiece(opponentPosition);
-                    Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(clonedBoard, opponentPosition);
-                    if (teamColor == TeamColor.WHITE){
-                        if (wouldLandOnPiece(possibleCaptureMoves, WKingPos)){
-                            return true;
-                        }
-                    }
-                    else{
-                        if (wouldLandOnPiece(possibleCaptureMoves, BKingPos)){
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;*/
         if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(WKingPos, clonedBoard, TeamColor.WHITE)){
             return true;
         }
