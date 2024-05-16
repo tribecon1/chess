@@ -328,12 +328,7 @@ public class ChessGame {
 
                     //Castling code
                     if (currPiece.getPieceType() == ChessPiece.PieceType.KING){
-                        if (currPieceTeam == TeamColor.WHITE){
-                            castlingMoves(currPiece, startPosition, validMoves);
-                        }
-                        else{
-                            castlingMoves(currPiece, startPosition, validMoves);
-                        }
+                        castlingMoves(currPiece, startPosition, validMoves);
                     }
                     //En Passant code
                     if (currPiece.getPieceType() == ChessPiece.PieceType.PAWN){
