@@ -78,7 +78,8 @@ public class ChessBoard implements Cloneable {
      */
     public ChessPiece getPiece(ChessPosition position) {
         //if (ChessBoard) call getPosition, check array at this position if equals a ChessPiece obj.
-        if (position.getRow() < 1 || position.getColumn() < 1 || position.getRow() > 8 || position.getColumn() > 8){
+        //I added a check if position is null on 5/15/24, in case it causes problems down the line
+        if (position == null || position.getRow() < 1 || position.getColumn() < 1 || position.getRow() > 8 || position.getColumn() > 8){
             return null;
         } //trying this out!
         if (board[position.getRow()-1][position.getColumn()-1] != null){

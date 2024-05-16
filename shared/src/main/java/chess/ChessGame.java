@@ -155,7 +155,7 @@ public class ChessGame {
                                     ChessPosition opponentPosition = new ChessPosition(i, j);
                                     ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
                                     Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnPiece(possibleCaptureMoves, new ChessPosition(1,4))){
+                                    if (wouldLandOnThisPiece(new ChessPosition(1,4), clonedBoard, currPieceTeam)){
                                         wouldLandOnPiece = true;
                                     }
                                 }
@@ -190,7 +190,7 @@ public class ChessGame {
                                     ChessPosition opponentPosition = new ChessPosition(i, j);
                                     ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
                                     Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnPiece(possibleCaptureMoves, new ChessPosition(1,6))){
+                                    if (wouldLandOnThisPiece(new ChessPosition(1,6), clonedBoard, currPieceTeam)){
                                         wouldLandOnPiece = true;
                                     }
                                 }
@@ -226,7 +226,7 @@ public class ChessGame {
                                     ChessPosition opponentPosition = new ChessPosition(i, j);
                                     ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
                                     Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnPiece(possibleCaptureMoves, new ChessPosition(8,4))){
+                                    if (wouldLandOnThisPiece(new ChessPosition(8,4), clonedBoard, currPieceTeam)){
                                         wouldLandOnPiece = true;
                                     }
                                 }
@@ -261,7 +261,7 @@ public class ChessGame {
                                     ChessPosition opponentPosition = new ChessPosition(i, j);
                                     ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
                                     Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                                    if (wouldLandOnPiece(possibleCaptureMoves, new ChessPosition(8,6))){
+                                    if (wouldLandOnThisPiece(new ChessPosition(8,6), clonedBoard, currPieceTeam)){
                                           wouldLandOnPiece = true;
                                     }
                                 }
@@ -548,14 +548,33 @@ public class ChessGame {
     }
 
     //capable of being used for both Kings (for isInCheck) AND to check if a rook would be captured after an attempted Castling move
-    private boolean wouldLandOnPiece (Collection<ChessMove> movesProvided, ChessPosition posOfPieceInDanger){
-            for (ChessMove potentialMove : movesProvided) {
+    /*private boolean wouldLandOnPiece (Collection<ChessMove> movesProvided, ChessPosition posOfPieceInDanger){
+        for (ChessMove potentialMove : movesProvided) {
                 if (potentialMove.getEndPosition().equals(posOfPieceInDanger)) {
                     return true;
                     }
                 }
-            return false;
+        return false;
+    }*/
+
+    //better version of wouldLandOnPiece
+    private boolean wouldLandOnThisPiece (ChessPosition posOfPieceInDanger, ChessBoard givenBoard, TeamColor currTeam) {
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                if (givenBoard.getPiece(new ChessPosition(i, j)) != null && givenBoard.getPiece(new ChessPosition(i, j)).getTeamColor() != currTeam) {
+                    ChessPosition opponentPosition = new ChessPosition(i, j);
+                    ChessPiece opponentPiece = givenBoard.getPiece(opponentPosition);
+                    Collection<ChessMove> movesProvided = opponentPiece.pieceMoves(givenBoard, opponentPosition);
+                    for (ChessMove potentialMove : movesProvided) {
+                        if (potentialMove.getEndPosition().equals(posOfPieceInDanger)) {
+                            return true;
+                        }
+                    }
+                }
+            }
         }
+        return false;
+    }
 
 
 
@@ -569,32 +588,22 @@ public class ChessGame {
         //establishing Kings' locations
         kingsFinder(this.board);
 
-        for (int i = 1; i < 9; i++) {
-            for (int j = 1; j < 9; j++) {
-                if (this.board.getPiece(new ChessPosition(i, j)) != null && this.board.getPiece(new ChessPosition(i, j)).getTeamColor() != teamColor) {
-                    ChessPosition opponentPosition = new ChessPosition(i, j);
-                    ChessPiece opponentPiece = this.board.getPiece(opponentPosition);
-                    Collection<ChessMove> possibleCaptureMoves = opponentPiece.pieceMoves(this.board, opponentPosition);
-                    if (teamColor == TeamColor.WHITE){
-                        if (wouldLandOnPiece(possibleCaptureMoves, WKingPos)){
-                            return true;
-                        }
-                    }
-                    else{
-                        if (wouldLandOnPiece(possibleCaptureMoves, BKingPos)){
-                            return true;
-                        }
-                    }
-                }
-            }
+        //similar code to the below commented out in Overload function
+        if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(WKingPos, this.board, TeamColor.WHITE)){
+            return true;
         }
-        return false;
+        else if (teamColor == TeamColor.BLACK && wouldLandOnThisPiece(BKingPos,this.board, TeamColor.BLACK)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     public boolean isInCheck(ChessBoard clonedBoard, TeamColor teamColor) { //OVERLOADED isInCheck FUNCTION
         kingsFinder(clonedBoard);
 
-        for (int i = 1; i < 9; i++) {
+        /*for (int i = 1; i < 9; i++) {
             for (int j = 1; j < 9; j++) {
                 if (clonedBoard.getPiece(new ChessPosition(i, j)) != null && clonedBoard.getPiece(new ChessPosition(i, j)).getTeamColor() != teamColor) {
                     ChessPosition opponentPosition = new ChessPosition(i, j);
@@ -613,7 +622,16 @@ public class ChessGame {
                 }
             }
         }
-        return false;
+        return false;*/
+        if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(WKingPos, clonedBoard, TeamColor.WHITE)){
+            return true;
+        }
+        else if (teamColor == TeamColor.BLACK && wouldLandOnThisPiece(BKingPos,clonedBoard, TeamColor.BLACK)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     private boolean noValidMoves(ChessGame.TeamColor teamColor){
