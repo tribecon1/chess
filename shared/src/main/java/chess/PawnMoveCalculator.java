@@ -7,7 +7,7 @@ public class PawnMoveCalculator {
 
     public static final ChessPiece.PieceType[] possiblePromotion = {ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
 
-    public static void possiblePromotionMoves (Collection<ChessMove> givenHashSet, ChessPosition givenStart, ChessPosition givenEnd) {
+    public static void possiblePromotionMoveAdder(Collection<ChessMove> givenHashSet, ChessPosition givenStart, ChessPosition givenEnd) {
         for (ChessPiece.PieceType promotionOption : possiblePromotion){
             givenHashSet.add(new ChessMove(givenStart, givenEnd, promotionOption));
         }
@@ -34,7 +34,7 @@ public class PawnMoveCalculator {
                     givenHashSet.add(new ChessMove(myPosition, oneUp, null));
                 }
                 else if (oneUp.getRow() == 8){
-                    possiblePromotionMoves(givenHashSet, myPosition, oneUp);
+                    possiblePromotionMoveAdder(givenHashSet, myPosition, oneUp);
                 }
                 else{
                     givenHashSet.add(new ChessMove(myPosition, oneUp, null));
@@ -42,7 +42,7 @@ public class PawnMoveCalculator {
             }
             if (board.getPiece(upRight) != null && board.getPiece(upRight).getTeamColor() != pawnColor){
                 if (upRight.getRow() == 8){
-                    possiblePromotionMoves(givenHashSet, myPosition, upRight);
+                    possiblePromotionMoveAdder(givenHashSet, myPosition, upRight);
                 }
                 else {
                     givenHashSet.add(new ChessMove(myPosition, upRight, null));
@@ -50,7 +50,7 @@ public class PawnMoveCalculator {
             }
             if (board.getPiece(upLeft) != null && board.getPiece(upLeft).getTeamColor() != pawnColor){
                 if (upLeft.getRow() == 8){
-                    possiblePromotionMoves(givenHashSet, myPosition, upLeft);
+                    possiblePromotionMoveAdder(givenHashSet, myPosition, upLeft);
                 }
                 else {
                     givenHashSet.add(new ChessMove(myPosition, upLeft, null));
@@ -75,7 +75,7 @@ public class PawnMoveCalculator {
                     givenHashSet.add(new ChessMove(myPosition, oneDown, null));
                 }
                 else if (oneDown.getRow() == 1){
-                    possiblePromotionMoves(givenHashSet, myPosition, oneDown);
+                    possiblePromotionMoveAdder(givenHashSet, myPosition, oneDown);
                 }
                 else{
                     givenHashSet.add(new ChessMove(myPosition, oneDown, null));
@@ -83,7 +83,7 @@ public class PawnMoveCalculator {
             }
             if (board.getPiece(downRight) != null && board.getPiece(downRight).getTeamColor() != pawnColor){
                 if (downRight.getRow() == 1){
-                    possiblePromotionMoves(givenHashSet, myPosition, downRight);
+                    possiblePromotionMoveAdder(givenHashSet, myPosition, downRight);
                 }
                 else {
                     givenHashSet.add(new ChessMove(myPosition, downRight, null));
@@ -91,7 +91,7 @@ public class PawnMoveCalculator {
             }
             if (board.getPiece(downLeft) != null && board.getPiece(downLeft).getTeamColor() != pawnColor){
                 if (downLeft.getRow() == 1){
-                    possiblePromotionMoves(givenHashSet, myPosition, downLeft);
+                    possiblePromotionMoveAdder(givenHashSet, myPosition, downLeft);
                 }
                 else {
                     givenHashSet.add(new ChessMove(myPosition, downLeft, null));
