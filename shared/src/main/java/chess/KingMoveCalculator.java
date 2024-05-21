@@ -5,27 +5,27 @@ import java.util.HashSet;
 public class KingMoveCalculator {
 
     public static HashSet<ChessMove> KingMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet) {
-        ChessMove UpRight = PossibleMoves.UpRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove UpLeft = PossibleMoves.UpLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove DownRight = PossibleMoves.DownRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove DownLeft = PossibleMoves.DownLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove upRight = PossibleMoves.UpRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove upLeft = PossibleMoves.UpLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove downRight = PossibleMoves.DownRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove downLeft = PossibleMoves.DownLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         ChessMove Up = PossibleMoves.UpMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         ChessMove Down = PossibleMoves.DownMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         ChessMove Right = PossibleMoves.RightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         ChessMove Left = PossibleMoves.LeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
 
 
-        if(UpRight != null){
-            givenHashSet.add(UpRight);
+        if(upRight != null){
+            givenHashSet.add(upRight);
         }
-        if(UpLeft != null){
-            givenHashSet.add(UpLeft);
+        if(upLeft != null){
+            givenHashSet.add(upLeft);
         }
-        if(DownRight != null){
-            givenHashSet.add(DownRight);
+        if(downRight != null){
+            givenHashSet.add(downRight);
         }
-        if(DownLeft != null){
-            givenHashSet.add(DownLeft);
+        if(downLeft != null){
+            givenHashSet.add(downLeft);
         }
         if(Up != null){
             givenHashSet.add(Up);

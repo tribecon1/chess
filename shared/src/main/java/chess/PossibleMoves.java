@@ -9,130 +9,130 @@ public class PossibleMoves {
 
 
     public static ChessMove UpRightMethod(ChessBoard board, ChessPosition startPosition, ChessPosition movePosition, ChessGame.TeamColor currColor, HashSet<ChessMove> givenHashSet) {
-        ChessPosition UpRightPos = new ChessPosition(movePosition.getRow()+1, movePosition.getColumn()+1);
-        if(UpRightPos.getRow() > 8 || UpRightPos.getColumn() > 8){
+        ChessPosition upRightPos = new ChessPosition(movePosition.getRow()+1, movePosition.getColumn()+1);
+        if(upRightPos.getRow() > 8 || upRightPos.getColumn() > 8){
             return null;
         }
-        else if (board.getPiece(UpRightPos) != null){
-            if (DifferentTeam(board, UpRightPos, currColor)) {
-                givenHashSet.add(new ChessMove(startPosition, UpRightPos, null));
+        else if (board.getPiece(upRightPos) != null){
+            if (DifferentTeam(board, upRightPos, currColor)) {
+                givenHashSet.add(new ChessMove(startPosition, upRightPos, null));
             }
             return null;
         }
         else{
-            return new ChessMove(startPosition, UpRightPos, null);
+            return new ChessMove(startPosition, upRightPos, null);
         }
     }
 
     public static ChessMove UpLeftMethod(ChessBoard board, ChessPosition startPosition, ChessPosition movePosition, ChessGame.TeamColor currColor, HashSet<ChessMove> givenHashSet) {
-        ChessPosition UpLeftPos = new ChessPosition(movePosition.getRow()+1, movePosition.getColumn()-1);
-        if(UpLeftPos.getRow() > 8 || UpLeftPos.getColumn() < 1){
+        ChessPosition upLeftPos = new ChessPosition(movePosition.getRow()+1, movePosition.getColumn()-1);
+        if(upLeftPos.getRow() > 8 || upLeftPos.getColumn() < 1){
             return null;
         }
-        else if (board.getPiece(UpLeftPos) != null){
-            if (DifferentTeam(board, UpLeftPos, currColor)) {
-                givenHashSet.add(new ChessMove(startPosition, UpLeftPos, null));
+        else if (board.getPiece(upLeftPos) != null){
+            if (DifferentTeam(board, upLeftPos, currColor)) {
+                givenHashSet.add(new ChessMove(startPosition, upLeftPos, null));
             }
             return null;
         }
         else{
-            return new ChessMove(startPosition, UpLeftPos, null);
+            return new ChessMove(startPosition, upLeftPos, null);
         }
     }
 
     public static ChessMove DownRightMethod(ChessBoard board, ChessPosition startPosition, ChessPosition movePosition, ChessGame.TeamColor currColor, HashSet<ChessMove> givenHashSet) {
-        ChessPosition DownRightPos = new ChessPosition(movePosition.getRow()-1, movePosition.getColumn()+1);
-        if(DownRightPos.getRow() < 1 || DownRightPos.getColumn() > 8){
+        ChessPosition downRightPos = new ChessPosition(movePosition.getRow()-1, movePosition.getColumn()+1);
+        if(downRightPos.getRow() < 1 || downRightPos.getColumn() > 8){
             return null;
         }
-        else if (board.getPiece(DownRightPos) != null){
-            if (DifferentTeam(board, DownRightPos, currColor)) {
-                givenHashSet.add(new ChessMove(startPosition, DownRightPos, null));
+        else if (board.getPiece(downRightPos) != null){
+            if (DifferentTeam(board, downRightPos, currColor)) {
+                givenHashSet.add(new ChessMove(startPosition, downRightPos, null));
             }
             return null;
         }
         else{
-            return new ChessMove(startPosition, DownRightPos, null);
+            return new ChessMove(startPosition, downRightPos, null);
         }
     }
 
     public static ChessMove DownLeftMethod(ChessBoard board, ChessPosition startPosition, ChessPosition movePosition, ChessGame.TeamColor currColor, HashSet<ChessMove> givenHashSet) {
-        ChessPosition DownLeftPos = new ChessPosition(movePosition.getRow()-1, movePosition.getColumn()-1);
-        if(DownLeftPos.getRow() < 1 || DownLeftPos.getColumn() < 1){
+        ChessPosition downLeftPos = new ChessPosition(movePosition.getRow()-1, movePosition.getColumn()-1);
+        if(downLeftPos.getRow() < 1 || downLeftPos.getColumn() < 1){
             return null;
         }
-        else if (board.getPiece(DownLeftPos) != null){
-            if (DifferentTeam(board, DownLeftPos, currColor)) {
-                givenHashSet.add(new ChessMove(startPosition, DownLeftPos, null));
+        else if (board.getPiece(downLeftPos) != null){
+            if (DifferentTeam(board, downLeftPos, currColor)) {
+                givenHashSet.add(new ChessMove(startPosition, downLeftPos, null));
             }
             return null;
         }
         else{
-            return new ChessMove(startPosition, DownLeftPos, null);
+            return new ChessMove(startPosition, downLeftPos, null);
         }
     }
 
     public static ChessMove UpMethod(ChessBoard board, ChessPosition startPosition, ChessPosition movePosition, ChessGame.TeamColor currColor, HashSet<ChessMove> givenHashSet) {
-        ChessPosition UpPos = new ChessPosition(movePosition.getRow()+1, movePosition.getColumn());
-        if(UpPos.getRow() > 8){
+        ChessPosition upPos = new ChessPosition(movePosition.getRow()+1, movePosition.getColumn());
+        if(upPos.getRow() > 8){
             return null;
         }
-        else if (board.getPiece(UpPos) != null){
-            if (DifferentTeam(board, UpPos, currColor)) {
-                givenHashSet.add(new ChessMove(startPosition, UpPos, null));
+        else if (board.getPiece(upPos) != null){
+            if (DifferentTeam(board, upPos, currColor)) {
+                givenHashSet.add(new ChessMove(startPosition, upPos, null));
             }
             return null;
         }
         else{
-            return new ChessMove(startPosition, UpPos, null);
+            return new ChessMove(startPosition, upPos, null);
         }
     }
 
     public static ChessMove DownMethod(ChessBoard board, ChessPosition startPosition, ChessPosition movePosition, ChessGame.TeamColor currColor, HashSet<ChessMove> givenHashSet) {
-        ChessPosition DownPos = new ChessPosition(movePosition.getRow()-1, movePosition.getColumn());
-        if (DownPos.getRow() < 1) {
+        ChessPosition downPos = new ChessPosition(movePosition.getRow()-1, movePosition.getColumn());
+        if (downPos.getRow() < 1) {
             return null;
         }
-        else if (board.getPiece(DownPos) != null) {
-            if (DifferentTeam(board, DownPos, currColor)) {
-                givenHashSet.add(new ChessMove(startPosition, DownPos, null));
+        else if (board.getPiece(downPos) != null) {
+            if (DifferentTeam(board, downPos, currColor)) {
+                givenHashSet.add(new ChessMove(startPosition, downPos, null));
             }
             return null;
         }
         else {
-            return new ChessMove(startPosition, DownPos, null);
+            return new ChessMove(startPosition, downPos, null);
         }
     }
 
     public static ChessMove RightMethod(ChessBoard board, ChessPosition startPosition, ChessPosition movePosition, ChessGame.TeamColor currColor, HashSet<ChessMove> givenHashSet) {
-        ChessPosition RightPos = new ChessPosition(movePosition.getRow(), movePosition.getColumn()+1);
-        if (RightPos.getColumn() > 8) {
+        ChessPosition rightPos = new ChessPosition(movePosition.getRow(), movePosition.getColumn()+1);
+        if (rightPos.getColumn() > 8) {
             return null;
         }
-        else if (board.getPiece(RightPos) != null) {
-            if (DifferentTeam(board, RightPos, currColor)) {
-                givenHashSet.add(new ChessMove(startPosition, RightPos, null));
+        else if (board.getPiece(rightPos) != null) {
+            if (DifferentTeam(board, rightPos, currColor)) {
+                givenHashSet.add(new ChessMove(startPosition, rightPos, null));
             }
             return null;
         }
         else {
-            return new ChessMove(startPosition, RightPos, null);
+            return new ChessMove(startPosition, rightPos, null);
         }
     }
 
     public static ChessMove LeftMethod(ChessBoard board, ChessPosition startPosition, ChessPosition movePosition, ChessGame.TeamColor currColor, HashSet<ChessMove> givenHashSet) {
-        ChessPosition LeftPos = new ChessPosition(movePosition.getRow(), movePosition.getColumn()-1);
-        if (LeftPos.getColumn() < 1) {
+        ChessPosition leftPos = new ChessPosition(movePosition.getRow(), movePosition.getColumn()-1);
+        if (leftPos.getColumn() < 1) {
             return null;
         }
-        else if (board.getPiece(LeftPos) != null) {
-            if (DifferentTeam(board, LeftPos, currColor)) {
-                givenHashSet.add(new ChessMove(startPosition, LeftPos, null));
+        else if (board.getPiece(leftPos) != null) {
+            if (DifferentTeam(board, leftPos, currColor)) {
+                givenHashSet.add(new ChessMove(startPosition, leftPos, null));
             }
             return null;
         }
         else {
-            return new ChessMove(startPosition, LeftPos, null);
+            return new ChessMove(startPosition, leftPos, null);
         }
     }
 
