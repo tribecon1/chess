@@ -5,10 +5,10 @@ import java.util.HashSet;
 
 public class PawnMoveCalculator {
 
-    public static final ChessPiece.PieceType[] possiblePromotion = {ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
+    public static final ChessPiece.PieceType[] POSSIBLE_PROMOTION = {ChessPiece.PieceType.QUEEN, ChessPiece.PieceType.BISHOP, ChessPiece.PieceType.KNIGHT, ChessPiece.PieceType.ROOK};
 
     public static void possiblePromotionMoveAdder(Collection<ChessMove> givenHashSet, ChessPosition givenStart, ChessPosition givenEnd) {
-        for (ChessPiece.PieceType promotionOption : possiblePromotion){
+        for (ChessPiece.PieceType promotionOption : POSSIBLE_PROMOTION){
             givenHashSet.add(new ChessMove(givenStart, givenEnd, promotionOption));
         }
     }
