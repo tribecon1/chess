@@ -1,3 +1,3 @@
 package response;
 
-public record ErrorResponse(String message) implements ResponseType {}
+public record ErrorResponse(int statusCode, String message) implements ResponseType {}

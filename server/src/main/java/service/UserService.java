@@ -23,8 +23,7 @@ public class UserService {
             userDaoUS.createUser(user.username(), user.password(), user.email());
             return authDaoUS.createAuth(user.username());
         }
-
-        return new ErrorResponse("Error: already taken");
+        return new ErrorResponse(403, "Error: already taken");
     }
 
     public AuthData login(UserData user) {

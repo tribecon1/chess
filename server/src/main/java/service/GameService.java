@@ -7,6 +7,7 @@ import dataaccess.dao.UserDao;
 import dataaccess.dao.memoryDao.MemoryAuthDao;
 import dataaccess.dao.memoryDao.MemoryGameDao;
 import model.AuthData;
+import model.GameData;
 import request.JoinGameRequest;
 import response.ErrorResponse;
 import response.ListGamesResponse;
@@ -24,19 +25,33 @@ public class GameService {
     }
 
 
+    private AuthData authCheckerGameService (String authToken) throws DataAccessException { //helper method
+        return authDaoGS.getAuth(authToken);
+    }
 
-    public void joinGame(JoinGameRequest req, String authToken){
 
-
-
+    public ResponseType joinGame(String authToken, JoinGameRequest req) throws DataAccessException {
+        AuthData authFound = authCheckerGameService(authToken);
+        if (authFound != null) {
+            if (req.playerColor().equalsIgnoreCase("WHITE")) {
+                GameData updatedGame = new GameData(req.gameID(), authFound.username(), null, null, null);
+                return gameDaoGS.updateGame(updatedGame);
+            } else if (req.playerColor().equalsIgnoreCase("BLACK")) {
+                GameData updatedGame = new GameData(req.gameID(), null, authFound.username(), null, null);
+                return gameDaoGS.updateGame(updatedGame);
+            } else {
+                return new ErrorResponse(400, "Error: bad request");
+            }
+        }
+        return new ErrorResponse(401, "Error: unauthorized");
     }
 
     public ResponseType listGames(String authToken) throws DataAccessException {
-        AuthData authFound = authDaoGS.getAuth(authToken);
-        if (authFound != null) {
+        AuthData authFound = authCheckerGameService(authToken);
+        if (authFound != null){
             return new ListGamesResponse(gameDaoGS.listGames());
         }
-        return new ErrorResponse("Error: unauthorized");
+        return new ErrorResponse(401,"Error: unauthorized");
     }
 
 

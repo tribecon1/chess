@@ -3,6 +3,8 @@ package dataaccess.dao.memoryDao;
 import chess.ChessGame;
 import dataaccess.dao.GameDao;
 import model.GameData;
+import response.ErrorResponse;
+import response.ResponseType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,7 +12,11 @@ import java.util.Collection;
 
 public class MemoryGameDao implements GameDao {
 
-    ArrayList<GameData> gameDataList = new ArrayList<>();
+    ArrayList<GameData> gameDataList;
+
+    public MemoryGameDao(){
+        this.gameDataList = new ArrayList<>();
+    }
 
     @Override
     public void createGame(String gameName) {
@@ -34,17 +40,44 @@ public class MemoryGameDao implements GameDao {
     }
 
     @Override
-    public void updateGame(GameData updatedGame) {
+    public ResponseType updateGame(GameData updatedGame) {
         GameData currGame = getGame(updatedGame.gameID());
-        if ( (currGame.whiteUsername() == null && updatedGame.whiteUsername() != null) ||
-             (currGame.blackUsername() == null && updatedGame.blackUsername() != null) ||
-             (!currGame.game().equals(updatedGame.game())) ) {
+        GameData changedGame;
+        if (currGame != null) {
+            if (updatedGame.whiteUsername() != null) {
+                if (currGame.whiteUsername() == null) {
+                    changedGame = new GameData(currGame.gameID(), updatedGame.whiteUsername(), currGame.blackUsername(), currGame.gameName(), currGame.game());
+                    //for when the white team has a player that joined
+                }
+                else {
+                    return new ErrorResponse(403, "Error: already taken");
+                }
+            }
+            else if (updatedGame.blackUsername() != null) {
+                if (currGame.blackUsername() == null) {
+                    changedGame = new GameData(currGame.gameID(), currGame.whiteUsername(), updatedGame.blackUsername(), currGame.gameName(), currGame.game());
+                    //for when the black team has a player that joined
+                }
+                else {
+                    return new ErrorResponse(403, "Error: already taken");
+                }
+            }
+            else if (updatedGame.game() != null){
+                changedGame = new GameData(currGame.gameID(), currGame.whiteUsername(), currGame.blackUsername(), currGame.gameName(), updatedGame.game());
+                //for when a move is made. WHEN DOES THIS OCCUR?
+            }
+            else {
+                return new ErrorResponse(400, "Error: bad request");
+            }
             gameDataList.remove(currGame);
-            gameDataList.add(updatedGame);
-            //Checking if A) whiteUsername was given, B) blackUsername was given, or C) a move was made
+            gameDataList.add(changedGame);
+            return null;
         }
-        //if none of those conditions are satisfied, then how do I raise the error?
+        else{
+            return new ErrorResponse(400, "Error: bad request");
+        }
     }
+
 
     @Override
     public void clearGame() {

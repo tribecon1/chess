@@ -2,6 +2,7 @@ package dataaccess.dao;
 
 import dataaccess.DataAccessException;
 import model.GameData;
+import response.ResponseType;
 
 import java.util.Collection;
 
@@ -13,7 +14,7 @@ public interface GameDao {
 
     Collection<GameData> listGames() throws DataAccessException;
 
-    void updateGame(GameData game) throws DataAccessException; //should have access to the AuthData obj. w/ username if need be
+    ResponseType updateGame(GameData game) throws DataAccessException;
 
     void clearGame() throws DataAccessException;
 
