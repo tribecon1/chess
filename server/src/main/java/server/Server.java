@@ -52,13 +52,12 @@ public class Server {
         if (serviceResponse instanceof ErrorResponse) {
             res.status( ((ErrorResponse) serviceResponse).statusCode() );
             res.body( ((ErrorResponse) serviceResponse).message() );
-            return res;
         }
         else {
             res.status(500);
             res.body("Another error");
-            return res;
         }
+        return res;
     }
 
     private static Response SuccessResponse(Response res, ResponseType serviceResponse){
