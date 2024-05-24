@@ -19,9 +19,10 @@ public class MemoryGameDao implements GameDao {
     }
 
     @Override
-    public void createGame(String gameName) {
+    public GameData createGame(String gameName) {
         GameData newGame = new GameData(gameDataList.size()+1, null, null, gameName, new ChessGame());
         gameDataList.add(newGame);
+        return newGame;
     }
 
     @Override
@@ -33,6 +34,17 @@ public class MemoryGameDao implements GameDao {
         }
         return null;
     }
+
+    @Override
+    public boolean getGameByName(String gameName){
+        for (GameData game : gameDataList) {
+            if (game.gameName().equals(gameName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public Collection<GameData> listGames() {
@@ -83,4 +95,5 @@ public class MemoryGameDao implements GameDao {
     public void clearGame() {
         gameDataList.clear();
     }
+
 }

@@ -3,12 +3,11 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDao;
 import dataaccess.dao.GameDao;
-import dataaccess.dao.UserDao;
-import dataaccess.dao.memoryDao.MemoryAuthDao;
-import dataaccess.dao.memoryDao.MemoryGameDao;
 import model.AuthData;
 import model.GameData;
+import request.CreateGameRequest;
 import request.JoinGameRequest;
+import response.CreateGameResponse;
 import response.ErrorResponse;
 import response.ListGamesResponse;
 import response.ResponseType;
@@ -29,7 +28,6 @@ public class GameService {
         return authDaoGS.getAuth(authToken);
     }
 
-
     public ResponseType joinGame(String authToken, JoinGameRequest req) throws DataAccessException {
         AuthData authFound = authCheckerGameService(authToken);
         if (authFound != null) {
@@ -46,6 +44,7 @@ public class GameService {
         return new ErrorResponse(401, "Error: unauthorized");
     }
 
+
     public ResponseType listGames(String authToken) throws DataAccessException {
         AuthData authFound = authCheckerGameService(authToken);
         if (authFound != null){
@@ -55,5 +54,13 @@ public class GameService {
     }
 
 
-
+    public ResponseType createGame(String authToken, CreateGameRequest req) throws DataAccessException {
+        if (authCheckerGameService(authToken) != null) {
+            if (!gameDaoGS.getGameByName(req.gameName())){
+                return new CreateGameResponse(gameDaoGS.createGame(req.gameName()).gameID());
+            }
+            return new ErrorResponse(400, "Error: bad request");
+        }
+        return new ErrorResponse(401,"Error: unauthorized");
+    }
 }

@@ -3,13 +3,14 @@ package server;
 import dataaccess.dao.memoryDao.MemoryAuthDao;
 import dataaccess.dao.memoryDao.MemoryGameDao;
 import dataaccess.dao.memoryDao.MemoryUserDao;
+import model.AuthData;
 import model.UserData;
+import request.CreateGameRequest;
 import request.JoinGameRequest;
-import response.ErrorResponse;
-import response.ListGamesResponse;
-import response.RegisterResponse;
-import response.ResponseType;
+import request.LoginRequest;
+import response.*;
 import service.GameService;
+import service.SystemService;
 import service.UserService;
 import spark.*;
 import dataaccess.dao.*;
@@ -47,11 +48,26 @@ public class Server {
         return null;
     }
 
-    private static Response CustomErrorCreator(ResponseType serviceResponse, Response res){
-        res.status( ((ErrorResponse) serviceResponse).statusCode() );
-        res.body( ((ErrorResponse) serviceResponse).message() );
+    private static Response ErrorCreator(Response res, ResponseType serviceResponse){
+        if (serviceResponse instanceof ErrorResponse) {
+            res.status( ((ErrorResponse) serviceResponse).statusCode() );
+            res.body( ((ErrorResponse) serviceResponse).message() );
+            return res;
+        }
+        else {
+            res.status(500);
+            res.body("Another error");
+            return res;
+        }
+    }
+
+    private static Response SuccessResponse(Response res, ResponseType serviceResponse){
+        res.status(200);
+        res.body(SerializerDeserializer.ConvertToJSON(serviceResponse));
         return res;
     }
+
+
 
     private void createRoutes() {
         //GET list of games
@@ -60,48 +76,52 @@ public class Server {
             GameService gameService = new GameService(this.gameDao, this.authDao);
             ResponseType response = gameService.listGames(authToken);
             if (response instanceof ListGamesResponse){
-                res.status(200);
-            }
-            else if (response instanceof ErrorResponse) {
-                res.status(401);
+                return SuccessResponse(res, response);
             }
             else {
-                res.status(500);
+                return ErrorCreator(res, response);
             }
-            res.body(SerializerDeserializer.ConvertToJSON(response));
-            return res;
         });
 
-        //POST register, login, or creating a new game
+        //POST creating a new game, login, register
         Spark.post("/:givenPath", (req, res) -> {
             String givenPath = req.params(":givenPath");
 
+            UserService userService = new UserService(this.userDao, this.authDao); //needed objects throughout this branch
+            GameService gameService = new GameService(this.gameDao, this.authDao);
+            ResponseType response;
+
+            if (BadRequestChecker(req, res) != null) {
+                return BadRequestChecker(req, res);
+            }
             switch (givenPath) {
                 case "/game":
-                    createGameHandler(req, res);
-                    return;
+                    String authToken = req.headers("authorization");
+                    CreateGameRequest newGameRequest = SerializerDeserializer.ConvertFromJSON(req.body(), CreateGameRequest.class);
+                    response = gameService.createGame(authToken, newGameRequest);
+                    if (response instanceof CreateGameResponse) {
+                        return SuccessResponse(res, response);
+                    }
+                    else{
+                        return ErrorCreator(res, response);
+                    }
                 case "/session":
-                    loginHandler(req,res);
-                    return;
+                    LoginRequest currUser = SerializerDeserializer.ConvertFromJSON(req.body(), LoginRequest.class);
+                    response = userService.login(currUser);
+                    if (response instanceof AuthData){
+                        return SuccessResponse(res, response);
+                    }
+                    else{
+                        return ErrorCreator(res, response);
+                    }
                 case "/user":
-                    if (BadRequestChecker(req, res) != null) {
-                        return BadRequestChecker(req, res);
-                    }
                     UserData newUser = SerializerDeserializer.ConvertFromJSON(req.body(), UserData.class);
-                    UserService userService = new UserService(this.userDao, this.authDao);
-                    ResponseType response = userService.register(newUser);
-                    if (response instanceof RegisterResponse){
-                        res.status(200);
-                        res.body(SerializerDeserializer.ConvertToJSON(response));
-                        return res;
-                    }
-                    else if (response instanceof ErrorResponse) {
-                        return CustomErrorCreator(response,res);
+                    response = userService.register(newUser);
+                    if (response instanceof AuthData){
+                        return SuccessResponse(res, response);
                     }
                     else {
-                        res.status(500);
-                        res.body( "Another error" );
-                        return res;
+                        return ErrorCreator(res, response);
                     }
                 default:
                     res.status(404);
@@ -120,41 +140,55 @@ public class Server {
             GameService gameService = new GameService(this.gameDao, this.authDao);
             ResponseType response = gameService.joinGame(authToken, joinGameRequest);
             if (response == null){
-                res.status(200);
-                return res;
-            }
-            else if (response instanceof ErrorResponse){
-                return CustomErrorCreator(response,res);
+                return SuccessResponse(res, response);
             }
             else {
-                res.status(500);
-                res.body( "Another error" );
-                return res;
+                return ErrorCreator(res, response);
             }
         });
 
         Spark.delete("/:givenPath", (req, res) -> {
             String givenPath = req.params(":givenPath");
-            if (givenPath == null) {
-                res.status(404);
-                return "Path option not found";
+            if (BadRequestChecker(req, res) != null) {
+                return BadRequestChecker(req, res);
             }
+
+            ResponseType response;
+
             switch (givenPath) {
                 case "/db":
-                    clearApplicationHandler(req, res);
-                    return;
+                    SystemService systemService = new SystemService(this.gameDao, this.authDao, this.userDao);
+                    response = systemService.clear();
+                    if (response == null){
+                        return SuccessResponse(res, response);
+                    }
+                    else{
+                        res.status(500);
+                        res.body( "Another error" );
+                        return res;
+                    }
                 case "/session":
-                    logoutHandler(req, res);
-                    return;
+                    String authToken = req.headers("authorization");
+                    UserService userService = new UserService(this.userDao, this.authDao);
+                    response = userService.logout(authToken);
+                    if (response == null){
+                        return SuccessResponse(res, response);
+                    }
+                    else{
+                        return ErrorCreator(res, response);
+                    }
                 default:
                     res.status(500);
-                    return;
+                    res.body("Error: Not found");
+                    return res;
             }
 
         });
     }
 
-
+    public static void main(String[] args){
+        new Server().run(8080);
+    }
 
     public void stop() {
         Spark.stop();

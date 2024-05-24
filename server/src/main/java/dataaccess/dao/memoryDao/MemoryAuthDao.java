@@ -20,14 +20,14 @@ public class MemoryAuthDao implements AuthDao {
     @Override
     public AuthData createAuth(String username) throws DataAccessException{
         String authToken = UUID.randomUUID().toString();
-        authDataMap.put(authToken, username);
-        return new AuthData(authToken, username);
+        authDataMap.put(username, authToken);
+        return new AuthData(username, authToken);
     }
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException{
         if(authDataMap.containsKey(authToken)){
-            return new AuthData(authToken, authDataMap.get(authToken));
+            return new AuthData(authDataMap.get(authToken), authToken);
         }
         return null;
     }

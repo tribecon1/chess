@@ -5,6 +5,7 @@ import dataaccess.dao.AuthDao;
 import dataaccess.dao.UserDao;
 import model.AuthData;
 import model.UserData;
+import request.LoginRequest;
 import response.ErrorResponse;
 import response.ResponseType;
 
@@ -26,15 +27,21 @@ public class UserService {
         return new ErrorResponse(403, "Error: already taken");
     }
 
-    public AuthData login(UserData user) {
-
-
-
-        return null;
+    public ResponseType login(LoginRequest loginRequest) throws DataAccessException {
+        if (userDaoUS.getUser(loginRequest.username()) != null){
+            return authDaoUS.createAuth(loginRequest.username());
+        }
+        return new ErrorResponse(401, "Error: unauthorized");
     }
 
 
-    public void logout(UserData user) {}
+    public ResponseType logout(String authToken) throws DataAccessException {
+        if (authDaoUS.getAuth(authToken) != null){
+            authDaoUS.deleteAuth(authToken);
+            return null;
+        }
+        return new ErrorResponse(401, "Error: unauthorized");
+    }
 
 
 

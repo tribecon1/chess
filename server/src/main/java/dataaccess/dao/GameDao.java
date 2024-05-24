@@ -8,7 +8,7 @@ import java.util.Collection;
 
 public interface GameDao {
 
-    void createGame(String gameName) throws DataAccessException;
+    GameData createGame(String gameName) throws DataAccessException;
 
     GameData getGame(int gameID) throws DataAccessException;
 
@@ -18,4 +18,5 @@ public interface GameDao {
 
     void clearGame() throws DataAccessException;
 
+    boolean getGameByName(String gameName) throws DataAccessException;
 }
