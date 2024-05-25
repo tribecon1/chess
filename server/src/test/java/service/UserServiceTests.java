@@ -17,11 +17,6 @@ public class UserServiceTests {
 
     private static UserService userService;
 
-    private static UserData newUser;
-    private static UserData currUser;
-
-    private static String logoutAuthToken;
-
 
     @BeforeAll
     public static void setUp() {
