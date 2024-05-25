@@ -19,7 +19,6 @@ public class UserService {
         this.authDaoUS = givenAuthDao;
     }
 
-
     public ResponseType register(UserData user) throws DataAccessException {
         if (user.username() == null || user.password() == null){
             return new ErrorResponse(400, "Error: bad request");
