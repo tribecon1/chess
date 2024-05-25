@@ -17,7 +17,6 @@ import response.ResponseType;
 public class UserServiceTests {
 
     private static UserService userService;
-    private static String authTokenLogout;
 
 
     @BeforeAll
