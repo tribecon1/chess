@@ -3,7 +3,6 @@ package service;
 import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDao;
 import dataaccess.dao.UserDao;
-import model.AuthData;
 import model.UserData;
 import request.LoginRequest;
 import response.ErrorResponse;
@@ -20,24 +19,24 @@ public class UserService {
 
 
     public ResponseType register(UserData user) throws DataAccessException {
-        if (userDaoUS.getUser(user.username()) == null){
-            userDaoUS.createUser(user.username(), user.password(), user.email());
-            return authDaoUS.createAuth(user.username());
+        if (this.userDaoUS.getUser(user.username()) == null){
+            this.userDaoUS.createUser(user.username(), user.password(), user.email());
+            return this.authDaoUS.createAuth(user.username());
         }
         return new ErrorResponse(403, "Error: already taken");
     }
 
     public ResponseType login(LoginRequest loginRequest) throws DataAccessException {
-        if (userDaoUS.getUser(loginRequest.username()) != null){
-            return authDaoUS.createAuth(loginRequest.username());
+        if (this.userDaoUS.getUser(loginRequest.username()) != null){
+            return this.authDaoUS.createAuth(loginRequest.username());
         }
         return new ErrorResponse(401, "Error: unauthorized");
     }
 
 
     public ResponseType logout(String authToken) throws DataAccessException {
-        if (authDaoUS.getAuth(authToken) != null){
-            authDaoUS.deleteAuth(authToken);
+        if (this.authDaoUS.getAuth(authToken) != null){
+            this.authDaoUS.deleteAuth(authToken);
             return null;
         }
         return new ErrorResponse(401, "Error: unauthorized");

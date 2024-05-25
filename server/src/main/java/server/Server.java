@@ -48,22 +48,25 @@ public class Server {
         return null;
     }
 
-    private static Response ErrorCreator(Response res, ResponseType serviceResponse){
+    private static String ErrorCreator(Response res, ResponseType serviceResponse){
         if (serviceResponse instanceof ErrorResponse) {
             res.status( ((ErrorResponse) serviceResponse).statusCode() );
-            res.body( ((ErrorResponse) serviceResponse).message() );
+            return SerializerDeserializer.ConvertToJSON(serviceResponse);
         }
         else {
             res.status(500);
-            res.body("Another error");
+            return "Another error";
         }
-        return res;
     }
 
-    private static Response SuccessResponse(Response res, ResponseType serviceResponse){
+    private static String SuccessResponse(Response res, ResponseType serviceResponse){
         res.status(200);
-        res.body(SerializerDeserializer.ConvertToJSON(serviceResponse));
-        return res;
+        return SerializerDeserializer.ConvertToJSON(serviceResponse);
+    }
+
+    private static String BlankSuccessResponse(Response res){
+        res.status(200);
+        return SerializerDeserializer.ConvertToJSON("");
     }
 
 
@@ -94,7 +97,7 @@ public class Server {
                 return BadRequestChecker(req, res);
             }
             switch (givenPath) {
-                case "/game":
+                case "game":
                     String authToken = req.headers("authorization");
                     CreateGameRequest newGameRequest = SerializerDeserializer.ConvertFromJSON(req.body(), CreateGameRequest.class);
                     response = gameService.createGame(authToken, newGameRequest);
@@ -104,7 +107,7 @@ public class Server {
                     else{
                         return ErrorCreator(res, response);
                     }
-                case "/session":
+                case "session":
                     LoginRequest currUser = SerializerDeserializer.ConvertFromJSON(req.body(), LoginRequest.class);
                     response = userService.login(currUser);
                     if (response instanceof AuthData){
@@ -113,7 +116,7 @@ public class Server {
                     else{
                         return ErrorCreator(res, response);
                     }
-                case "/user":
+                case "user":
                     UserData newUser = SerializerDeserializer.ConvertFromJSON(req.body(), UserData.class);
                     response = userService.register(newUser);
                     if (response instanceof AuthData){
@@ -148,30 +151,29 @@ public class Server {
 
         Spark.delete("/:givenPath", (req, res) -> {
             String givenPath = req.params(":givenPath");
-            if (BadRequestChecker(req, res) != null) {
-                return BadRequestChecker(req, res);
-            }
 
             ResponseType response;
 
             switch (givenPath) {
-                case "/db":
+                case "db":
                     SystemService systemService = new SystemService(this.gameDao, this.authDao, this.userDao);
                     response = systemService.clear();
                     if (response == null){
-                        return SuccessResponse(res, response);
+                        //return SuccessResponse(res, response);
+                        return BlankSuccessResponse(res);
                     }
                     else{
                         res.status(500);
                         res.body( "Another error" );
                         return res;
                     }
-                case "/session":
+                case "session":
                     String authToken = req.headers("authorization");
                     UserService userService = new UserService(this.userDao, this.authDao);
                     response = userService.logout(authToken);
                     if (response == null){
-                        return SuccessResponse(res, response);
+                        //return SuccessResponse(res, response);
+                        return BlankSuccessResponse(res);
                     }
                     else{
                         return ErrorCreator(res, response);

@@ -31,14 +31,32 @@ public class GameService {
     public ResponseType joinGame(String authToken, JoinGameRequest req) throws DataAccessException {
         AuthData authFound = authCheckerGameService(authToken);
         if (authFound != null) {
-            if (req.playerColor().equalsIgnoreCase("WHITE")) {
-                GameData updatedGame = new GameData(req.gameID(), authFound.username(), null, null, null);
-                return gameDaoGS.updateGame(updatedGame);
-            } else if (req.playerColor().equalsIgnoreCase("BLACK")) {
-                GameData updatedGame = new GameData(req.gameID(), null, authFound.username(), null, null);
-                return gameDaoGS.updateGame(updatedGame);
-            } else {
+            GameData currGame = gameDaoGS.getGame(req.gameID());
+            if (currGame == null) {
                 return new ErrorResponse(400, "Error: bad request");
+            }
+            else {
+                if (req.playerColor().equalsIgnoreCase("WHITE")) {
+                    if (currGame.whiteUsername() == null){
+                        GameData updatedGame = new GameData(req.gameID(), authFound.username(), currGame.blackUsername(), currGame.gameName(), currGame.game());
+                        return gameDaoGS.updateGame(currGame, updatedGame);
+                    }
+                    else{
+                        return new ErrorResponse(403, "Error: already taken");
+                    }
+                }
+                else if (req.playerColor().equalsIgnoreCase("BLACK")) {
+                    if (currGame.blackUsername() == null){
+                        GameData updatedGame = new GameData(req.gameID(), currGame.whiteUsername(), authFound.username(), currGame.gameName(), currGame.game());
+                        return gameDaoGS.updateGame(currGame, updatedGame);
+                    }
+                    else{
+                        return new ErrorResponse(403, "Error: already taken");
+                    }
+                }
+                else {
+                    return new ErrorResponse(400, "Error: bad request");
+                }
             }
         }
         return new ErrorResponse(401, "Error: unauthorized");
