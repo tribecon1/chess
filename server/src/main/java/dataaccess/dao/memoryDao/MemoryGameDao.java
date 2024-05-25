@@ -48,7 +48,12 @@ public class MemoryGameDao implements GameDao {
 
     @Override
     public Collection<GameData> listGames() {
-        return gameDataList;
+        Collection<GameData> userFriendlyGameList = new ArrayList<>();
+        for (GameData game : gameDataList) {
+            userFriendlyGameList.add(new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), null));
+        }
+        //return gameDataList;
+        return userFriendlyGameList;
     }
 
     @Override

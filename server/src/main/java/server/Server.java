@@ -16,9 +16,9 @@ import spark.*;
 import dataaccess.dao.*;
 
 public class Server {
-    private UserDao userDao;
-    private GameDao gameDao;
-    private AuthDao authDao;
+    private final UserDao userDao;
+    private final GameDao gameDao;
+    private final AuthDao authDao;
 
     public Server(){
         this.userDao = new MemoryUserDao();
@@ -66,7 +66,7 @@ public class Server {
 
     private static String BlankSuccessResponse(Response res){
         res.status(200);
-        return SerializerDeserializer.ConvertToJSON("");
+        return "{}";
     }
 
 
@@ -142,13 +142,14 @@ public class Server {
             GameService gameService = new GameService(this.gameDao, this.authDao);
             ResponseType response = gameService.joinGame(authToken, joinGameRequest);
             if (response == null){
-                return SuccessResponse(res, response);
+                return BlankSuccessResponse(res);
             }
             else {
                 return ErrorCreator(res, response);
             }
         });
 
+        //DELETE clear all databases/DAOs or logout
         Spark.delete("/:givenPath", (req, res) -> {
             String givenPath = req.params(":givenPath");
 
@@ -159,7 +160,6 @@ public class Server {
                     SystemService systemService = new SystemService(this.gameDao, this.authDao, this.userDao);
                     response = systemService.clear();
                     if (response == null){
-                        //return SuccessResponse(res, response);
                         return BlankSuccessResponse(res);
                     }
                     else{
@@ -172,7 +172,6 @@ public class Server {
                     UserService userService = new UserService(this.userDao, this.authDao);
                     response = userService.logout(authToken);
                     if (response == null){
-                        //return SuccessResponse(res, response);
                         return BlankSuccessResponse(res);
                     }
                     else{

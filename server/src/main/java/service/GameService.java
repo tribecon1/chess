@@ -32,7 +32,7 @@ public class GameService {
         AuthData authFound = authCheckerGameService(authToken);
         if (authFound != null) {
             GameData currGame = gameDaoGS.getGame(req.gameID());
-            if (currGame == null) {
+            if (currGame == null || req.playerColor() == null || req.gameID() == 0) {
                 return new ErrorResponse(400, "Error: bad request");
             }
             else {

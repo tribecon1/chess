@@ -5,7 +5,7 @@ import model.AuthData;
 
 public interface AuthDao {
 
-    AuthData createAuth(String username) throws DataAccessException;
+    AuthData createAuth(String username, String authToken) throws DataAccessException;
     //will generate authToken w/in overridden method call
     //necessary to return AuthData object, or just void?
 
