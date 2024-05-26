@@ -64,7 +64,6 @@ public class UserServiceTests {
     @Test
     public void logoutFailTest1() throws DataAccessException { //wrong authToken
         UserData testUser = new UserData("ToBeLoggedOut","1234", "t@gmail.com");
-        ResponseType authData = userService.register(testUser);
         ResponseType response = userService.logout("fakeAuthToken");
         assert (response instanceof ErrorResponse);
         Assertions.assertEquals( ((ErrorResponse) response).message(), "Error: unauthorized");
@@ -78,7 +77,22 @@ public class UserServiceTests {
 
 
     //Login Positive and Negative Tests
-
+    @Test
+    public void loginSuccessTest() throws DataAccessException {
+        AuthDao presetAuthDao = new MemoryAuthDao();
+        presetAuthDao.createAuth("fakeUser", "2BeRemoved");
+        UserService tempUserService = new UserService(new MemoryUserDao(), presetAuthDao);
+        ResponseType response = tempUserService.logout("2BeRemoved");
+        Assertions.assertNull(response);
+    }
+    @Test
+    public void loginFailTest() throws DataAccessException {
+        UserService tempUserService = new UserService(new MemoryUserDao(), new MemoryAuthDao());
+        ResponseType response = tempUserService.logout("nonExistingUser");
+        Assertions.assertNotNull(response);
+        assert (response instanceof ErrorResponse);
+        Assertions.assertEquals( ((ErrorResponse) response).message(), "Error: unauthorized");
+    }
 
 
 

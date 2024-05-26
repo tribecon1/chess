@@ -3,7 +3,6 @@ package dataaccess.dao.memoryDao;
 import chess.ChessGame;
 import dataaccess.dao.GameDao;
 import model.GameData;
-import response.ErrorResponse;
 import response.ResponseType;
 
 import java.util.ArrayList;
@@ -52,7 +51,6 @@ public class MemoryGameDao implements GameDao {
         for (GameData game : gameDataList) {
             userFriendlyGameList.add(new GameData(game.gameID(), game.whiteUsername(), game.blackUsername(), game.gameName(), null));
         }
-        //return gameDataList;
         return userFriendlyGameList;
     }
 

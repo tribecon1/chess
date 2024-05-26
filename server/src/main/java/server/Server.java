@@ -1,5 +1,6 @@
 package server;
 
+import dataaccess.DataAccessException;
 import dataaccess.dao.memoryDao.MemoryAuthDao;
 import dataaccess.dao.memoryDao.MemoryGameDao;
 import dataaccess.dao.memoryDao.MemoryUserDao;
@@ -15,10 +16,18 @@ import service.UserService;
 import spark.*;
 import dataaccess.dao.*;
 
+import java.util.HashMap;
+
 public class Server {
     private final UserDao userDao;
     private final GameDao gameDao;
     private final AuthDao authDao;
+
+    private static final HashMap<String, Integer> ErrorCodeMessageMap = new HashMap<>() {{
+        put("Error: bad request", 400);
+        put("Error: unauthorized", 401);
+        put("Error: already taken", 403);
+    }};
 
     public Server(){
         this.userDao = new MemoryUserDao();
@@ -59,6 +68,13 @@ public class Server {
         }
     }
 
+    //ONLY if try/catch is required
+    private static String ErrorTranslator(Response res, DataAccessException thrownError){
+        res.status(ErrorCodeMessageMap.get(thrownError.getMessage()));
+        return SerializerDeserializer.ConvertToJSON(thrownError);
+    }
+
+
     private static String SuccessResponse(Response res, ResponseType serviceResponse){
         res.status(200);
         return SerializerDeserializer.ConvertToJSON(serviceResponse);
@@ -71,18 +87,28 @@ public class Server {
 
 
 
+
     private void createRoutes() {
         //GET list of games
         Spark.get("/game", (req, res) -> {
             String authToken = req.headers("authorization");
             GameService gameService = new GameService(this.gameDao, this.authDao);
+
+            try {
+                ResponseType response = gameService.listGames(authToken);
+                return SuccessResponse(res, response);
+            }
+            catch (DataAccessException e){
+                return ErrorTranslator(res, e);
+            }
+            /*
             ResponseType response = gameService.listGames(authToken);
             if (response instanceof ListGamesResponse){
                 return SuccessResponse(res, response);
             }
             else {
                 return ErrorCreator(res, response);
-            }
+            }*/
         });
 
         //POST creating a new game, login, register
@@ -100,31 +126,60 @@ public class Server {
                 case "game":
                     String authToken = req.headers("authorization");
                     CreateGameRequest newGameRequest = SerializerDeserializer.ConvertFromJSON(req.body(), CreateGameRequest.class);
+
+                    try {
+                        response = gameService.createGame(authToken, newGameRequest);
+                        return SuccessResponse(res, response);
+                    }
+                    catch (DataAccessException e) {
+                        return ErrorTranslator(res, e);
+                    }
+                    /*
                     response = gameService.createGame(authToken, newGameRequest);
                     if (response instanceof CreateGameResponse) {
                         return SuccessResponse(res, response);
                     }
                     else{
                         return ErrorCreator(res, response);
-                    }
+                    }*/
                 case "session":
                     LoginRequest currUser = SerializerDeserializer.ConvertFromJSON(req.body(), LoginRequest.class);
+
+                    try {
+                        response = userService.login(currUser);
+                        return SuccessResponse(res, response);
+                    }
+                    catch (DataAccessException e) {
+                        return ErrorTranslator(res, e);
+                    }
+                    /*
                     response = userService.login(currUser);
                     if (response instanceof AuthData){
                         return SuccessResponse(res, response);
                     }
                     else{
                         return ErrorCreator(res, response);
-                    }
+                    }*/
                 case "user":
                     UserData newUser = SerializerDeserializer.ConvertFromJSON(req.body(), UserData.class);
+                    //TESTING
+                    try{
+                        response = userService.register(newUser);
+                        if (response instanceof AuthData){
+                            return SuccessResponse(res, response);
+                        }
+                    }
+                    catch (DataAccessException e){
+                       return ErrorTranslator(res, e);
+                    }
+                    /*
                     response = userService.register(newUser);
                     if (response instanceof AuthData){
                         return SuccessResponse(res, response);
                     }
                     else {
                         return ErrorCreator(res, response);
-                    }
+                    }*/
                 default:
                     res.status(404);
                     res.body("Error: Not found");
@@ -140,13 +195,22 @@ public class Server {
             String authToken = req.headers("authorization");
             JoinGameRequest joinGameRequest = SerializerDeserializer.ConvertFromJSON(req.body(), JoinGameRequest.class);
             GameService gameService = new GameService(this.gameDao, this.authDao);
+
+            try {
+                ResponseType response = gameService.joinGame(authToken, joinGameRequest); //if this works, set to void
+                return BlankSuccessResponse(res);
+            }
+            catch (DataAccessException e) {
+                return ErrorTranslator(res, e);
+            }
+            /*
             ResponseType response = gameService.joinGame(authToken, joinGameRequest);
             if (response == null){
                 return BlankSuccessResponse(res);
             }
             else {
                 return ErrorCreator(res, response);
-            }
+            }*/
         });
 
         //DELETE clear all databases/DAOs or logout
@@ -170,13 +234,22 @@ public class Server {
                 case "session":
                     String authToken = req.headers("authorization");
                     UserService userService = new UserService(this.userDao, this.authDao);
+
+                    try{
+                        response = userService.logout(authToken); //if this works, set to void
+                        return BlankSuccessResponse(res);
+                    }
+                    catch (DataAccessException e) {
+                        return ErrorTranslator(res, e);
+                    }
+                    /*
                     response = userService.logout(authToken);
                     if (response == null){
                         return BlankSuccessResponse(res);
                     }
                     else{
                         return ErrorCreator(res, response);
-                    }
+                    }*/
                 default:
                     res.status(500);
                     res.body("Error: Not found");

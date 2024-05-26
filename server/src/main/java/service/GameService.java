@@ -33,7 +33,8 @@ public class GameService {
         if (authFound != null) {
             GameData currGame = gameDaoGS.getGame(req.gameID());
             if (currGame == null || req.playerColor() == null || req.gameID() == 0) {
-                return new ErrorResponse(400, "Error: bad request");
+                //return new ErrorResponse(400, "Error: bad request");
+                throw new DataAccessException("Error: bad request");
             }
             else {
                 if (req.playerColor().equalsIgnoreCase("WHITE")) {
@@ -42,7 +43,8 @@ public class GameService {
                         return gameDaoGS.updateGame(currGame, updatedGame);
                     }
                     else{
-                        return new ErrorResponse(403, "Error: already taken");
+                        //return new ErrorResponse(403, "Error: already taken");
+                        throw new DataAccessException("Error: already taken");
                     }
                 }
                 else if (req.playerColor().equalsIgnoreCase("BLACK")) {
@@ -51,15 +53,18 @@ public class GameService {
                         return gameDaoGS.updateGame(currGame, updatedGame);
                     }
                     else{
-                        return new ErrorResponse(403, "Error: already taken");
+                        //return new ErrorResponse(403, "Error: already taken");
+                        throw new DataAccessException("Error: already taken");
                     }
                 }
                 else {
-                    return new ErrorResponse(400, "Error: bad request");
+                    //return new ErrorResponse(400, "Error: bad request");
+                    throw new DataAccessException("Error: bad request");
                 }
             }
         }
-        return new ErrorResponse(401, "Error: unauthorized");
+        //return new ErrorResponse(401, "Error: unauthorized");
+        throw new DataAccessException("Error: unauthorized");
     }
 
 
@@ -68,7 +73,8 @@ public class GameService {
         if (authFound != null){
             return new ListGamesResponse(gameDaoGS.listGames());
         }
-        return new ErrorResponse(401,"Error: unauthorized");
+        //return new ErrorResponse(401,"Error: unauthorized");
+        throw new DataAccessException("Error: unauthorized");
     }
 
 
@@ -77,8 +83,10 @@ public class GameService {
             if (!gameDaoGS.getGameByName(req.gameName())){
                 return new CreateGameResponse(gameDaoGS.createGame(req.gameName()).gameID());
             }
-            return new ErrorResponse(400, "Error: bad request");
+            //return new ErrorResponse(400, "Error: bad request");
+            throw new DataAccessException("Error: bad request");
         }
-        return new ErrorResponse(401,"Error: unauthorized");
+        //return new ErrorResponse(401,"Error: unauthorized");
+        throw new DataAccessException("Error: unauthorized");
     }
 }

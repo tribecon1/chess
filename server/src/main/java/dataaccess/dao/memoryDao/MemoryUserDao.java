@@ -15,13 +15,13 @@ public class MemoryUserDao implements UserDao {
     }
 
     @Override
-    public void createUser(String username, String password, String email) throws DataAccessException {
+    public void createUser(String username, String password, String email) {
         UserData newUser = new UserData(username, password, email);
         users.add(newUser);
     }
 
     @Override
-    public UserData getUser(String username) throws DataAccessException {
+    public UserData getUser(String username) {
         for (UserData user : users) {
             if (user.username().equals(username)){
                 return user;
@@ -31,7 +31,7 @@ public class MemoryUserDao implements UserDao {
     }
 
     @Override
-    public void clearUser() throws DataAccessException {
+    public void clearUser() {
         users.clear();
     }
 }
