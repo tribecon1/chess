@@ -11,4 +11,5 @@ public interface UserDao {
 
     void clearUser() throws DataAccessException;
 
+    int getDatabaseSize();
 }

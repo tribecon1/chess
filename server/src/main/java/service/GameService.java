@@ -9,7 +9,6 @@ import request.CreateGameRequest;
 import request.JoinGameRequest;
 import response.CreateGameResponse;
 import response.ListGamesResponse;
-import response.ResponseType;
 
 
 public class GameService {
@@ -74,9 +73,9 @@ public class GameService {
     }
 
 
-    public ResponseType createGame(String authToken, CreateGameRequest req) throws DataAccessException {
+    public CreateGameResponse createGame(String authToken, CreateGameRequest req) throws DataAccessException {
         if (authCheckerGameService(authToken) != null) {
-            if (!gameDaoGS.getGameByName(req.gameName())){
+            if (req.gameName() != null && !gameDaoGS.getGameByName(req.gameName())){
                 return new CreateGameResponse(gameDaoGS.createGame(gameIDCreator++, req.gameName()).gameID());
             }
             throw new DataAccessException("Error: bad request");

@@ -2,7 +2,6 @@ package dataaccess.dao;
 
 import dataaccess.DataAccessException;
 import model.GameData;
-import response.ResponseType;
 
 import java.util.Collection;
 
@@ -19,4 +18,6 @@ public interface GameDao {
     void clearGame() throws DataAccessException;
 
     boolean getGameByName(String gameName) throws DataAccessException;
+
+    int getDatabaseSize();
 }

@@ -41,5 +41,9 @@ public class MemoryAuthDao implements AuthDao {
         authDataMap.clear();
     }
 
+    @Override
+    public int getDatabaseSize(){
+        return authDataMap.size();
+    }
 
 }
