@@ -7,7 +7,7 @@ public class SerializerDeserializer {
 
     private static final Gson SERIALIZER = new Gson();
 
-    public static String ConvertToJSON(Object obj){
+    public static String convertToJSON(Object obj){
         if (obj instanceof Exception){
             JsonObject json = new JsonObject();
             json.addProperty("message", ((Exception) obj).getMessage());
@@ -16,7 +16,7 @@ public class SerializerDeserializer {
         return SERIALIZER.toJson(obj);
     }
 
-    public static <T> T ConvertFromJSON(String json, Class<T> objClass){
+    public static <T> T convertFromJSON(String json, Class<T> objClass){
         return SERIALIZER.fromJson(json, objClass);
     }
 

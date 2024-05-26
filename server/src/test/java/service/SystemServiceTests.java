@@ -39,7 +39,7 @@ public class SystemServiceTests {
     }
 
     @Test
-    public void ClearSuccess() throws DataAccessException {
+    public void clearSuccess() throws DataAccessException {
         assert (givenAuthDao.getDatabaseSize() != 0);
         assert (givenUserDao.getDatabaseSize() != 0);
         assert (givenGameDao.getDatabaseSize() != 0);

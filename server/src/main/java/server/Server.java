@@ -59,13 +59,13 @@ public class Server {
 
     private static String errorTranslator(Response res, DataAccessException thrownError){
         res.status(ERRORCODEMESSAGEMAP.get(thrownError.getMessage()));
-        return SerializerDeserializer.ConvertToJSON(thrownError);
+        return SerializerDeserializer.convertToJSON(thrownError);
     }
 
 
     private static String successResponse(Response res, ResponseType serviceResponse){
         res.status(200);
-        return SerializerDeserializer.ConvertToJSON(serviceResponse);
+        return SerializerDeserializer.convertToJSON(serviceResponse);
     }
 
     private static String blankSuccessResponse(Response res){
@@ -99,7 +99,7 @@ public class Server {
             switch (givenPath) {
                 case "game":
                     String authToken = req.headers("authorization");
-                    CreateGameRequest newGameRequest = SerializerDeserializer.ConvertFromJSON(req.body(), CreateGameRequest.class);
+                    CreateGameRequest newGameRequest = SerializerDeserializer.convertFromJSON(req.body(), CreateGameRequest.class);
                     try {
                         response = gameService.createGame(authToken, newGameRequest);
                         return successResponse(res, response);
@@ -108,7 +108,7 @@ public class Server {
                         return errorTranslator(res, e);
                     }
                 case "session":
-                    LoginRequest currUser = SerializerDeserializer.ConvertFromJSON(req.body(), LoginRequest.class);
+                    LoginRequest currUser = SerializerDeserializer.convertFromJSON(req.body(), LoginRequest.class);
                     try {
                         response = userService.login(currUser);
                         return successResponse(res, response);
@@ -117,7 +117,7 @@ public class Server {
                         return errorTranslator(res, e);
                     }
                 case "user":
-                    UserData newUser = SerializerDeserializer.ConvertFromJSON(req.body(), UserData.class);
+                    UserData newUser = SerializerDeserializer.convertFromJSON(req.body(), UserData.class);
                     try{
                         response = userService.register(newUser);
                         return successResponse(res, response);
@@ -137,7 +137,7 @@ public class Server {
                 return badRequestChecker(req, res);
             }
             String authToken = req.headers("authorization");
-            JoinGameRequest joinGameRequest = SerializerDeserializer.ConvertFromJSON(req.body(), JoinGameRequest.class);
+            JoinGameRequest joinGameRequest = SerializerDeserializer.convertFromJSON(req.body(), JoinGameRequest.class);
             GameService gameService = new GameService(this.gameDao, this.authDao);
             try {
                 gameService.joinGame(authToken, joinGameRequest);
