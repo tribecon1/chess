@@ -24,7 +24,7 @@ public class PawnMoveCalculator {
 
             if (myPosition.getRow() == 8){ //PROMOTION Edge Case, White
                 QueenMoveCalculator.queenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
-                BishopMoveCalculator.BishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen
+                BishopMoveCalculator.bishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen
                 KnightMoveCalculator.knightMoves(board, myPosition, givenHashSet); //if KNIGHT chosen
                 RookMoveCalculator.rookMoves(board, myPosition, givenHashSet); //if ROOK chosen
             }
@@ -65,7 +65,7 @@ public class PawnMoveCalculator {
 
             if (myPosition.getRow() == 1){ //PROMOTION Edge Case, Black
                 QueenMoveCalculator.queenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
-                BishopMoveCalculator.BishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen
+                BishopMoveCalculator.bishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen
                 KnightMoveCalculator.knightMoves(board, myPosition, givenHashSet); //if KNIGHT chosen
                 RookMoveCalculator.rookMoves(board, myPosition, givenHashSet); //if ROOK chosen
             }

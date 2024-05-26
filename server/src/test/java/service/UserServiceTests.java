@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 public class UserServiceTests {
 
     private static UserService userService;
-    private static final UserData testUser = new UserData("ToBeLoggedOut","1234", "t@gmail.com");
+    private static final UserData TESTUSER = new UserData("ToBeLoggedOut","1234", "t@gmail.com");
     private static UserDao givenUserDao;
     private static AuthDao givenAuthDao;
 
@@ -61,12 +61,12 @@ public class UserServiceTests {
     //Logout Positive and Negative Tests
     @Test
     public void logoutSuccessTest() throws DataAccessException {
-        AuthData authData = userService.register(testUser);
+        AuthData authData = userService.register(TESTUSER);
         Assertions.assertDoesNotThrow(() -> userService.logout(authData.authToken()));
     }
     @Test
     public void logoutFailTest1() throws DataAccessException { //wrong authToken
-        userService.register(testUser);
+        userService.register(TESTUSER);
         DataAccessException expectedError = Assertions.assertThrows(DataAccessException.class, () -> userService.logout("fakeAuthToken"));
         Assertions.assertEquals("Error: unauthorized", expectedError.getMessage());
     }

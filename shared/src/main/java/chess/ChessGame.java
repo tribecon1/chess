@@ -262,7 +262,7 @@ public class ChessGame {
         else{
             ChessGame.TeamColor currPieceTeam = this.board.getPiece(startPosition).getTeamColor();
             Collection <ChessMove> possibleMoves = currPiece.pieceMoves(board, startPosition);
-            Collection <ChessMove> possibleMoves_TEMPLATE = currPiece.pieceMoves(board, startPosition);
+            Collection <ChessMove> possibleMovesTEMPLATE = currPiece.pieceMoves(board, startPosition);
             Collection <ChessMove> validMoves = new HashSet<>();
 
             try {
@@ -282,10 +282,10 @@ public class ChessGame {
                         clonedBoard.addPiece(move.getEndPosition(), currPiece);
                         clonedBoard.removePiece(move.getStartPosition());
                         if (isInCheck(clonedBoard, currPieceTeam)){ //using overloaded isInCheck to check potential consequences of a move
-                            possibleMoves_TEMPLATE.remove(move);
+                            possibleMovesTEMPLATE.remove(move);
                         }
                     }
-                    validMoves = possibleMoves_TEMPLATE;
+                    validMoves = possibleMovesTEMPLATE;
                     kingsFinder(this.board);//to set it back to original board
 
                     //Castling code
@@ -482,8 +482,8 @@ public class ChessGame {
 
     private void kingsFinder(ChessBoard clonedBoard){
         //for auto-grader test scenarios
-        boolean WKingFound = false;
-        boolean BKingFound = false;
+        boolean wKingFound = false;
+        boolean bKingFound = false;
 
         for (int i = 1; i < 9; i++) { //Treat as row/column #s, not index values/one less
             for (int j = 1; j < 9; j++) {
@@ -491,19 +491,19 @@ public class ChessGame {
                         clonedBoard.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING){
                     if (clonedBoard.getPiece(new ChessPosition(i, j)).getTeamColor() == TeamColor.WHITE){
                         this.wKingPos = new ChessPosition(i, j);
-                        WKingFound = true;
+                        wKingFound = true;
                     }
                     else{
                         this.bKingPos = new ChessPosition(i, j);
-                        BKingFound = true;
+                        bKingFound = true;
                     }
                 }
             }
         }
-        if (!WKingFound){ //literally only for the test scenarios, this would never happen in a game
+        if (!wKingFound){ //literally only for the test scenarios, this would never happen in a game
             wKingPos = null;
         }
-        if (!BKingFound){
+        if (!bKingFound){
             bKingPos = null;
         }
     }

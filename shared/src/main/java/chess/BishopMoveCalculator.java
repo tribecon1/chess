@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 public class BishopMoveCalculator {
 
-    public static HashSet<ChessMove> BishopMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet) {
+    public static HashSet<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet) {
         ChessMove upRight = PossibleMoves.upRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         ChessMove upLeft = PossibleMoves.upLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         ChessMove downRight = PossibleMoves.downRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);

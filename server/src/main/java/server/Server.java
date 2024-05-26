@@ -22,7 +22,7 @@ public class Server {
     private final GameDao gameDao;
     private final AuthDao authDao;
 
-    private static final HashMap<String, Integer> ErrorCodeMessageMap = new HashMap<>() {{
+    private static final HashMap<String, Integer> ERRORCODEMESSAGEMAP = new HashMap<>() {{
         put("Error: bad request", 400);
         put("Error: unauthorized", 401);
         put("Error: already taken", 403);
@@ -47,7 +47,7 @@ public class Server {
         return Spark.port();
     }
 
-    private static Response BadRequestChecker(Request req, Response res){
+    private static Response badRequestChecker(Request req, Response res){
         if (req.body().isEmpty()){
             res.status(400);
             res.body("Error: bad request");
@@ -57,18 +57,18 @@ public class Server {
     }
 
 
-    private static String ErrorTranslator(Response res, DataAccessException thrownError){
-        res.status(ErrorCodeMessageMap.get(thrownError.getMessage()));
+    private static String errorTranslator(Response res, DataAccessException thrownError){
+        res.status(ERRORCODEMESSAGEMAP.get(thrownError.getMessage()));
         return SerializerDeserializer.ConvertToJSON(thrownError);
     }
 
 
-    private static String SuccessResponse(Response res, ResponseType serviceResponse){
+    private static String successResponse(Response res, ResponseType serviceResponse){
         res.status(200);
         return SerializerDeserializer.ConvertToJSON(serviceResponse);
     }
 
-    private static String BlankSuccessResponse(Response res){
+    private static String blankSuccessResponse(Response res){
         res.status(200);
         return "{}";
     }
@@ -81,10 +81,10 @@ public class Server {
             GameService gameService = new GameService(this.gameDao, this.authDao);
             try {
                 ListGamesResponse response = gameService.listGames(authToken);
-                return SuccessResponse(res, response);
+                return successResponse(res, response);
             }
             catch (DataAccessException e){
-                return ErrorTranslator(res, e);
+                return errorTranslator(res, e);
             }
         });
         //POST creating a new game, login, register
@@ -93,8 +93,8 @@ public class Server {
             UserService userService = new UserService(this.userDao, this.authDao); //needed objects throughout this branch
             GameService gameService = new GameService(this.gameDao, this.authDao);
             ResponseType response;
-            if (BadRequestChecker(req, res) != null) {
-                return BadRequestChecker(req, res);
+            if (badRequestChecker(req, res) != null) {
+                return badRequestChecker(req, res);
             }
             switch (givenPath) {
                 case "game":
@@ -102,28 +102,28 @@ public class Server {
                     CreateGameRequest newGameRequest = SerializerDeserializer.ConvertFromJSON(req.body(), CreateGameRequest.class);
                     try {
                         response = gameService.createGame(authToken, newGameRequest);
-                        return SuccessResponse(res, response);
+                        return successResponse(res, response);
                     }
                     catch (DataAccessException e) {
-                        return ErrorTranslator(res, e);
+                        return errorTranslator(res, e);
                     }
                 case "session":
                     LoginRequest currUser = SerializerDeserializer.ConvertFromJSON(req.body(), LoginRequest.class);
                     try {
                         response = userService.login(currUser);
-                        return SuccessResponse(res, response);
+                        return successResponse(res, response);
                     }
                     catch (DataAccessException e) {
-                        return ErrorTranslator(res, e);
+                        return errorTranslator(res, e);
                     }
                 case "user":
                     UserData newUser = SerializerDeserializer.ConvertFromJSON(req.body(), UserData.class);
                     try{
                         response = userService.register(newUser);
-                        return SuccessResponse(res, response);
+                        return successResponse(res, response);
                     }
                     catch (DataAccessException e){
-                       return ErrorTranslator(res, e);
+                       return errorTranslator(res, e);
                     }
                 default:
                     res.status(404);
@@ -133,18 +133,18 @@ public class Server {
         });
         //PUT join game
         Spark.put("/game", (req, res) -> {
-            if (BadRequestChecker(req, res) != null) {
-                return BadRequestChecker(req, res);
+            if (badRequestChecker(req, res) != null) {
+                return badRequestChecker(req, res);
             }
             String authToken = req.headers("authorization");
             JoinGameRequest joinGameRequest = SerializerDeserializer.ConvertFromJSON(req.body(), JoinGameRequest.class);
             GameService gameService = new GameService(this.gameDao, this.authDao);
             try {
                 gameService.joinGame(authToken, joinGameRequest);
-                return BlankSuccessResponse(res);
+                return blankSuccessResponse(res);
             }
             catch (DataAccessException e) {
-                return ErrorTranslator(res, e);
+                return errorTranslator(res, e);
             }
         });
         //DELETE clear all databases/DAOs or logout
@@ -155,20 +155,20 @@ public class Server {
                     SystemService systemService = new SystemService(this.gameDao, this.authDao, this.userDao);
                     try{
                         systemService.clear();
-                        return BlankSuccessResponse(res);
+                        return blankSuccessResponse(res);
                     }
                     catch (DataAccessException e){
-                        return ErrorTranslator(res, e);
+                        return errorTranslator(res, e);
                     }
                 case "session":
                     String authToken = req.headers("authorization");
                     UserService userService = new UserService(this.userDao, this.authDao);
                     try{
                         userService.logout(authToken);
-                        return BlankSuccessResponse(res);
+                        return blankSuccessResponse(res);
                     }
                     catch (DataAccessException e) {
-                        return ErrorTranslator(res, e);
+                        return errorTranslator(res, e);
                     }
                 default:
                     res.status(500);

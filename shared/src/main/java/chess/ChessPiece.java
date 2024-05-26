@@ -78,7 +78,7 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         HashSet<ChessMove> possibleMoves = new HashSet<>(); //diamond format, since datatype is implied
         return switch (this.type) {
-            case BISHOP -> BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
+            case BISHOP -> BishopMoveCalculator.bishopMoves(board, myPosition, possibleMoves);
             case KING -> KingMoveCalculator.kingMoves(board, myPosition, possibleMoves);
             case KNIGHT -> KnightMoveCalculator.knightMoves(board, myPosition, possibleMoves);
             case ROOK -> RookMoveCalculator.rookMoves(board, myPosition, possibleMoves);
