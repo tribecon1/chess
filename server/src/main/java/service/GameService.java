@@ -16,6 +16,7 @@ public class GameService {
 
     private final GameDao gameDaoGS;
     private final AuthDao authDaoGS;
+    private static int gameIDCreator = 1;
 
     public GameService(GameDao givenGameDao, AuthDao givenAuthDao){
         this.gameDaoGS = givenGameDao;
@@ -76,7 +77,7 @@ public class GameService {
     public ResponseType createGame(String authToken, CreateGameRequest req) throws DataAccessException {
         if (authCheckerGameService(authToken) != null) {
             if (!gameDaoGS.getGameByName(req.gameName())){
-                return new CreateGameResponse(gameDaoGS.createGame(req.gameName()).gameID());
+                return new CreateGameResponse(gameDaoGS.createGame(gameIDCreator++, req.gameName()).gameID());
             }
             throw new DataAccessException("Error: bad request");
         }

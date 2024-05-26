@@ -3,7 +3,6 @@ package dataaccess.dao.memoryDao;
 import chess.ChessGame;
 import dataaccess.dao.GameDao;
 import model.GameData;
-import response.ResponseType;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,8 +17,8 @@ public class MemoryGameDao implements GameDao {
     }
 
     @Override
-    public GameData createGame(String gameName) {
-        GameData newGame = new GameData(gameDataList.size()+1, null, null, gameName, new ChessGame());
+    public GameData createGame(int gameID, String gameName) {
+        GameData newGame = new GameData(gameID, null, null, gameName, new ChessGame());
         gameDataList.add(newGame);
         return newGame;
     }
