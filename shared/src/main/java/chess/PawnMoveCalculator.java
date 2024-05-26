@@ -13,7 +13,7 @@ public class PawnMoveCalculator {
         }
     }
 
-    public static HashSet<ChessMove> PawnMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet, ChessGame.TeamColor pawnColor){
+    public static HashSet<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet, ChessGame.TeamColor pawnColor){
 
         if (pawnColor == ChessGame.TeamColor.WHITE){
             ChessPosition oneUp = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn());
@@ -23,10 +23,10 @@ public class PawnMoveCalculator {
 
 
             if (myPosition.getRow() == 8){ //PROMOTION Edge Case, White
-                QueenMoveCalculator.QueenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
+                QueenMoveCalculator.queenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
                 BishopMoveCalculator.BishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen
-                KnightMoveCalculator.KnightMoves(board, myPosition, givenHashSet); //if KNIGHT chosen
-                RookMoveCalculator.RookMoves(board, myPosition, givenHashSet); //if ROOK chosen
+                KnightMoveCalculator.knightMoves(board, myPosition, givenHashSet); //if KNIGHT chosen
+                RookMoveCalculator.rookMoves(board, myPosition, givenHashSet); //if ROOK chosen
             }
             if (board.getPiece(oneUp) == null){
                 if (myPosition.getRow() == 2 && board.getPiece(twoUp) == null){ //START Edge Case, White
@@ -64,10 +64,10 @@ public class PawnMoveCalculator {
             ChessPosition downLeft = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-1);
 
             if (myPosition.getRow() == 1){ //PROMOTION Edge Case, Black
-                QueenMoveCalculator.QueenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
+                QueenMoveCalculator.queenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
                 BishopMoveCalculator.BishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen
-                KnightMoveCalculator.KnightMoves(board, myPosition, givenHashSet); //if KNIGHT chosen
-                RookMoveCalculator.RookMoves(board, myPosition, givenHashSet); //if ROOK chosen
+                KnightMoveCalculator.knightMoves(board, myPosition, givenHashSet); //if KNIGHT chosen
+                RookMoveCalculator.rookMoves(board, myPosition, givenHashSet); //if ROOK chosen
             }
             if (board.getPiece(oneDown) == null){
                 if(myPosition.getRow() == 7 && board.getPiece(twoDown) == null){

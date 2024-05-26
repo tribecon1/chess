@@ -4,15 +4,15 @@ import java.util.HashSet;
 
 public class KingMoveCalculator {
 
-    public static HashSet<ChessMove> KingMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet) {
-        ChessMove upRight = PossibleMoves.UpRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove upLeft = PossibleMoves.UpLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove downRight = PossibleMoves.DownRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove downLeft = PossibleMoves.DownLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove Up = PossibleMoves.UpMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove Down = PossibleMoves.DownMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove Right = PossibleMoves.RightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove Left = PossibleMoves.LeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+    public static HashSet<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet) {
+        ChessMove upRight = PossibleMoves.upRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove upLeft = PossibleMoves.upLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove downRight = PossibleMoves.downRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove downLeft = PossibleMoves.downLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove up = PossibleMoves.upMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove down = PossibleMoves.downMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove right = PossibleMoves.rightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove left = PossibleMoves.leftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
 
 
         if(upRight != null){
@@ -27,17 +27,17 @@ public class KingMoveCalculator {
         if(downLeft != null){
             givenHashSet.add(downLeft);
         }
-        if(Up != null){
-            givenHashSet.add(Up);
+        if(up != null){
+            givenHashSet.add(up);
         }
-        if(Down != null){
-            givenHashSet.add(Down);
+        if(down != null){
+            givenHashSet.add(down);
         }
-        if(Right != null){
-            givenHashSet.add(Right);
+        if(right != null){
+            givenHashSet.add(right);
         }
-        if(Left != null){
-            givenHashSet.add(Left);
+        if(left != null){
+            givenHashSet.add(left);
         }
         return givenHashSet;
     }

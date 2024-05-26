@@ -4,40 +4,40 @@ import java.util.HashSet;
 
 public class KnightMoveCalculator {
 
-    public static HashSet<ChessMove> KnightMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet){
-        ChessMove LForwardRight = PossibleMoves.LForwardRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove LForwardLeft = PossibleMoves.LForwardLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove LRightUp = PossibleMoves.LRightUpMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove LRightDown = PossibleMoves.LRightDownMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove LBackwardRight = PossibleMoves.LBackwardRightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove LBackwardLeft = PossibleMoves.LBackwardLeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove LLeftUp = PossibleMoves.LLeftUpMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove LLeftDown = PossibleMoves.LLeftDownMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+    public static HashSet<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet){
+        ChessMove forwardRightL = PossibleMoves.forwardRightLMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove forwardLeftL = PossibleMoves.forwardLeftLMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove rightUpL = PossibleMoves.rightUpLMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove rightDownL = PossibleMoves.rightDownLMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove backwardRightL = PossibleMoves.backwardRightLMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove backwardLeftL = PossibleMoves.backwardLeftLMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove leftUpL = PossibleMoves.leftUpLMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove leftDownL = PossibleMoves.leftDownLMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
 
 
-        if(LForwardRight != null){
-            givenHashSet.add(LForwardRight);
+        if(forwardRightL != null){
+            givenHashSet.add(forwardRightL);
         }
-        if(LForwardLeft != null){
-            givenHashSet.add(LForwardLeft);
+        if(forwardLeftL != null){
+            givenHashSet.add(forwardLeftL);
         }
-        if(LRightUp != null){
-            givenHashSet.add(LRightUp);
+        if(rightUpL != null){
+            givenHashSet.add(rightUpL);
         }
-        if(LRightDown != null){
-            givenHashSet.add(LRightDown);
+        if(rightDownL != null){
+            givenHashSet.add(rightDownL);
         }
-        if(LBackwardRight != null){
-            givenHashSet.add(LBackwardRight);
+        if(backwardRightL != null){
+            givenHashSet.add(backwardRightL);
         }
-        if(LBackwardLeft != null){
-            givenHashSet.add(LBackwardLeft);
+        if(backwardLeftL != null){
+            givenHashSet.add(backwardLeftL);
         }
-        if(LLeftUp != null){
-            givenHashSet.add(LLeftUp);
+        if(leftUpL != null){
+            givenHashSet.add(leftUpL);
         }
-        if(LLeftDown != null){
-            givenHashSet.add(LLeftDown);
+        if(leftDownL != null){
+            givenHashSet.add(leftDownL);
         }
 
         return givenHashSet;

@@ -4,36 +4,36 @@ import java.util.HashSet;
 
 public class RookMoveCalculator {
 
-    public static HashSet<ChessMove> RookMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet) {
-        ChessMove Up = PossibleMoves.UpMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove Down = PossibleMoves.DownMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove Right = PossibleMoves.RightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
-        ChessMove Left = PossibleMoves.LeftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+    public static HashSet<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet) {
+        ChessMove up = PossibleMoves.upMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove down = PossibleMoves.downMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove right = PossibleMoves.rightMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+        ChessMove left = PossibleMoves.leftMethod(board, myPosition, myPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
 
 
         ChessPosition tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
-        while(Up != null){
-            givenHashSet.add(Up);
+        while(up != null){
+            givenHashSet.add(up);
             tempPosition = new ChessPosition(tempPosition.getRow()+1, tempPosition.getColumn());
-            Up = PossibleMoves.UpMethod(board, myPosition, tempPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+            up = PossibleMoves.upMethod(board, myPosition, tempPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         }
         tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
-        while(Down != null){
-            givenHashSet.add(Down);
+        while(down != null){
+            givenHashSet.add(down);
             tempPosition = new ChessPosition(tempPosition.getRow()-1, tempPosition.getColumn());
-            Down = PossibleMoves.DownMethod(board, myPosition, tempPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+            down = PossibleMoves.downMethod(board, myPosition, tempPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         }
         tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
-        while(Right != null){
-            givenHashSet.add(Right);
+        while(right != null){
+            givenHashSet.add(right);
             tempPosition = new ChessPosition(tempPosition.getRow(), tempPosition.getColumn()+1);
-            Right = PossibleMoves.RightMethod(board, myPosition, tempPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+            right = PossibleMoves.rightMethod(board, myPosition, tempPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         }
         tempPosition = new ChessPosition(myPosition.getRow(), myPosition.getColumn());
-        while(Left != null){
-            givenHashSet.add(Left);
+        while(left != null){
+            givenHashSet.add(left);
             tempPosition = new ChessPosition(tempPosition.getRow(), tempPosition.getColumn()-1);
-            Left = PossibleMoves.LeftMethod(board, myPosition, tempPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
+            left = PossibleMoves.leftMethod(board, myPosition, tempPosition, board.getPiece(myPosition).getTeamColor(), givenHashSet);
         }
 
         return givenHashSet;

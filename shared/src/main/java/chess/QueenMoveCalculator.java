@@ -4,9 +4,9 @@ import java.util.HashSet;
 
 public class QueenMoveCalculator {
 
-    public static HashSet<ChessMove> QueenMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet) {
+    public static HashSet<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet) {
         BishopMoveCalculator.BishopMoves(board, myPosition, givenHashSet);
-        RookMoveCalculator.RookMoves(board, myPosition, givenHashSet);
+        RookMoveCalculator.rookMoves(board, myPosition, givenHashSet);
         return givenHashSet;
 
     }

@@ -13,18 +13,18 @@ public class ChessGame {
     private TeamColor thisTeamsTurn;
     private ChessBoard board;
 
-    private ChessPosition WKingPos;
-    private ChessPosition BKingPos;
+    private ChessPosition wKingPos;
+    private ChessPosition bKingPos;
 
     //EXTRA CREDIT VARIABLES
     //Castling
-    private boolean WKingHasMoved;
-    private boolean LWRookHasMoved;
-    private boolean RWRookHasMoved;
+    private boolean wKingHasMoved;
+    private boolean lWRookHasMoved;
+    private boolean rWRookHasMoved;
 
-    private boolean BKingHasMoved;
-    private boolean LBRookHasMoved;
-    private boolean RBRookHasMoved;
+    private boolean bKingHasMoved;
+    private boolean lBRookHasMoved;
+    private boolean rBRookHasMoved;
 
     //En Passant
     private ChessPosition blackPawnForWhiteEnPassant;
@@ -43,17 +43,17 @@ public class ChessGame {
         this.board = new ChessBoard();
         this.board.resetBoard(); //puts all the pieces down in their places
         this.thisTeamsTurn = TeamColor.WHITE; //White always starts in Chess
-        WKingPos = new ChessPosition(1,5); //default Kings' positions in a game
-        BKingPos = new ChessPosition(8,5);
+        wKingPos = new ChessPosition(1,5); //default Kings' positions in a game
+        bKingPos = new ChessPosition(8,5);
 
         //EXTRA CREDIT VARIABLES for Castling
-        WKingHasMoved = false;
-        LWRookHasMoved = false;
-        RWRookHasMoved = false;
+        wKingHasMoved = false;
+        lWRookHasMoved = false;
+        rWRookHasMoved = false;
 
-        BKingHasMoved = false;
-        LBRookHasMoved = false;
-        RBRookHasMoved = false;
+        bKingHasMoved = false;
+        lBRookHasMoved = false;
+        rBRookHasMoved = false;
 
         //EXTRA CREDIT VARIABLES for En Passant
         blackPawnForWhiteEnPassant = null;
@@ -134,11 +134,11 @@ public class ChessGame {
 
     private void castlingMoves (ChessPiece currPiece, ChessPosition startPosition, Collection<ChessMove> validMoves){
         TeamColor currPieceTeam = currPiece.getTeamColor();
-        if (currPieceTeam == TeamColor.WHITE && startPosition.equals(WKingPos) && !WKingHasMoved){ //we've already checked that we aren't already in check, otherwise castling code wouldn't have run
+        if (currPieceTeam == TeamColor.WHITE && startPosition.equals(wKingPos) && !wKingHasMoved){ //we've already checked that we aren't already in check, otherwise castling code wouldn't have run
             if (this.board.getPiece(new ChessPosition(1,1))!= null &&
                     this.board.getPiece(new ChessPosition(1,1)).getPieceType() == ChessPiece.PieceType.ROOK &&
-                    !LWRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,1))){
-                ChessMove castlingKingLeftW = new ChessMove(WKingPos, new ChessPosition(1,3), null);
+                    !lWRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,1))){
+                ChessMove castlingKingLeftW = new ChessMove(wKingPos, new ChessPosition(1,3), null);
                 ChessMove castlingRookRightW = new ChessMove(new ChessPosition(1,1), new ChessPosition(1,4), null);
                 try {
                     ChessBoard clonedBoard = this.board.clone();
@@ -163,8 +163,8 @@ public class ChessGame {
             kingsFinder(this.board);
             if (this.board.getPiece(new ChessPosition(1,8))!= null &&
                     this.board.getPiece(new ChessPosition(1,8)).getPieceType() == ChessPiece.PieceType.ROOK &&
-                    !RWRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,8))){
-                ChessMove castlingKingRightW = new ChessMove(WKingPos, new ChessPosition(1,7), null);
+                    !rWRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,8))){
+                ChessMove castlingKingRightW = new ChessMove(wKingPos, new ChessPosition(1,7), null);
                 ChessMove castlingRookLeftW = new ChessMove(new ChessPosition(1,8), new ChessPosition(1,6), null);
                 try {
                     ChessBoard clonedBoard = this.board.clone();
@@ -187,11 +187,11 @@ public class ChessGame {
                 }
             }
         }
-        else if (currPieceTeam == TeamColor.BLACK && startPosition.equals(BKingPos) && !BKingHasMoved){
+        else if (currPieceTeam == TeamColor.BLACK && startPosition.equals(bKingPos) && !bKingHasMoved){
             if (this.board.getPiece(new ChessPosition(8,1))!= null &&
                     this.board.getPiece(new ChessPosition(8,1)).getPieceType() == ChessPiece.PieceType.ROOK &&
-                    !LBRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,1))){
-                ChessMove castlingKingLeftB = new ChessMove(BKingPos, new ChessPosition(8,3), null);
+                    !lBRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,1))){
+                ChessMove castlingKingLeftB = new ChessMove(bKingPos, new ChessPosition(8,3), null);
                 ChessMove castlingRookRightB = new ChessMove(new ChessPosition(8,1), new ChessPosition(8,4), null);
                 try {
                     ChessBoard clonedBoard = this.board.clone();
@@ -216,8 +216,8 @@ public class ChessGame {
             kingsFinder(this.board);
             if (this.board.getPiece(new ChessPosition(8,8))!= null &&
                     this.board.getPiece(new ChessPosition(8,8)).getPieceType() == ChessPiece.PieceType.ROOK &&
-                    !RBRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,8))){
-                ChessMove castlingKingRightB = new ChessMove(BKingPos, new ChessPosition(8,7), null);
+                    !rBRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,8))){
+                ChessMove castlingKingRightB = new ChessMove(bKingPos, new ChessPosition(8,7), null);
                 ChessMove castlingRookLeftB = new ChessMove(new ChessPosition(8,8), new ChessPosition(8,6), null);
                 try {
                     ChessBoard clonedBoard = this.board.clone();
@@ -356,50 +356,50 @@ public class ChessGame {
                 if (move.getEndPosition().getColumn()+1 < move.getStartPosition().getColumn()) { //castling move LEFT
                     switch (pieceBeingMoved.getTeamColor()) {
                         case WHITE:
-                            WKingPos = move.getEndPosition();
-                            WKingHasMoved = true;
+                            wKingPos = move.getEndPosition();
+                            wKingHasMoved = true;
 
                             this.board.addPiece(new ChessPosition(1, 4), this.board.getPiece(new ChessPosition(1, 1)));//moving ROOK
                             this.board.removePiece(new ChessPosition(1, 1));
-                            LWRookHasMoved = true;
+                            lWRookHasMoved = true;
                             break;
                         case BLACK:
-                            BKingPos = move.getEndPosition();
-                            BKingHasMoved = true;
+                            bKingPos = move.getEndPosition();
+                            bKingHasMoved = true;
 
                             this.board.addPiece(new ChessPosition(8, 4), this.board.getPiece(new ChessPosition(8, 1)));//moving ROOK
                             this.board.removePiece(new ChessPosition(8, 1));
-                            LBRookHasMoved = true;
+                            lBRookHasMoved = true;
                     }
                 }
                 else if (move.getEndPosition().getColumn()-1 > move.getStartPosition().getColumn()){ //castling move RIGHT
                     switch (pieceBeingMoved.getTeamColor()) {
                         case WHITE:
-                            WKingPos = move.getEndPosition();
-                            WKingHasMoved = true;
+                            wKingPos = move.getEndPosition();
+                            wKingHasMoved = true;
 
                             this.board.addPiece(new ChessPosition(1, 6), this.board.getPiece(new ChessPosition(1, 8)));//moving ROOK
                             this.board.removePiece(new ChessPosition(1, 8));
-                            RWRookHasMoved = true;
+                            rWRookHasMoved = true;
                             break;
                         case BLACK:
-                            BKingPos = move.getEndPosition();
-                            BKingHasMoved = true;
+                            bKingPos = move.getEndPosition();
+                            bKingHasMoved = true;
 
                             this.board.addPiece(new ChessPosition(8, 6), this.board.getPiece(new ChessPosition(8, 8)));//moving ROOK
                             this.board.removePiece(new ChessPosition(8, 8));
-                            RBRookHasMoved = true;
+                            rBRookHasMoved = true;
                     }
                 }
                 else{
                     switch (pieceBeingMoved.getTeamColor()){
                         case WHITE:
-                            WKingPos = move.getEndPosition();
-                            WKingHasMoved = true;
+                            wKingPos = move.getEndPosition();
+                            wKingHasMoved = true;
                             break;
                         case BLACK:
-                            BKingPos = move.getEndPosition();
-                            BKingHasMoved = true;
+                            bKingPos = move.getEndPosition();
+                            bKingHasMoved = true;
                     }
                 }
 
@@ -449,19 +449,19 @@ public class ChessGame {
             else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.ROOK){
                 switch (pieceBeingMoved.getTeamColor()){
                     case WHITE:
-                        if (move.getStartPosition().equals(new ChessPosition(1,1)) && !LWRookHasMoved){
-                            LWRookHasMoved = true;
+                        if (move.getStartPosition().equals(new ChessPosition(1,1)) && !lWRookHasMoved){
+                            lWRookHasMoved = true;
                         }
-                        else if (move.getStartPosition().equals(new ChessPosition(1,8)) && !RWRookHasMoved){
-                            RWRookHasMoved = true;
+                        else if (move.getStartPosition().equals(new ChessPosition(1,8)) && !rWRookHasMoved){
+                            rWRookHasMoved = true;
                         }
                         break;
                     case BLACK:
-                        if (move.getStartPosition().equals(new ChessPosition(8,1)) && !LBRookHasMoved){
-                            LBRookHasMoved = true;
+                        if (move.getStartPosition().equals(new ChessPosition(8,1)) && !lBRookHasMoved){
+                            lBRookHasMoved = true;
                         }
-                        else if (move.getStartPosition().equals(new ChessPosition(8,8)) && !RBRookHasMoved){
-                            RBRookHasMoved = true;
+                        else if (move.getStartPosition().equals(new ChessPosition(8,8)) && !rBRookHasMoved){
+                            rBRookHasMoved = true;
                         }
                 }
             }
@@ -490,21 +490,21 @@ public class ChessGame {
                 if (clonedBoard.getPiece(new ChessPosition(i, j)) != null &&
                         clonedBoard.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING){
                     if (clonedBoard.getPiece(new ChessPosition(i, j)).getTeamColor() == TeamColor.WHITE){
-                        this.WKingPos = new ChessPosition(i, j);
+                        this.wKingPos = new ChessPosition(i, j);
                         WKingFound = true;
                     }
                     else{
-                        this.BKingPos = new ChessPosition(i, j);
+                        this.bKingPos = new ChessPosition(i, j);
                         BKingFound = true;
                     }
                 }
             }
         }
         if (!WKingFound){ //literally only for the test scenarios, this would never happen in a game
-            WKingPos = null;
+            wKingPos = null;
         }
         if (!BKingFound){
-            BKingPos = null;
+            bKingPos = null;
         }
     }
 
@@ -540,10 +540,10 @@ public class ChessGame {
         kingsFinder(this.board);
 
         //similar code to the below commented out in Overload function
-        if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(WKingPos, this.board, TeamColor.WHITE)){
+        if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(wKingPos, this.board, TeamColor.WHITE)){
             return true;
         }
-        else if (teamColor == TeamColor.BLACK && wouldLandOnThisPiece(BKingPos,this.board, TeamColor.BLACK)){
+        else if (teamColor == TeamColor.BLACK && wouldLandOnThisPiece(bKingPos,this.board, TeamColor.BLACK)){
             return true;
         }
         else {
@@ -553,10 +553,10 @@ public class ChessGame {
 
     public boolean isInCheck(ChessBoard clonedBoard, TeamColor teamColor) { //OVERLOADED isInCheck FUNCTION
         kingsFinder(clonedBoard);
-        if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(WKingPos, clonedBoard, TeamColor.WHITE)){
+        if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(wKingPos, clonedBoard, TeamColor.WHITE)){
             return true;
         }
-        else if (teamColor == TeamColor.BLACK && wouldLandOnThisPiece(BKingPos,clonedBoard, TeamColor.BLACK)){
+        else if (teamColor == TeamColor.BLACK && wouldLandOnThisPiece(bKingPos,clonedBoard, TeamColor.BLACK)){
             return true;
         }
         else {
@@ -620,13 +620,13 @@ public class ChessGame {
         kingsFinder(this.board);
 
         //EXTRA CREDIT VARIABLES for Castling (resetting for testing purposes)
-        WKingHasMoved = false;
-        LWRookHasMoved = false;
-        RWRookHasMoved = false;
+        wKingHasMoved = false;
+        lWRookHasMoved = false;
+        rWRookHasMoved = false;
 
-        BKingHasMoved = false;
-        LBRookHasMoved = false;
-        RBRookHasMoved = false;
+        bKingHasMoved = false;
+        lBRookHasMoved = false;
+        rBRookHasMoved = false;
     }
 
     /**

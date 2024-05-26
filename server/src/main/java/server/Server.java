@@ -74,14 +74,11 @@ public class Server {
     }
 
 
-
-
     private void createRoutes() {
         //GET list of games
         Spark.get("/game", (req, res) -> {
             String authToken = req.headers("authorization");
             GameService gameService = new GameService(this.gameDao, this.authDao);
-
             try {
                 ListGamesResponse response = gameService.listGames(authToken);
                 return SuccessResponse(res, response);
@@ -90,15 +87,12 @@ public class Server {
                 return ErrorTranslator(res, e);
             }
         });
-
         //POST creating a new game, login, register
         Spark.post("/:givenPath", (req, res) -> {
             String givenPath = req.params(":givenPath");
-
             UserService userService = new UserService(this.userDao, this.authDao); //needed objects throughout this branch
             GameService gameService = new GameService(this.gameDao, this.authDao);
             ResponseType response;
-
             if (BadRequestChecker(req, res) != null) {
                 return BadRequestChecker(req, res);
             }
@@ -137,7 +131,6 @@ public class Server {
                     return res;
             }
         });
-
         //PUT join game
         Spark.put("/game", (req, res) -> {
             if (BadRequestChecker(req, res) != null) {
@@ -154,11 +147,9 @@ public class Server {
                 return ErrorTranslator(res, e);
             }
         });
-
         //DELETE clear all databases/DAOs or logout
         Spark.delete("/:givenPath", (req, res) -> {
             String givenPath = req.params(":givenPath");
-
             switch (givenPath) {
                 case "db":
                     SystemService systemService = new SystemService(this.gameDao, this.authDao, this.userDao);
@@ -172,7 +163,6 @@ public class Server {
                 case "session":
                     String authToken = req.headers("authorization");
                     UserService userService = new UserService(this.userDao, this.authDao);
-
                     try{
                         userService.logout(authToken);
                         return BlankSuccessResponse(res);
@@ -185,7 +175,6 @@ public class Server {
                     res.body("Error: Not found");
                     return res;
             }
-
         });
     }
 

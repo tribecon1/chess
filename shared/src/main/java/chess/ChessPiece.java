@@ -79,11 +79,11 @@ public class ChessPiece {
         HashSet<ChessMove> possibleMoves = new HashSet<>(); //diamond format, since datatype is implied
         return switch (this.type) {
             case BISHOP -> BishopMoveCalculator.BishopMoves(board, myPosition, possibleMoves);
-            case KING -> KingMoveCalculator.KingMoves(board, myPosition, possibleMoves);
-            case KNIGHT -> KnightMoveCalculator.KnightMoves(board, myPosition, possibleMoves);
-            case ROOK -> RookMoveCalculator.RookMoves(board, myPosition, possibleMoves);
-            case QUEEN -> QueenMoveCalculator.QueenMoves(board, myPosition, possibleMoves);
-            case PAWN -> PawnMoveCalculator.PawnMoves(board, myPosition, possibleMoves, this.pieceColor);//Pass in param: this.pieceColor
+            case KING -> KingMoveCalculator.kingMoves(board, myPosition, possibleMoves);
+            case KNIGHT -> KnightMoveCalculator.knightMoves(board, myPosition, possibleMoves);
+            case ROOK -> RookMoveCalculator.rookMoves(board, myPosition, possibleMoves);
+            case QUEEN -> QueenMoveCalculator.queenMoves(board, myPosition, possibleMoves);
+            case PAWN -> PawnMoveCalculator.pawnMoves(board, myPosition, possibleMoves, this.pieceColor);//Pass in param: this.pieceColor
         };
     }
 }
