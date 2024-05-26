@@ -55,10 +55,9 @@ public class MemoryGameDao implements GameDao {
     }
 
     @Override
-    public ResponseType updateGame(GameData currGame, GameData updatedGame) {
+    public void updateGame(GameData currGame, GameData updatedGame) {
             gameDataList.remove(currGame);
             gameDataList.add(updatedGame);
-            return null; //how to account for when a move is made as an update
     }
 
 

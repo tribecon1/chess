@@ -4,7 +4,6 @@ import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDao;
 import dataaccess.dao.GameDao;
 import dataaccess.dao.UserDao;
-import response.ResponseType;
 
 public class SystemService {
 
@@ -19,10 +18,9 @@ public class SystemService {
     }
 
 
-    public ResponseType clear() throws DataAccessException {
+    public void clear() throws DataAccessException {
         this.gameDaoSS.clearGame();
         this.authDaoSS.clearAuth();
         this.userDaoSS.clearUser();
-        return null;
     }
 }
