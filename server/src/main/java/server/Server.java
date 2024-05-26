@@ -159,8 +159,6 @@ public class Server {
         Spark.delete("/:givenPath", (req, res) -> {
             String givenPath = req.params(":givenPath");
 
-            ResponseType response;
-
             switch (givenPath) {
                 case "db":
                     SystemService systemService = new SystemService(this.gameDao, this.authDao, this.userDao);
