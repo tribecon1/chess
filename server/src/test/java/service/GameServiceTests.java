@@ -37,11 +37,7 @@ public class GameServiceTests {
 
     @AfterEach
     public void cleanUp() throws DataAccessException {
-        givenGameDao = new MemoryGameDao();
-        givenGameDao.createGame(3, "presetGame");
-        givenAuthDao = new MemoryAuthDao();
-        authorizedTester = givenAuthDao.createAuth("testUser", "myAuthToken");
-        gameService = new GameService(givenGameDao, givenAuthDao);
+        setUp();
     }
 
     //createGame Positive and Negative Tests
@@ -108,10 +104,5 @@ public class GameServiceTests {
                 gameService.joinGame(authorizedTester.authToken(), new JoinGameRequest(null, newGameResponse.gameID()) ) );
         assert (thrownError.getMessage().equals("Error: bad request"));
     }
-
-
-
-
-
 
 }

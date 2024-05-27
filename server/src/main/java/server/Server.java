@@ -87,8 +87,7 @@ public class Server {
                 return errorTranslator(res, e);
             }
         });
-        //POST creating a new game, login, register
-        Spark.post("/:givenPath", (req, res) -> {
+        Spark.post("/:givenPath", (req, res) -> {         //POST creating a new game, login, register
             String givenPath = req.params(":givenPath");
             UserService userService = new UserService(this.userDao, this.authDao); //needed objects throughout this branch
             GameService gameService = new GameService(this.gameDao, this.authDao);
@@ -131,8 +130,7 @@ public class Server {
                     return res;
             }
         });
-        //PUT join game
-        Spark.put("/game", (req, res) -> {
+        Spark.put("/game", (req, res) -> {          //PUT join game
             if (badRequestChecker(req, res) != null) {
                 return badRequestChecker(req, res);
             }
@@ -147,8 +145,7 @@ public class Server {
                 return errorTranslator(res, e);
             }
         });
-        //DELETE clear all databases/DAOs or logout
-        Spark.delete("/:givenPath", (req, res) -> {
+        Spark.delete("/:givenPath", (req, res) -> {          //DELETE clear all databases/DAOs or logout
             String givenPath = req.params(":givenPath");
             switch (givenPath) {
                 case "db":
