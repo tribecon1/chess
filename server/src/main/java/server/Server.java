@@ -1,9 +1,9 @@
 package server;
 
 import dataaccess.DataAccessException;
-import dataaccess.dao.memoryDao.MemoryAuthDao;
-import dataaccess.dao.memoryDao.MemoryGameDao;
-import dataaccess.dao.memoryDao.MemoryUserDao;
+import dataaccess.dao.memorydao.MemoryAuthDao;
+import dataaccess.dao.memorydao.MemoryGameDao;
+import dataaccess.dao.memorydao.MemoryUserDao;
 import model.UserData;
 import request.CreateGameRequest;
 import request.JoinGameRequest;

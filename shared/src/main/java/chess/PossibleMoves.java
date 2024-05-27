@@ -7,6 +7,46 @@ public class PossibleMoves {
         return board.getPiece(checkedPos).getTeamColor() != currColor;
     }
 
+    public static boolean blankSpaceCastlingChecker (ChessGame.TeamColor team, ChessPosition rookPos, ChessBoard currBoard) {
+        if (team == ChessGame.TeamColor.WHITE) {
+            if (rookPos.getColumn() == 1){
+                for (int j = 2; j < 5; j++){
+                    if (currBoard.getPiece(new ChessPosition(1,j)) != null){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else if (rookPos.getColumn() == 8){
+                for (int j = 6; j < 8; j++){
+                    if (currBoard.getPiece(new ChessPosition(1,j)) != null){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        else{
+            if (rookPos.getColumn() == 1){
+                for (int j = 2; j < 5; j++){
+                    if (currBoard.getPiece(new ChessPosition(8,j)) != null){
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else if (rookPos.getColumn() == 8){
+                for (int j = 6; j < 8; j++){
+                    if (currBoard.getPiece(new ChessPosition(8,j)) != null){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static ChessMove upRightMethod(ChessBoard board, ChessPosition startPosition, ChessPosition movePosition, ChessGame.TeamColor currColor, HashSet<ChessMove> givenHashSet) {
         ChessPosition upRightPos = new ChessPosition(movePosition.getRow()+1, movePosition.getColumn()+1);
@@ -263,5 +303,4 @@ public class PossibleMoves {
             return new ChessMove(startPosition, LLeftDownPos, null);
         }
     }
-
 }

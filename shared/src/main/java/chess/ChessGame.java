@@ -89,55 +89,13 @@ public class ChessGame {
         BLACK
     }
 
-
     //CASTLING METHODS
-    private boolean blankSpaceCastlingChecker (TeamColor team, ChessPosition rookPos) {
-        if (team == TeamColor.WHITE) {
-            if (rookPos.getColumn() == 1){
-                for (int j = 2; j < 5; j++){
-                    if (this.board.getPiece(new ChessPosition(1,j)) != null){
-                        return false;
-                    }
-                }
-                return true;
-            }
-            else if (rookPos.getColumn() == 8){
-                for (int j = 6; j < 8; j++){
-                    if (this.board.getPiece(new ChessPosition(1,j)) != null){
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-        else{
-            if (rookPos.getColumn() == 1){
-                for (int j = 2; j < 5; j++){
-                    if (this.board.getPiece(new ChessPosition(8,j)) != null){
-                        return false;
-                    }
-                }
-                return true;
-            }
-            else if (rookPos.getColumn() == 8){
-                for (int j = 6; j < 8; j++){
-                    if (this.board.getPiece(new ChessPosition(8,j)) != null){
-                        return false;
-                    }
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     private void castlingMoves (ChessPiece currPiece, ChessPosition startPosition, Collection<ChessMove> validMoves){
         TeamColor currPieceTeam = currPiece.getTeamColor();
         if (currPieceTeam == TeamColor.WHITE && startPosition.equals(wKingPos) && !wKingHasMoved){ //we've already checked that we aren't already in check, otherwise castling code wouldn't have run
             if (this.board.getPiece(new ChessPosition(1,1))!= null &&
                     this.board.getPiece(new ChessPosition(1,1)).getPieceType() == ChessPiece.PieceType.ROOK &&
-                    !lWRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,1))){
+                    !lWRookHasMoved && PossibleMoves.blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,1), this.board) ){
                 ChessMove castlingKingLeftW = new ChessMove(wKingPos, new ChessPosition(1,3), null);
                 ChessMove castlingRookRightW = new ChessMove(new ChessPosition(1,1), new ChessPosition(1,4), null);
                 try {
@@ -147,10 +105,7 @@ public class ChessGame {
                     clonedBoard.addPiece(castlingRookRightW.getEndPosition(), clonedBoard.getPiece(new ChessPosition(1,1)));
                     clonedBoard.removePiece(castlingRookRightW.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
-                        boolean enemyFound = false;
-                        if (wouldLandOnThisPiece(new ChessPosition(1,4), clonedBoard, currPieceTeam)){
-                            enemyFound = true;
-                        }
+                        boolean enemyFound = wouldLandOnThisPiece(new ChessPosition(1, 4), clonedBoard, currPieceTeam);
                         if (!enemyFound){
                             validMoves.add(castlingKingLeftW);
                         }
@@ -163,7 +118,7 @@ public class ChessGame {
             kingsFinder(this.board);
             if (this.board.getPiece(new ChessPosition(1,8))!= null &&
                     this.board.getPiece(new ChessPosition(1,8)).getPieceType() == ChessPiece.PieceType.ROOK &&
-                    !rWRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,8))){
+                    !rWRookHasMoved && PossibleMoves.blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(1,8), this.board)){
                 ChessMove castlingKingRightW = new ChessMove(wKingPos, new ChessPosition(1,7), null);
                 ChessMove castlingRookLeftW = new ChessMove(new ChessPosition(1,8), new ChessPosition(1,6), null);
                 try {
@@ -173,10 +128,7 @@ public class ChessGame {
                     clonedBoard.addPiece(castlingRookLeftW.getEndPosition(), clonedBoard.getPiece(new ChessPosition(1,8)));
                     clonedBoard.removePiece(castlingRookLeftW.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
-                        boolean enemyFound = false;
-                        if (wouldLandOnThisPiece(new ChessPosition(1,6), clonedBoard, currPieceTeam)){
-                            enemyFound = true;
-                        }
+                        boolean enemyFound = wouldLandOnThisPiece(new ChessPosition(1, 6), clonedBoard, currPieceTeam);
                         if (!enemyFound){
                             validMoves.add(castlingKingRightW);
                         }
@@ -190,7 +142,7 @@ public class ChessGame {
         else if (currPieceTeam == TeamColor.BLACK && startPosition.equals(bKingPos) && !bKingHasMoved){
             if (this.board.getPiece(new ChessPosition(8,1))!= null &&
                     this.board.getPiece(new ChessPosition(8,1)).getPieceType() == ChessPiece.PieceType.ROOK &&
-                    !lBRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,1))){
+                    !lBRookHasMoved && PossibleMoves.blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,1), this.board)){
                 ChessMove castlingKingLeftB = new ChessMove(bKingPos, new ChessPosition(8,3), null);
                 ChessMove castlingRookRightB = new ChessMove(new ChessPosition(8,1), new ChessPosition(8,4), null);
                 try {
@@ -200,10 +152,7 @@ public class ChessGame {
                     clonedBoard.addPiece(castlingRookRightB.getEndPosition(), clonedBoard.getPiece(new ChessPosition(8,1)));
                     clonedBoard.removePiece(castlingRookRightB.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
-                        boolean enemyFound = false;
-                        if (wouldLandOnThisPiece(new ChessPosition(8,4), clonedBoard, currPieceTeam)){
-                            enemyFound = true;
-                        }
+                        boolean enemyFound = wouldLandOnThisPiece(new ChessPosition(8, 4), clonedBoard, currPieceTeam);
                         if (!enemyFound){
                             validMoves.add(castlingKingLeftB);
                         }
@@ -216,7 +165,7 @@ public class ChessGame {
             kingsFinder(this.board);
             if (this.board.getPiece(new ChessPosition(8,8))!= null &&
                     this.board.getPiece(new ChessPosition(8,8)).getPieceType() == ChessPiece.PieceType.ROOK &&
-                    !rBRookHasMoved && blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,8))){
+                    !rBRookHasMoved && PossibleMoves.blankSpaceCastlingChecker(currPieceTeam, new ChessPosition(8,8), this.board)){
                 ChessMove castlingKingRightB = new ChessMove(bKingPos, new ChessPosition(8,7), null);
                 ChessMove castlingRookLeftB = new ChessMove(new ChessPosition(8,8), new ChessPosition(8,6), null);
                 try {
@@ -226,10 +175,7 @@ public class ChessGame {
                     clonedBoard.addPiece(castlingRookLeftB.getEndPosition(), clonedBoard.getPiece(new ChessPosition(8,8)));
                     clonedBoard.removePiece(castlingRookLeftB.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
-                        boolean enemyFound = false; //only for tests, since they have a board with no enemy pieces
-                        if (wouldLandOnThisPiece(new ChessPosition(8,6), clonedBoard, currPieceTeam)){
-                            enemyFound = true;
-                        }
+                        boolean enemyFound = wouldLandOnThisPiece(new ChessPosition(8, 6), clonedBoard, currPieceTeam); //only for tests, since they have a board with no enemy pieces
                         if (!enemyFound){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
                             validMoves.add(castlingKingRightB);
                         }
@@ -239,13 +185,8 @@ public class ChessGame {
                     throw new RuntimeException("Bug in cloning for castling");
                 }
             }
-
-
         }
-
     }
-
-
 
     /**
      * Gets a valid moves for a piece at the given location
@@ -479,7 +420,6 @@ public class ChessGame {
         }
     }
 
-
     private void kingsFinder(ChessBoard clonedBoard){
         //for auto-grader test scenarios
         boolean wKingFound = false;
@@ -507,7 +447,6 @@ public class ChessGame {
             bKingPos = null;
         }
     }
-
 
     private boolean wouldLandOnThisPiece (ChessPosition posOfPieceInDanger, ChessBoard givenBoard, TeamColor currTeam) {
         for (int i = 1; i < 9; i++) {
@@ -539,16 +478,10 @@ public class ChessGame {
         //establishing Kings' locations
         kingsFinder(this.board);
 
-        //similar code to the below commented out in Overload function
         if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(wKingPos, this.board, TeamColor.WHITE)){
             return true;
         }
-        else if (teamColor == TeamColor.BLACK && wouldLandOnThisPiece(bKingPos,this.board, TeamColor.BLACK)){
-            return true;
-        }
-        else {
-            return false;
-        }
+        else return teamColor == TeamColor.BLACK && wouldLandOnThisPiece(bKingPos, this.board, TeamColor.BLACK);
     }
 
     public boolean isInCheck(ChessBoard clonedBoard, TeamColor teamColor) { //OVERLOADED isInCheck FUNCTION
@@ -556,12 +489,7 @@ public class ChessGame {
         if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(wKingPos, clonedBoard, TeamColor.WHITE)){
             return true;
         }
-        else if (teamColor == TeamColor.BLACK && wouldLandOnThisPiece(bKingPos,clonedBoard, TeamColor.BLACK)){
-            return true;
-        }
-        else {
-            return false;
-        }
+        else return teamColor == TeamColor.BLACK && wouldLandOnThisPiece(bKingPos, clonedBoard, TeamColor.BLACK);
     }
 
     private boolean noValidMoves(ChessGame.TeamColor teamColor){
