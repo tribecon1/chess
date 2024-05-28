@@ -277,70 +277,43 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece pieceBeingMoved = this.board.getPiece(move.getStartPosition());
         Collection<ChessMove> currValidMoves = validMoves(move.getStartPosition());
-        if(board.getPiece(move.getStartPosition()) == null){
-            throw new InvalidMoveException();
-        }
-        else if (currValidMoves.isEmpty()){ //can't make a move that can't possibly exist
-            throw new InvalidMoveException();
-        }
-        else if(!currValidMoves.contains(move)){ //any valid move should already be in Valid moves, and return false
-            throw new InvalidMoveException();
-        }
-        else if(board.getPiece(move.getStartPosition()).getTeamColor() != thisTeamsTurn){ //not player's turn
+        if(board.getPiece(move.getStartPosition()) == null ||
+                currValidMoves.isEmpty() ||
+                !currValidMoves.contains(move) ||
+                board.getPiece(move.getStartPosition()).getTeamColor() != thisTeamsTurn){
             throw new InvalidMoveException();
         }
         else { //all test cases passed, a move now will be made
             if(pieceBeingMoved.getPieceType() == ChessPiece.PieceType.KING){
-                if (move.getEndPosition().getColumn()+1 < move.getStartPosition().getColumn()) { //castling move LEFT
-                    switch (pieceBeingMoved.getTeamColor()) {
-                        case WHITE:
-                            wKingPos = move.getEndPosition();
-                            wKingHasMoved = true;
-
+                switch (pieceBeingMoved.getTeamColor()){
+                    case WHITE:
+                        if (move.getEndPosition().getColumn()+1 < move.getStartPosition().getColumn()){
                             this.board.addPiece(new ChessPosition(1, 4), this.board.getPiece(new ChessPosition(1, 1)));//moving ROOK
                             this.board.removePiece(new ChessPosition(1, 1));
                             lWRookHasMoved = true;
-                            break;
-                        case BLACK:
-                            bKingPos = move.getEndPosition();
-                            bKingHasMoved = true;
-
-                            this.board.addPiece(new ChessPosition(8, 4), this.board.getPiece(new ChessPosition(8, 1)));//moving ROOK
-                            this.board.removePiece(new ChessPosition(8, 1));
-                            lBRookHasMoved = true;
-                    }
-                }
-                else if (move.getEndPosition().getColumn()-1 > move.getStartPosition().getColumn()){ //castling move RIGHT
-                    switch (pieceBeingMoved.getTeamColor()) {
-                        case WHITE:
-                            wKingPos = move.getEndPosition();
-                            wKingHasMoved = true;
-
+                        }
+                        else if (move.getEndPosition().getColumn()-1 > move.getStartPosition().getColumn()){
                             this.board.addPiece(new ChessPosition(1, 6), this.board.getPiece(new ChessPosition(1, 8)));//moving ROOK
                             this.board.removePiece(new ChessPosition(1, 8));
                             rWRookHasMoved = true;
-                            break;
-                        case BLACK:
-                            bKingPos = move.getEndPosition();
-                            bKingHasMoved = true;
-
+                        }
+                        wKingPos = move.getEndPosition();
+                        wKingHasMoved = true;
+                        break;
+                    case BLACK:
+                        if (move.getEndPosition().getColumn()+1 < move.getStartPosition().getColumn()){
+                            this.board.addPiece(new ChessPosition(8, 4), this.board.getPiece(new ChessPosition(8, 1)));//moving ROOK
+                            this.board.removePiece(new ChessPosition(8, 1));
+                            lBRookHasMoved = true;
+                        }
+                        else if (move.getEndPosition().getColumn()-1 > move.getStartPosition().getColumn()){
                             this.board.addPiece(new ChessPosition(8, 6), this.board.getPiece(new ChessPosition(8, 8)));//moving ROOK
                             this.board.removePiece(new ChessPosition(8, 8));
                             rBRookHasMoved = true;
-                    }
+                        }
+                        bKingPos = move.getEndPosition();
+                        bKingHasMoved = true;
                 }
-                else{
-                    switch (pieceBeingMoved.getTeamColor()){
-                        case WHITE:
-                            wKingPos = move.getEndPosition();
-                            wKingHasMoved = true;
-                            break;
-                        case BLACK:
-                            bKingPos = move.getEndPosition();
-                            bKingHasMoved = true;
-                    }
-                }
-
             }
             else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.PAWN){
                 if (pieceBeingMoved.getTeamColor()==TeamColor.BLACK && blackEnPassantMove != null && !move.equals(blackEnPassantMove)){
@@ -349,7 +322,6 @@ public class ChessGame {
                 if (pieceBeingMoved.getTeamColor()==TeamColor.WHITE && whiteEnPassantMove != null && !move.equals(whiteEnPassantMove)){
                     doubleMoveJustMade = false;
                 }
-
                 if (move.getPromotionPiece() != null){
                     pieceBeingMoved = new ChessPiece(pieceBeingMoved.getTeamColor(), move.getPromotionPiece());
                 }
@@ -403,11 +375,8 @@ public class ChessGame {
                         }
                 }
             }
-
             this.board.addPiece(move.getEndPosition(), pieceBeingMoved);
             this.board.removePiece(move.getStartPosition());
-
-            //switches turns at the end of a move
             if (this.thisTeamsTurn == TeamColor.WHITE){
                 this.thisTeamsTurn = TeamColor.BLACK;
             }
