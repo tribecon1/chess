@@ -316,44 +316,31 @@ public class ChessGame {
                 }
             }
             else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.PAWN){
-                if (pieceBeingMoved.getTeamColor()==TeamColor.BLACK && blackEnPassantMove != null && !move.equals(blackEnPassantMove)){
-                    doubleMoveJustMade = false;
+                if (pieceBeingMoved.getTeamColor()==TeamColor.BLACK && move.equals(blackEnPassantMove)){
+                    this.board.removePiece(whitePawnForBlackEnPassant);
+                    whitePawnForBlackEnPassant = null;
                 }
-                if (pieceBeingMoved.getTeamColor()==TeamColor.WHITE && whiteEnPassantMove != null && !move.equals(whiteEnPassantMove)){
-                    doubleMoveJustMade = false;
+                else if (pieceBeingMoved.getTeamColor()==TeamColor.WHITE && move.equals(whiteEnPassantMove)){
+                    this.board.removePiece(blackPawnForWhiteEnPassant);
+                    blackPawnForWhiteEnPassant = null;
                 }
+                doubleMoveJustMade = false;
+
                 if (move.getPromotionPiece() != null){
                     pieceBeingMoved = new ChessPiece(pieceBeingMoved.getTeamColor(), move.getPromotionPiece());
                 }
                 if (Math.abs(move.getEndPosition().getRow() - move.getStartPosition().getRow()) == 2){
                     doubleMoveJustMade = true;
                     switch (pieceBeingMoved.getTeamColor()) {
-                        case WHITE -> whitePawnForBlackEnPassant = move.getEndPosition();
-                        //White Pawn just made a first move of 2 spaces up instead of 1, chance for black to perform en passant
-                        case BLACK -> blackPawnForWhiteEnPassant = move.getEndPosition();
-                        //Black Pawn just made a first move of 2 spaces down instead of 1, chance for white to perform en passant
+                        case WHITE -> whitePawnForBlackEnPassant = move.getEndPosition(); //White Pawn just made a 2-space first move instead of 1 = chance for black to perform en passant
+                        case BLACK -> blackPawnForWhiteEnPassant = move.getEndPosition(); //Black Pawn just made a 2-space first move instead of 1 = chance for white to perform en passant
                     }
                 }
                 else {
-                    if (doubleMoveJustMade){
-                        if (pieceBeingMoved.getTeamColor()==TeamColor.BLACK && whitePawnForBlackEnPassant != null &&
-                                move.getEndPosition().getRow()+1 == whitePawnForBlackEnPassant.getRow()){
-                            this.board.removePiece(whitePawnForBlackEnPassant);
-                            whitePawnForBlackEnPassant = null;
-                        }
-                        else if (pieceBeingMoved.getTeamColor()==TeamColor.WHITE && blackPawnForWhiteEnPassant != null &&
-                                move.getEndPosition().getRow()-1 == blackPawnForWhiteEnPassant.getRow()){
-                            this.board.removePiece(blackPawnForWhiteEnPassant);
-                            blackPawnForWhiteEnPassant = null;
-                        }
-                        doubleMoveJustMade = false;
-                    }
-                    else{
-                        whitePawnForBlackEnPassant = null;
-                        whiteEnPassantMove = null;
-                        blackPawnForWhiteEnPassant = null;
-                        blackEnPassantMove = null;
-                    }
+                    whitePawnForBlackEnPassant = null;
+                    whiteEnPassantMove = null;
+                    blackPawnForWhiteEnPassant = null;
+                    blackEnPassantMove = null;
                 }
             }
             else if (pieceBeingMoved.getPieceType() == ChessPiece.PieceType.ROOK){
@@ -387,29 +374,20 @@ public class ChessGame {
     }
 
     private void kingsFinder(ChessBoard clonedBoard){
-        //for auto-grader test scenarios
-        boolean wKingFound = false;
-        boolean bKingFound = false;
+        wKingPos = null; //for auto-grader test scenarios
+        bKingPos = null;
         for (int i = 1; i < 9; i++) { //Treat as row/column #s, not index values/one less
             for (int j = 1; j < 9; j++) {
                 if (clonedBoard.getPiece(new ChessPosition(i, j)) != null &&
                         clonedBoard.getPiece(new ChessPosition(i, j)).getPieceType() == ChessPiece.PieceType.KING){
                     if (clonedBoard.getPiece(new ChessPosition(i, j)).getTeamColor() == TeamColor.WHITE){
                         this.wKingPos = new ChessPosition(i, j);
-                        wKingFound = true;
                     }
                     else{
                         this.bKingPos = new ChessPosition(i, j);
-                        bKingFound = true;
                     }
                 }
             }
-        }
-        if (!wKingFound){ //literally only for the test scenarios, this would never happen in a game
-            wKingPos = null;
-        }
-        if (!bKingFound){
-            bKingPos = null;
         }
     }
 
@@ -422,7 +400,6 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
         //establishing Kings' locations
         kingsFinder(this.board);
-
         if (teamColor == TeamColor.WHITE && PossibleMoves.wouldLandOnThisPiece(wKingPos, this.board, TeamColor.WHITE)){
             return true;
         }
