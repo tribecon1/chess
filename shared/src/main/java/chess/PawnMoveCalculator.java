@@ -13,6 +13,56 @@ public class PawnMoveCalculator {
         }
     }
 
+    private static void teamSpecificMoves(int limit, ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet, ChessPosition oneSpaceForwardMove,
+                                   ChessPosition twoSpaceForwardMove, ChessPosition oneSpaceForwardLeftMove, ChessPosition oneSpaceForwardRightMove) {
+        int atStartRow;
+        ChessGame.TeamColor pawnColor;
+
+        if (limit == 8){
+            atStartRow = 2;
+            pawnColor = ChessGame.TeamColor.WHITE;
+        }
+        else {
+            atStartRow = 7;
+            pawnColor = ChessGame.TeamColor.BLACK;
+        }
+        if (myPosition.getRow() == limit){ //PROMOTION Edge Case, White
+            QueenMoveCalculator.queenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
+            BishopMoveCalculator.bishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen
+            KnightMoveCalculator.knightMoves(board, myPosition, givenHashSet); //if KNIGHT chosen
+            RookMoveCalculator.rookMoves(board, myPosition, givenHashSet); //if ROOK chosen
+        }
+        if (board.getPiece(oneSpaceForwardMove) == null){
+            if (myPosition.getRow() == atStartRow && board.getPiece(twoSpaceForwardMove) == null){ //START Edge Case, White
+                givenHashSet.add(new ChessMove(myPosition, oneSpaceForwardMove, null));
+                givenHashSet.add(new ChessMove(myPosition, twoSpaceForwardMove, null));
+            }
+            else if (oneSpaceForwardMove.getRow() == limit){
+                possiblePromotionMoveAdder(givenHashSet, myPosition, oneSpaceForwardMove);
+            }
+            else{
+                givenHashSet.add(new ChessMove(myPosition, oneSpaceForwardMove, null));
+            }
+        }
+        if (board.getPiece(oneSpaceForwardRightMove) != null && board.getPiece(oneSpaceForwardRightMove).getTeamColor() != pawnColor){
+            if (oneSpaceForwardRightMove.getRow() == limit){
+                possiblePromotionMoveAdder(givenHashSet, myPosition, oneSpaceForwardRightMove);
+            }
+            else {
+                givenHashSet.add(new ChessMove(myPosition, oneSpaceForwardRightMove, null));
+            }
+        }
+        if (board.getPiece(oneSpaceForwardLeftMove) != null && board.getPiece(oneSpaceForwardLeftMove).getTeamColor() != pawnColor){
+            if (oneSpaceForwardLeftMove.getRow() == limit){
+                possiblePromotionMoveAdder(givenHashSet, myPosition, oneSpaceForwardLeftMove);
+            }
+            else {
+                givenHashSet.add(new ChessMove(myPosition, oneSpaceForwardLeftMove, null));
+            }
+        }
+    }
+
+
     public static HashSet<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition, HashSet<ChessMove> givenHashSet, ChessGame.TeamColor pawnColor){
 
         if (pawnColor == ChessGame.TeamColor.WHITE){
@@ -21,41 +71,8 @@ public class PawnMoveCalculator {
             ChessPosition upRight = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()+1);
             ChessPosition upLeft = new ChessPosition(myPosition.getRow()+1, myPosition.getColumn()-1);
 
+            teamSpecificMoves(8, board, myPosition, givenHashSet, oneUp, twoUp, upLeft, upRight);
 
-            if (myPosition.getRow() == 8){ //PROMOTION Edge Case, White
-                QueenMoveCalculator.queenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
-                BishopMoveCalculator.bishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen
-                KnightMoveCalculator.knightMoves(board, myPosition, givenHashSet); //if KNIGHT chosen
-                RookMoveCalculator.rookMoves(board, myPosition, givenHashSet); //if ROOK chosen
-            }
-            if (board.getPiece(oneUp) == null){
-                if (myPosition.getRow() == 2 && board.getPiece(twoUp) == null){ //START Edge Case, White
-                    givenHashSet.add(new ChessMove(myPosition, twoUp, null));
-                    givenHashSet.add(new ChessMove(myPosition, oneUp, null));
-                }
-                else if (oneUp.getRow() == 8){
-                    possiblePromotionMoveAdder(givenHashSet, myPosition, oneUp);
-                }
-                else{
-                    givenHashSet.add(new ChessMove(myPosition, oneUp, null));
-                }
-            }
-            if (board.getPiece(upRight) != null && board.getPiece(upRight).getTeamColor() != pawnColor){
-                if (upRight.getRow() == 8){
-                    possiblePromotionMoveAdder(givenHashSet, myPosition, upRight);
-                }
-                else {
-                    givenHashSet.add(new ChessMove(myPosition, upRight, null));
-                }
-            }
-            if (board.getPiece(upLeft) != null && board.getPiece(upLeft).getTeamColor() != pawnColor){
-                if (upLeft.getRow() == 8){
-                    possiblePromotionMoveAdder(givenHashSet, myPosition, upLeft);
-                }
-                else {
-                    givenHashSet.add(new ChessMove(myPosition, upLeft, null));
-                }
-            }
         }
         else { //BLACK
             ChessPosition oneDown = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn());
@@ -63,41 +80,9 @@ public class PawnMoveCalculator {
             ChessPosition downRight = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()+1);
             ChessPosition downLeft = new ChessPosition(myPosition.getRow()-1, myPosition.getColumn()-1);
 
-            if (myPosition.getRow() == 1){ //PROMOTION Edge Case, Black
-                QueenMoveCalculator.queenMoves(board, myPosition, givenHashSet); //if QUEEN chosen
-                BishopMoveCalculator.bishopMoves(board, myPosition, givenHashSet); //if BISHOP chosen
-                KnightMoveCalculator.knightMoves(board, myPosition, givenHashSet); //if KNIGHT chosen
-                RookMoveCalculator.rookMoves(board, myPosition, givenHashSet); //if ROOK chosen
-            }
-            if (board.getPiece(oneDown) == null){
-                if(myPosition.getRow() == 7 && board.getPiece(twoDown) == null){
-                    givenHashSet.add(new ChessMove(myPosition, twoDown, null));
-                    givenHashSet.add(new ChessMove(myPosition, oneDown, null));
-                }
-                else if (oneDown.getRow() == 1){
-                    possiblePromotionMoveAdder(givenHashSet, myPosition, oneDown);
-                }
-                else{
-                    givenHashSet.add(new ChessMove(myPosition, oneDown, null));
-                }
-            }
-            if (board.getPiece(downRight) != null && board.getPiece(downRight).getTeamColor() != pawnColor){
-                if (downRight.getRow() == 1){
-                    possiblePromotionMoveAdder(givenHashSet, myPosition, downRight);
-                }
-                else {
-                    givenHashSet.add(new ChessMove(myPosition, downRight, null));
-                }
-            }
-            if (board.getPiece(downLeft) != null && board.getPiece(downLeft).getTeamColor() != pawnColor){
-                if (downLeft.getRow() == 1){
-                    possiblePromotionMoveAdder(givenHashSet, myPosition, downLeft);
-                }
-                else {
-                    givenHashSet.add(new ChessMove(myPosition, downLeft, null));
-                }
-            }
+            teamSpecificMoves(1, board, myPosition, givenHashSet, oneDown, twoDown, downLeft, downRight);
         }
+
        return givenHashSet;
     }
 }

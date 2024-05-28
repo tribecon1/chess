@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 public class PossibleMoves {
@@ -42,6 +43,25 @@ public class PossibleMoves {
                     }
                 }
                 return true;
+            }
+        }
+        return false;
+    }
+
+
+    public static boolean wouldLandOnThisPiece (ChessPosition posOfPieceInDanger, ChessBoard givenBoard, ChessGame.TeamColor currTeam) {
+        for (int i = 1; i < 9; i++) {
+            for (int j = 1; j < 9; j++) {
+                if (givenBoard.getPiece(new ChessPosition(i, j)) != null && givenBoard.getPiece(new ChessPosition(i, j)).getTeamColor() != currTeam) {
+                    ChessPosition opponentPosition = new ChessPosition(i, j);
+                    ChessPiece opponentPiece = givenBoard.getPiece(opponentPosition);
+                    Collection<ChessMove> movesProvided = opponentPiece.pieceMoves(givenBoard, opponentPosition);
+                    for (ChessMove potentialMove : movesProvided) {
+                        if (potentialMove.getEndPosition().equals(posOfPieceInDanger)) {
+                            return true;
+                        }
+                    }
+                }
             }
         }
         return false;
@@ -303,4 +323,5 @@ public class PossibleMoves {
             return new ChessMove(startPosition, leftDownLPos, null);
         }
     }
+
 }

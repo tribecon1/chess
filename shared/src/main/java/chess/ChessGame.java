@@ -12,7 +12,6 @@ import java.util.HashSet;
 public class ChessGame {
     private TeamColor thisTeamsTurn;
     private ChessBoard board;
-
     private ChessPosition wKingPos;
     private ChessPosition bKingPos;
 
@@ -29,15 +28,19 @@ public class ChessGame {
     //En Passant
     private ChessPosition blackPawnForWhiteEnPassant;
     private ChessPosition whitePawnForBlackEnPassant;
-
     private boolean doubleMoveJustMade;
-
     private ChessMove whiteEnPassantMove;
     private ChessMove blackEnPassantMove;
 
 
-
-
+    private void initCastlingVariables(){
+        wKingHasMoved = false;
+        lWRookHasMoved = false;
+        rWRookHasMoved = false;
+        bKingHasMoved = false;
+        lBRookHasMoved = false;
+        rBRookHasMoved = false;
+    }
 
     public ChessGame() {
         this.board = new ChessBoard();
@@ -47,13 +50,7 @@ public class ChessGame {
         bKingPos = new ChessPosition(8,5);
 
         //EXTRA CREDIT VARIABLES for Castling
-        wKingHasMoved = false;
-        lWRookHasMoved = false;
-        rWRookHasMoved = false;
-
-        bKingHasMoved = false;
-        lBRookHasMoved = false;
-        rBRookHasMoved = false;
+        initCastlingVariables();
 
         //EXTRA CREDIT VARIABLES for En Passant
         blackPawnForWhiteEnPassant = null;
@@ -105,7 +102,7 @@ public class ChessGame {
                     clonedBoard.addPiece(castlingRookRightW.getEndPosition(), clonedBoard.getPiece(new ChessPosition(1,1)));
                     clonedBoard.removePiece(castlingRookRightW.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
-                        boolean enemyFound = wouldLandOnThisPiece(new ChessPosition(1, 4), clonedBoard, currPieceTeam);
+                        boolean enemyFound = PossibleMoves.wouldLandOnThisPiece(new ChessPosition(1, 4), clonedBoard, currPieceTeam);
                         if (!enemyFound){
                             validMoves.add(castlingKingLeftW);
                         }
@@ -128,7 +125,7 @@ public class ChessGame {
                     clonedBoard.addPiece(castlingRookLeftW.getEndPosition(), clonedBoard.getPiece(new ChessPosition(1,8)));
                     clonedBoard.removePiece(castlingRookLeftW.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
-                        boolean enemyFound = wouldLandOnThisPiece(new ChessPosition(1, 6), clonedBoard, currPieceTeam);
+                        boolean enemyFound = PossibleMoves.wouldLandOnThisPiece(new ChessPosition(1, 6), clonedBoard, currPieceTeam);
                         if (!enemyFound){
                             validMoves.add(castlingKingRightW);
                         }
@@ -152,7 +149,7 @@ public class ChessGame {
                     clonedBoard.addPiece(castlingRookRightB.getEndPosition(), clonedBoard.getPiece(new ChessPosition(8,1)));
                     clonedBoard.removePiece(castlingRookRightB.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
-                        boolean enemyFound = wouldLandOnThisPiece(new ChessPosition(8, 4), clonedBoard, currPieceTeam);
+                        boolean enemyFound = PossibleMoves.wouldLandOnThisPiece(new ChessPosition(8, 4), clonedBoard, currPieceTeam);
                         if (!enemyFound){
                             validMoves.add(castlingKingLeftB);
                         }
@@ -175,7 +172,7 @@ public class ChessGame {
                     clonedBoard.addPiece(castlingRookLeftB.getEndPosition(), clonedBoard.getPiece(new ChessPosition(8,8)));
                     clonedBoard.removePiece(castlingRookLeftB.getStartPosition());
                     if (!isInCheck(clonedBoard, currPieceTeam)) {
-                        boolean enemyFound = wouldLandOnThisPiece(new ChessPosition(8, 6), clonedBoard, currPieceTeam); //only for tests, since they have a board with no enemy pieces
+                        boolean enemyFound = PossibleMoves.wouldLandOnThisPiece(new ChessPosition(8, 6), clonedBoard, currPieceTeam); //only for tests, since they have a board with no enemy pieces
                         if (!enemyFound){ //again, only for tests, since White Team Castle has no opposing pieces(wouldn't happen in a real game)
                             validMoves.add(castlingKingRightB);
                         }
@@ -424,7 +421,6 @@ public class ChessGame {
         //for auto-grader test scenarios
         boolean wKingFound = false;
         boolean bKingFound = false;
-
         for (int i = 1; i < 9; i++) { //Treat as row/column #s, not index values/one less
             for (int j = 1; j < 9; j++) {
                 if (clonedBoard.getPiece(new ChessPosition(i, j)) != null &&
@@ -448,26 +444,6 @@ public class ChessGame {
         }
     }
 
-    private boolean wouldLandOnThisPiece (ChessPosition posOfPieceInDanger, ChessBoard givenBoard, TeamColor currTeam) {
-        for (int i = 1; i < 9; i++) {
-            for (int j = 1; j < 9; j++) {
-                if (givenBoard.getPiece(new ChessPosition(i, j)) != null && givenBoard.getPiece(new ChessPosition(i, j)).getTeamColor() != currTeam) {
-                    ChessPosition opponentPosition = new ChessPosition(i, j);
-                    ChessPiece opponentPiece = givenBoard.getPiece(opponentPosition);
-                    Collection<ChessMove> movesProvided = opponentPiece.pieceMoves(givenBoard, opponentPosition);
-                    for (ChessMove potentialMove : movesProvided) {
-                        if (potentialMove.getEndPosition().equals(posOfPieceInDanger)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-
-
     /**
      * Determines if the given team is in check
      *
@@ -478,18 +454,18 @@ public class ChessGame {
         //establishing Kings' locations
         kingsFinder(this.board);
 
-        if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(wKingPos, this.board, TeamColor.WHITE)){
+        if (teamColor == TeamColor.WHITE && PossibleMoves.wouldLandOnThisPiece(wKingPos, this.board, TeamColor.WHITE)){
             return true;
         }
-        else return teamColor == TeamColor.BLACK && wouldLandOnThisPiece(bKingPos, this.board, TeamColor.BLACK);
+        else return teamColor == TeamColor.BLACK && PossibleMoves.wouldLandOnThisPiece(bKingPos, this.board, TeamColor.BLACK);
     }
 
     public boolean isInCheck(ChessBoard clonedBoard, TeamColor teamColor) { //OVERLOADED isInCheck FUNCTION
         kingsFinder(clonedBoard);
-        if (teamColor == TeamColor.WHITE && wouldLandOnThisPiece(wKingPos, clonedBoard, TeamColor.WHITE)){
+        if (teamColor == TeamColor.WHITE && PossibleMoves.wouldLandOnThisPiece(wKingPos, clonedBoard, TeamColor.WHITE)){
             return true;
         }
-        else return teamColor == TeamColor.BLACK && wouldLandOnThisPiece(bKingPos, clonedBoard, TeamColor.BLACK);
+        else return teamColor == TeamColor.BLACK && PossibleMoves.wouldLandOnThisPiece(bKingPos, clonedBoard, TeamColor.BLACK);
     }
 
     private boolean noValidMoves(ChessGame.TeamColor teamColor){
@@ -507,7 +483,6 @@ public class ChessGame {
         }
         return anyValidMoves.isEmpty();
     }
-
 
     /**
      * Determines if the given team is in checkmate
@@ -546,15 +521,8 @@ public class ChessGame {
     public void setBoard(ChessBoard board) {
         this.board = board;
         kingsFinder(this.board);
-
-        //EXTRA CREDIT VARIABLES for Castling (resetting for testing purposes)
-        wKingHasMoved = false;
-        lWRookHasMoved = false;
-        rWRookHasMoved = false;
-
-        bKingHasMoved = false;
-        lBRookHasMoved = false;
-        rBRookHasMoved = false;
+        //EXTRA CREDIT VARIABLES for Castling being reset for testing purposes
+        initCastlingVariables();
     }
 
     /**
