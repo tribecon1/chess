@@ -9,9 +9,7 @@ import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
 import response.*;
-import service.GameService;
-import service.SystemService;
-import service.UserService;
+import service.*;
 import spark.*;
 import dataaccess.dao.*;
 
