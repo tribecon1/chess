@@ -33,7 +33,7 @@ public class Server {
             DatabaseManager.createDatabase(); //if it doesn't already exist
         }
         catch (DataAccessException e){
-            System.out.println(e.getMessage());//best way to handle this since there is no "status code"?
+            e.printStackTrace();//best way to handle this since there is no "status code"?
         }
 
         this.userDao = new MemoryUserDao();
