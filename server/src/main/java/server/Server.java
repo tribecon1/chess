@@ -1,10 +1,12 @@
 package server;
 
 import dataaccess.DataAccessException;
+import dataaccess.DatabaseManager;
 import dataaccess.dao.memorydao.MemoryAuthDao;
 import dataaccess.dao.memorydao.MemoryGameDao;
 import dataaccess.dao.memorydao.MemoryUserDao;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
@@ -27,6 +29,13 @@ public class Server {
     }};
 
     public Server(){
+        try{
+            DatabaseManager.createDatabase(); //if it doesn't already exist
+        }
+        catch (DataAccessException e){
+            System.out.println(e.getMessage());//best way to handle this since there is no "status code"?
+        }
+
         this.userDao = new MemoryUserDao();
         this.gameDao = new MemoryGameDao();
         this.authDao = new MemoryAuthDao();
@@ -107,7 +116,7 @@ public class Server {
                 case "session":
                     LoginRequest currUser = SerializerDeserializer.convertFromJSON(req.body(), LoginRequest.class);
                     try {
-                        response = userService.login(currUser);
+                        response = userService.login(currUser); //will be compared in UserService
                         return successResponse(res, response);
                     }
                     catch (DataAccessException e) {
@@ -116,7 +125,7 @@ public class Server {
                 case "user":
                     UserData newUser = SerializerDeserializer.convertFromJSON(req.body(), UserData.class);
                     try{
-                        response = userService.register(newUser);
+                        response = userService.register(new UserData(newUser.username(),BCrypt.hashpw(newUser.password(), BCrypt.gensalt()), newUser.email()) );
                         return successResponse(res, response);
                     }
                     catch (DataAccessException e){
@@ -166,7 +175,7 @@ public class Server {
                         return errorTranslator(res, e);
                     }
                 default:
-                    res.status(500);
+                    res.status(404);
                     res.body("Error: Not found");
                     return res;
             }

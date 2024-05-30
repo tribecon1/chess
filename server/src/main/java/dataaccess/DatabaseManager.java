@@ -1,6 +1,7 @@
 package dataaccess;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class DatabaseManager {
@@ -8,6 +9,40 @@ public class DatabaseManager {
     private static final String USER;
     private static final String PASSWORD;
     private static final String CONNECTION_URL;
+
+    private static final String[] sqlUserTable = {
+            """
+            CREATE TABLE IF NOT EXISTS user (
+              `username` varchar(30) NOT NULL PRIMARY KEY,
+              `password` varchar(72) NOT NULL,
+              `email` varchar(45) NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+    };
+
+
+    private static final String[] sqlAuthTable = {
+            """
+            CREATE TABLE IF NOT EXISTS auth (
+              `username` varchar(30) NOT NULL UNIQUE,
+              `authToken` varchar(45) NOT NULL PRIMARY KEY
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+    };
+
+
+    private static final String[] sqlGameTable = {
+            """
+            CREATE TABLE IF NOT EXISTS game (
+              `gameID` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+              `whiteUsername` varchar(30),
+              `blackUsername` varchar(30),
+              `gameName` varchar(30) NOT NULL UNIQUE,
+              `game` text NOT NULL
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+            """
+    };
+
 
     /*
      * Load the database information for the db.properties file.
@@ -34,11 +69,20 @@ public class DatabaseManager {
     /**
      * Creates the database if it does not already exist.
      */
-    static void createDatabase() throws DataAccessException {
+    public static void createDatabase() throws DataAccessException {
         try {
             var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             try (var preparedStatement = conn.prepareStatement(statement)) {
+                preparedStatement.executeUpdate();
+            }
+            try (var preparedStatement = conn.prepareStatement(Arrays.toString(sqlUserTable) )) {
+                preparedStatement.executeUpdate();
+            }
+            try (var preparedStatement = conn.prepareStatement(Arrays.toString(sqlAuthTable))) {
+                preparedStatement.executeUpdate();
+            }
+            try (var preparedStatement = conn.prepareStatement(Arrays.toString(sqlGameTable))) {
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -58,7 +102,7 @@ public class DatabaseManager {
      * }
      * </code>
      */
-    static Connection getConnection() throws DataAccessException {
+    public static Connection getConnection() throws DataAccessException {
         try {
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             conn.setCatalog(DATABASE_NAME);

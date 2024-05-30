@@ -5,6 +5,7 @@ import dataaccess.dao.AuthDao;
 import dataaccess.dao.UserDao;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import request.LoginRequest;
 
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class UserService {
             throw new DataAccessException("Error: bad request");
         }
         if (this.userDaoUS.getUser(loginRequest.username()) != null){
-            if (this.userDaoUS.getUser(loginRequest.username()).password().equals(loginRequest.password())){
+            if (BCrypt.checkpw(loginRequest.password(), this.userDaoUS.getUser(loginRequest.username()).password())  ){//BCrypt check
                 String authToken = UUID.randomUUID().toString();
                 return this.authDaoUS.createAuth(loginRequest.username(), authToken);
             }
