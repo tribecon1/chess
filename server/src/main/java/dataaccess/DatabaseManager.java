@@ -1,7 +1,6 @@
 package dataaccess;
 
 import java.sql.*;
-import java.util.Arrays;
 import java.util.Properties;
 
 public class DatabaseManager {
@@ -73,6 +72,7 @@ public class DatabaseManager {
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }
+            conn.setCatalog(DATABASE_NAME);//necessary? Dr. Wilkerson said I needed to change the conn var assignment above
             try (var preparedStatement = conn.prepareStatement(sqlUserTable) ) {
                 preparedStatement.executeUpdate();
             }

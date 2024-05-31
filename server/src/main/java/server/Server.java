@@ -5,6 +5,7 @@ import dataaccess.DatabaseManager;
 import dataaccess.dao.memorydao.MemoryAuthDao;
 import dataaccess.dao.memorydao.MemoryGameDao;
 import dataaccess.dao.memorydao.MemoryUserDao;
+import dataaccess.dao.sqldao.SqlUserDao;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 import request.CreateGameRequest;
@@ -36,7 +37,8 @@ public class Server {
             e.printStackTrace();//best way to handle this since there is no "status code"?
         }
 
-        this.userDao = new MemoryUserDao();
+        //this.userDao = new MemoryUserDao();
+        this.userDao = new SqlUserDao();
         this.gameDao = new MemoryGameDao();
         this.authDao = new MemoryAuthDao();
         //to be replaced w/ SQL in Phase 4
@@ -65,7 +67,12 @@ public class Server {
 
 
     private static String errorTranslator(Response res, DataAccessException thrownError){
-        res.status(ERRORCODEMESSAGEMAP.get(thrownError.getMessage()));
+        if (thrownError.getMessage().contains("Database")){
+            res.status(500);
+        }
+        else{
+            res.status(ERRORCODEMESSAGEMAP.get(thrownError.getMessage()));
+        }
         return SerializerDeserializer.convertToJSON(thrownError);
     }
 
