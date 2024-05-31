@@ -11,7 +11,7 @@ public class SqlGameDao implements GameDao {
 
 
     @Override
-    public GameData createGame(int gameID, String gameName) throws DataAccessException {
+    public GameData createGame(String gameName) throws DataAccessException {
         return null;
     }
 

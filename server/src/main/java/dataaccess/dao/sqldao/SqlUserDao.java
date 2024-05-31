@@ -58,7 +58,7 @@ public class SqlUserDao implements UserDao {
         Connection conn = null;
         try (Connection autoCloseC = DatabaseManager.getConnection()){
             conn = autoCloseC;
-            String sql = "DROP TABLE user";
+            String sql = "DROP TABLE user"; //if user replaced w/ ? and uncommented below, is code reusable for all 3 classes?
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.executeUpdate();
             }
@@ -74,8 +74,9 @@ public class SqlUserDao implements UserDao {
         Connection conn = null;
         try (Connection autoCloseC = DatabaseManager.getConnection()){
             conn = autoCloseC;
-            String sql = "SELECT COUNT(*) FROM user";
+            String sql = "SELECT COUNT(*) FROM user"; //if user replaced w/ ? and uncommented below, is code reusable for all 3 classes?
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                //ps.setString(1, "user");
                 ResultSet resultSet = ps.executeQuery();
                  if (resultSet.next()) {
                      numberOfEntries = resultSet.getInt(1);

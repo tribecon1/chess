@@ -13,5 +13,5 @@ public interface AuthDao {
 
     void clearAuth() throws DataAccessException;
 
-    int getDatabaseSize();
+    int getDatabaseSize() throws DataAccessException;
 }

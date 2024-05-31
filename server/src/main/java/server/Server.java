@@ -5,6 +5,7 @@ import dataaccess.DatabaseManager;
 import dataaccess.dao.memorydao.MemoryAuthDao;
 import dataaccess.dao.memorydao.MemoryGameDao;
 import dataaccess.dao.memorydao.MemoryUserDao;
+import dataaccess.dao.sqldao.SqlAuthDao;
 import dataaccess.dao.sqldao.SqlUserDao;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
@@ -40,7 +41,8 @@ public class Server {
         //this.userDao = new MemoryUserDao();
         this.userDao = new SqlUserDao();
         this.gameDao = new MemoryGameDao();
-        this.authDao = new MemoryAuthDao();
+        //this.authDao = new MemoryAuthDao();
+        this.authDao = new SqlAuthDao();
         //to be replaced w/ SQL in Phase 4
     }
 
@@ -131,6 +133,9 @@ public class Server {
                     }
                 case "user":
                     UserData newUser = SerializerDeserializer.convertFromJSON(req.body(), UserData.class);
+                    if (newUser.username() == null || newUser.password() == null){
+                        return errorTranslator(res, new DataAccessException("Error: bad request"));
+                    }
                     try{
                         response = userService.register(new UserData(newUser.username(),BCrypt.hashpw(newUser.password(), BCrypt.gensalt()), newUser.email()) );
                         return successResponse(res, response);

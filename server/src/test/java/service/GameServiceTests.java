@@ -28,7 +28,7 @@ public class GameServiceTests {
     @BeforeAll
     public static void setUp() throws DataAccessException {
         givenGameDao = new MemoryGameDao();
-        givenGameDao.createGame(3, "presetGame");
+        givenGameDao.createGame("presetGame");
         givenAuthDao = new MemoryAuthDao();
         authorizedTester = givenAuthDao.createAuth("testUser", "myAuthToken");
 

@@ -17,8 +17,8 @@ public class MemoryGameDao implements GameDao {
     }
 
     @Override
-    public GameData createGame(int gameID, String gameName) {
-        GameData newGame = new GameData(gameID, null, null, gameName, new ChessGame());
+    public GameData createGame(String gameName) {
+        GameData newGame = new GameData(gameDataList.size()+1, null, null, gameName, new ChessGame());
         gameDataList.add(newGame);
         return newGame;
     }

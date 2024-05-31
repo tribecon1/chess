@@ -68,23 +68,15 @@ public class DatabaseManager {
     public static void createDatabase() throws DataAccessException {
         try {
             var statement = "CREATE DATABASE IF NOT EXISTS " + DATABASE_NAME;
-            var conn = DatabaseManager.getConnection();
+            var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
             try (var preparedStatement = conn.prepareStatement(statement)) {
                 preparedStatement.executeUpdate();
             }
-            conn.setCatalog(DATABASE_NAME);//necessary? Dr. Wilkerson said I needed to change the conn var assignment above
-            try (var preparedStatement = conn.prepareStatement(sqlUserTable) ) {
-                preparedStatement.executeUpdate();
-            }
-            try (var preparedStatement = conn.prepareStatement(sqlAuthTable)) {
-                preparedStatement.executeUpdate();
-            }
-            try (var preparedStatement = conn.prepareStatement(sqlGameTable)) {
-                preparedStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
+        createTables();
     }
 
     /**
@@ -102,10 +94,28 @@ public class DatabaseManager {
     public static Connection getConnection() throws DataAccessException {
         try {
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
-            conn.setCatalog(DATABASE_NAME);
+            conn.setCatalog(DATABASE_NAME); //if I comment this out, run it, it creates it. But then can't create tables. So I have to uncomment
             return conn;
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
         }
     }
+
+    public static void createTables() throws DataAccessException{
+        try (Connection conn = getConnection()) {
+            try (var preparedStatement = conn.prepareStatement(sqlUserTable)){
+                preparedStatement.executeUpdate();
+            }
+            try (var preparedStatement = conn.prepareStatement(sqlAuthTable)) {
+                preparedStatement.executeUpdate();
+            }
+            try (var preparedStatement = conn.prepareStatement(sqlGameTable)) {
+                preparedStatement.executeUpdate();
+            }
+        }
+        catch (SQLException e){
+            throw new DataAccessException(e.getMessage());
+        }
+    }
+
 }

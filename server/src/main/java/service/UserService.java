@@ -21,9 +21,6 @@ public class UserService {
     }
 
     public AuthData register(UserData user) throws DataAccessException {
-        if (user.username() == null || user.username().isEmpty() || user.password() == null){
-            throw new DataAccessException("Error: bad request");
-        }
         if (this.userDaoUS.getUser(user.username()) == null){
             try {
                 this.userDaoUS.createUser(user.username(), user.password(), user.email());
