@@ -19,5 +19,5 @@ public interface GameDao {
 
     boolean getGameByName(String gameName) throws DataAccessException;
 
-    int getDatabaseSize();
+    int getDatabaseSize() throws DataAccessException;
 }

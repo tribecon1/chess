@@ -6,6 +6,7 @@ import dataaccess.dao.memorydao.MemoryAuthDao;
 import dataaccess.dao.memorydao.MemoryGameDao;
 import dataaccess.dao.memorydao.MemoryUserDao;
 import dataaccess.dao.sqldao.SqlAuthDao;
+import dataaccess.dao.sqldao.SqlGameDao;
 import dataaccess.dao.sqldao.SqlUserDao;
 import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
@@ -40,7 +41,8 @@ public class Server {
 
         //this.userDao = new MemoryUserDao();
         this.userDao = new SqlUserDao();
-        this.gameDao = new MemoryGameDao();
+        //this.gameDao = new MemoryGameDao();
+        this.gameDao = new SqlGameDao();
         //this.authDao = new MemoryAuthDao();
         this.authDao = new SqlAuthDao();
         //to be replaced w/ SQL in Phase 4

@@ -118,4 +118,40 @@ public class DatabaseManager {
         }
     }
 
+    public static void clearTable(String givenTable) throws DataAccessException {
+        Connection conn = null;
+        try (Connection autoCloseC = DatabaseManager.getConnection()){
+            conn = autoCloseC;
+            String sql = "DROP TABLE ?";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, givenTable);
+                ps.executeUpdate();
+            }
+        }
+        catch (SQLException e) {
+            throw new DataAccessException(String.format("Database Error: %s", e.getMessage()));
+        }
+    }
+
+
+    public static int getRowCount(String givenTable) throws DataAccessException {
+        int numberOfEntries = 0;
+        Connection conn = null;
+        try (Connection autoCloseC = DatabaseManager.getConnection()){
+            conn = autoCloseC;
+            String sql = "SELECT COUNT(*) FROM ?";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, givenTable);
+                ResultSet resultSet = ps.executeQuery();
+                if (resultSet.next()) {
+                    numberOfEntries = resultSet.getInt(1);
+                }
+            }
+        }
+        catch (SQLException e) {
+            throw new DataAccessException(String.format("Database Error: %s", e.getMessage()));
+        }
+        return numberOfEntries;
+    }
+
 }

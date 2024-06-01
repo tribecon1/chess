@@ -70,38 +70,12 @@ public class SqlAuthDao implements AuthDao {
 
     @Override
     public void clearAuth() throws DataAccessException {
-        Connection conn = null;
-        try (Connection autoCloseC = DatabaseManager.getConnection()){
-            conn = autoCloseC;
-            String sql = "DROP TABLE auth"; //if user replaced w/ ? and uncommented below, is code reusable for all 3 classes?
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.executeUpdate();
-            }
-        }
-        catch (SQLException e) {
-            throw new DataAccessException(String.format("Database Error: %s", e.getMessage()));
-        }
+        DatabaseManager.clearTable("auth");
     }
 
     @Override
     public int getDatabaseSize() throws DataAccessException {
-        int numberOfEntries = 0;
-        Connection conn = null;
-        try (Connection autoCloseC = DatabaseManager.getConnection()){
-            conn = autoCloseC;
-            String sql = "SELECT COUNT(*) FROM auth"; //if user replaced w/ ? and uncommented below, is code reusable for all 3 classes?
-            try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                //ps.setString(1, "auth");
-                ResultSet resultSet = ps.executeQuery();
-                if (resultSet.next()) {
-                    numberOfEntries = resultSet.getInt(1);
-                }
-            }
-        }
-        catch (SQLException e) {
-            throw new DataAccessException(String.format("Database Error: %s", e.getMessage()));
-        }
-        return numberOfEntries;
+        return DatabaseManager.getRowCount("auth");
     }
 
 }
