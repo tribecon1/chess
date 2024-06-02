@@ -8,7 +8,6 @@ import dataaccess.dao.sqldao.SqlGameDao;
 import dataaccess.dao.sqldao.SqlUserDao;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import service.SystemService;
@@ -21,13 +20,10 @@ public class UserSqlTests {
     private final AuthDao authDao = new SqlAuthDao();
     private final UserDao userDao = new SqlUserDao();
 
-    @BeforeAll
-    public static void before() throws DataAccessException {
-        DatabaseManager.createDatabase();
-    }
 
     @BeforeEach
     void preTest() throws DataAccessException {
+        DatabaseManager.createDatabase();
         new SystemService(gameDao, authDao, userDao).clear();
     }
 
@@ -90,7 +86,5 @@ public class UserSqlTests {
         userDao.clearUser();
         Assertions.assertThrows(DataAccessException.class, userDao::getDatabaseSize);
     }
-
-
 
 }
