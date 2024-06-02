@@ -119,7 +119,7 @@ public class DatabaseManager {
     }
 
     public static void clearTable(String givenTable) throws DataAccessException {
-        Connection conn = null;
+        Connection conn;
         try (Connection autoCloseC = DatabaseManager.getConnection()){
             conn = autoCloseC;
             String sql = "DROP TABLE " + String.format(givenTable);
@@ -135,12 +135,11 @@ public class DatabaseManager {
 
     public static int getRowCount(String givenTable) throws DataAccessException {
         int numberOfEntries = 0;
-        Connection conn = null;
+        Connection conn;
         try (Connection autoCloseC = DatabaseManager.getConnection()){
             conn = autoCloseC;
-            String sql = "SELECT COUNT(*) FROM ?";
+            String sql = "SELECT COUNT(*) FROM " + String.format(givenTable);
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, givenTable);
                 ResultSet resultSet = ps.executeQuery();
                 if (resultSet.next()) {
                     numberOfEntries = resultSet.getInt(1);
