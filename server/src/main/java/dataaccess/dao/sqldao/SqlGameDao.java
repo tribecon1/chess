@@ -4,11 +4,9 @@ import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import dataaccess.dao.GameDao;
-import model.AuthData;
 import model.GameData;
 import server.SerializerDeserializer;
 
-import javax.xml.crypto.Data;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
