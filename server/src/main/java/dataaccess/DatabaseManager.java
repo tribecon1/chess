@@ -22,7 +22,7 @@ public class DatabaseManager {
     private static final String sqlAuthTable =
             """
             CREATE TABLE IF NOT EXISTS auth (
-              `username` varchar(30) NOT NULL UNIQUE,
+              `username` varchar(30) NOT NULL,
               `authToken` varchar(45) NOT NULL PRIMARY KEY
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """;
@@ -94,7 +94,7 @@ public class DatabaseManager {
     public static Connection getConnection() throws DataAccessException {
         try {
             var conn = DriverManager.getConnection(CONNECTION_URL, USER, PASSWORD);
-            conn.setCatalog(DATABASE_NAME); //if I comment this out, run it, it creates it. But then can't create tables. So I have to uncomment
+            conn.setCatalog(DATABASE_NAME);
             return conn;
         } catch (SQLException e) {
             throw new DataAccessException(e.getMessage());
@@ -122,9 +122,8 @@ public class DatabaseManager {
         Connection conn = null;
         try (Connection autoCloseC = DatabaseManager.getConnection()){
             conn = autoCloseC;
-            String sql = "DROP TABLE ?";
+            String sql = "DROP TABLE " + String.format(givenTable);
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setString(1, givenTable);
                 ps.executeUpdate();
             }
         }

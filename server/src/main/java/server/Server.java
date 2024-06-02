@@ -36,7 +36,7 @@ public class Server {
             DatabaseManager.createDatabase(); //if it doesn't already exist
         }
         catch (DataAccessException e){
-            e.printStackTrace();//best way to handle this since there is no "status code"?
+            e.printStackTrace();
         }
 
         //this.userDao = new MemoryUserDao();
@@ -45,7 +45,6 @@ public class Server {
         this.gameDao = new SqlGameDao();
         //this.authDao = new MemoryAuthDao();
         this.authDao = new SqlAuthDao();
-        //to be replaced w/ SQL in Phase 4
     }
 
     public int run(int desiredPort) {

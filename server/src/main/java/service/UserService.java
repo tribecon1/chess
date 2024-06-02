@@ -21,17 +21,22 @@ public class UserService {
     }
 
     public AuthData register(UserData user) throws DataAccessException {
-        if (this.userDaoUS.getUser(user.username()) == null){
-            try {
-                this.userDaoUS.createUser(user.username(), user.password(), user.email());
-            }
-            catch (SQLException e){
-                throw new DataAccessException(String.format("Database Error: %s", e.getMessage()));
-            }
-            String authToken = UUID.randomUUID().toString();
-            return this.authDaoUS.createAuth(user.username(), authToken);
+        if (user.username() == null || user.password() == null){
+            throw new DataAccessException("Error: bad request");
         }
-        throw new DataAccessException("Error: already taken");
+        else{
+            if (this.userDaoUS.getUser(user.username()) == null){
+                try {
+                    this.userDaoUS.createUser(user.username(), user.password(), user.email());
+                }
+                catch (SQLException e){
+                    throw new DataAccessException(String.format("Database Error: %s", e.getMessage()));
+                }
+                String authToken = UUID.randomUUID().toString();
+                return this.authDaoUS.createAuth(user.username(), authToken);
+            }
+            throw new DataAccessException("Error: already taken");
+        }
     }
 
     public AuthData login(LoginRequest loginRequest) throws DataAccessException {

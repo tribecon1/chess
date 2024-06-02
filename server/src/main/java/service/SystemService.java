@@ -1,6 +1,7 @@
 package service;
 
 import dataaccess.DataAccessException;
+import dataaccess.DatabaseManager;
 import dataaccess.dao.AuthDao;
 import dataaccess.dao.GameDao;
 import dataaccess.dao.UserDao;
@@ -22,5 +23,6 @@ public class SystemService {
         this.gameDaoSS.clearGame();
         this.authDaoSS.clearAuth();
         this.userDaoSS.clearUser();
+        DatabaseManager.createTables();
     }
 }
