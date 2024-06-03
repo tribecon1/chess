@@ -121,5 +121,4 @@ public class AuthSqlTests {
         Assertions.assertThrows(DataAccessException.class, authDao::getDatabaseSize);
     }
 
-
 }
