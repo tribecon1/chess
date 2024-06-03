@@ -9,7 +9,7 @@ public class DatabaseManager {
     private static final String PASSWORD;
     private static final String CONNECTION_URL;
 
-    private static final String sqlUserTable =
+    private static final String SQLUSERTABLE =
             """
             CREATE TABLE IF NOT EXISTS user (
               `username` varchar(30) NOT NULL PRIMARY KEY,
@@ -19,7 +19,7 @@ public class DatabaseManager {
             """;
 
 
-    private static final String sqlAuthTable =
+    private static final String SQLAUTHTABLE =
             """
             CREATE TABLE IF NOT EXISTS auth (
               `username` varchar(30) NOT NULL,
@@ -28,7 +28,7 @@ public class DatabaseManager {
             """;
 
 
-    private static final String sqlGameTable =
+    private static final String SQLGAMETABLE =
             """
             CREATE TABLE IF NOT EXISTS game (
               `gameID` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -103,13 +103,13 @@ public class DatabaseManager {
 
     public static void createTables() throws DataAccessException{
         try (Connection conn = getConnection()) {
-            try (var preparedStatement = conn.prepareStatement(sqlUserTable)){
+            try (var preparedStatement = conn.prepareStatement(SQLUSERTABLE)){
                 preparedStatement.executeUpdate();
             }
-            try (var preparedStatement = conn.prepareStatement(sqlAuthTable)) {
+            try (var preparedStatement = conn.prepareStatement(SQLAUTHTABLE)) {
                 preparedStatement.executeUpdate();
             }
-            try (var preparedStatement = conn.prepareStatement(sqlGameTable)) {
+            try (var preparedStatement = conn.prepareStatement(SQLGAMETABLE)) {
                 preparedStatement.executeUpdate();
             }
         }

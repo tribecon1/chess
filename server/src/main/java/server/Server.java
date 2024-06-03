@@ -92,8 +92,7 @@ public class Server {
 
 
     private void createRoutes() {
-        //GET list of games
-        Spark.get("/game", (req, res) -> {
+        Spark.get("/game", (req, res) -> {         //GET list of games
             String authToken = req.headers("authorization");
             GameService gameService = new GameService(this.gameDao, this.authDao);
             try {
@@ -102,8 +101,7 @@ public class Server {
             }
             catch (DataAccessException e){
                 return errorTranslator(res, e);
-            }
-        });
+            }});
         Spark.post("/:givenPath", (req, res) -> {         //POST creating a new game, login, register
             String givenPath = req.params(":givenPath");
             UserService userService = new UserService(this.userDao, this.authDao); //needed objects throughout this branch
@@ -148,8 +146,7 @@ public class Server {
                     res.status(404);
                     res.body("Error: Not found");
                     return res;
-            }
-        });
+            } });
         Spark.put("/game", (req, res) -> {          //PUT join game
             if (badRequestChecker(req, res) != null) {
                 return badRequestChecker(req, res);
@@ -163,8 +160,7 @@ public class Server {
             }
             catch (DataAccessException e) {
                 return errorTranslator(res, e);
-            }
-        });
+            } });
         Spark.delete("/:givenPath", (req, res) -> {          //DELETE clear all databases/DAOs or logout
             String givenPath = req.params(":givenPath");
             switch (givenPath) {
@@ -191,8 +187,7 @@ public class Server {
                     res.status(404);
                     res.body("Error: Not found");
                     return res;
-            }
-        });
+            } });
     }
 
     public static void main(String[] args){
