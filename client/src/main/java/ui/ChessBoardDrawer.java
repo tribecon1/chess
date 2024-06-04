@@ -46,7 +46,7 @@ public class ChessBoardDrawer {
 
         //Black-view Chess Board
         drawHeaders(out, ChessGame.TeamColor.BLACK);
-        drawBoard(out, new ChessGame().getBoard());
+        drawBoard(out, new ChessGame().getBoard(), ChessGame.TeamColor.BLACK);
         drawHeaders(out, ChessGame.TeamColor.BLACK);
 
         out.print(SET_BG_COLOR_BLACK);
@@ -73,40 +73,78 @@ public class ChessBoardDrawer {
         out.print(headerText);
     }
 
-    private static void drawBoard(PrintStream out, ChessBoard currBoard) {
+    private static void drawBoard(PrintStream out, ChessBoard currBoard, ChessGame.TeamColor currTeamOrientation) {
 
-        for (int rowNum = BOARD_DIMENSION_IN_SQUARES; rowNum > 0; --rowNum) {
-            printRowNum(out, rowNum);
-            if (rowNum % 2 != 0) {
-                for (int colNum = BOARD_DIMENSION_IN_SQUARES; colNum > 0; --colNum) {
-                    if (colNum % 2 != 0) {
-                        setGreen(out);
-                        //out.print(EMPTY);
+        switch (currTeamOrientation) {
+            case WHITE:
+                for (int rowNum = BOARD_DIMENSION_IN_SQUARES; rowNum > 0; --rowNum) {
+                    printRowNum(out, rowNum);
+                    if (rowNum % 2 != 0) {
+                        for (int colNum = BOARD_DIMENSION_IN_SQUARES; colNum > 0; --colNum) {
+                            if (colNum % 2 != 0) {
+                                setGreen(out);
+                                //out.print(EMPTY);
+                            }
+                            else {
+                                setDarkGreen(out);
+                                //out.print(EMPTY);
+                            }
+                            pieceChecker(currBoard, out, rowNum, colNum);
+                        }
                     }
-                    else {
-                        setDarkGreen(out);
-                        //out.print(EMPTY);
+                    else{
+                        for (int colNum = BOARD_DIMENSION_IN_SQUARES; colNum > 0; --colNum) {
+                            if (colNum % 2 != 0) {
+                                setDarkGreen(out);
+                                //out.print(EMPTY);
+                            }
+                            else {
+                                setGreen(out);
+                                //out.print(EMPTY);
+                            }
+                            pieceChecker(currBoard, out, rowNum, colNum);
+                        }
                     }
-                    pieceChecker(currBoard, out, rowNum, colNum);
+                    printRowNum(out, rowNum);
+                    setBlack(out); //could be white for other terminal color
+                    out.println();
                 }
-            }
-            else{
-                for (int colNum = BOARD_DIMENSION_IN_SQUARES; colNum > 0; --colNum) {
-                    if (colNum % 2 != 0) {
-                        setDarkGreen(out);
-                        //out.print(EMPTY);
+                break;
+            case BLACK:
+                for (int rowNum = 1; rowNum < BOARD_DIMENSION_IN_SQUARES+1; ++rowNum) {
+                    printRowNum(out, rowNum);
+                    if (rowNum % 2 != 0) {
+                        for (int colNum = 1; colNum < BOARD_DIMENSION_IN_SQUARES+1; ++colNum) {
+                            if (colNum % 2 != 0) {
+                                setGreen(out);
+                                //out.print(EMPTY);
+                            }
+                            else {
+                                setDarkGreen(out);
+                                //out.print(EMPTY);
+                            }
+                            pieceChecker(currBoard, out, rowNum, colNum);
+                        }
                     }
-                    else {
-                        setGreen(out);
-                        //out.print(EMPTY);
+                    else{
+                        for (int colNum = 1; colNum < BOARD_DIMENSION_IN_SQUARES+1; ++colNum) {
+                            if (colNum % 2 != 0) {
+                                setDarkGreen(out);
+                                //out.print(EMPTY);
+                            }
+                            else {
+                                setGreen(out);
+                                //out.print(EMPTY);
+                            }
+                            pieceChecker(currBoard, out, rowNum, colNum);
+                        }
                     }
-                    pieceChecker(currBoard, out, rowNum, colNum);
+                    printRowNum(out, rowNum);
+                    setBlack(out); //could be white for other terminal color
+                    out.println();
                 }
-            }
-            printRowNum(out, rowNum);
-            setBlack(out); //could be white for other terminal color
-            out.println();
         }
+
     }
 
 
