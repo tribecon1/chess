@@ -1,12 +1,10 @@
 package ui;
 
 import model.UserData;
+import net.ClientCommunicator;
 import request.LoginRequest;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -19,11 +17,8 @@ public class Client {
     private static String authToken = null;
 
     public static void main(String[] args){
+        ClientCommunicator clientCommunicator = new ClientCommunicator("http://localhost:8080/");
         startupMenu();
-        /*while (authToken != null){
-            //code
-        }*/
-
     }
 
 
@@ -47,7 +42,6 @@ public class Client {
                     UserData newUser = registerInfoSteps();
                     currUser = newUser.username();
                     //authToken = res.body();
-                    //send off to ServerFacade or ClientCommunicator?? (in one line)
                     break;
                 case "LOGIN":
                     loginVerifySteps();
