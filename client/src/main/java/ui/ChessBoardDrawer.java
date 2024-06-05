@@ -44,14 +44,26 @@ public class ChessBoardDrawer {
 
         out.print(ERASE_SCREEN);
 
-        //Black-view Chess Board
-        drawHeaders(out, ChessGame.TeamColor.BLACK);
-        drawBoard(out, new ChessGame().getBoard(), ChessGame.TeamColor.BLACK);
-        drawHeaders(out, ChessGame.TeamColor.BLACK);
+        createBoardWhiteOrientation(out, new ChessGame().getBoard());
+        out.println();
+        createBoardBlackOrientation(out, new ChessGame().getBoard());
 
         out.print(SET_BG_COLOR_BLACK);
         out.print(SET_TEXT_COLOR_WHITE);
     }
+
+    private static void createBoardWhiteOrientation(PrintStream out, ChessBoard currBoard) {
+        drawHeaders(out, ChessGame.TeamColor.WHITE);
+        drawBoard(out, currBoard, ChessGame.TeamColor.WHITE);
+        drawHeaders(out, ChessGame.TeamColor.WHITE);
+    }
+
+    private static void createBoardBlackOrientation(PrintStream out, ChessBoard currBoard) {
+        drawHeaders(out, ChessGame.TeamColor.BLACK);
+        drawBoard(out, currBoard, ChessGame.TeamColor.BLACK);
+        drawHeaders(out, ChessGame.TeamColor.BLACK);
+    }
+
 
     private static void drawHeaders(PrintStream out, ChessGame.TeamColor currTeamOrientation) {
         setLightBrown(out);
