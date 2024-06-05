@@ -1,5 +1,8 @@
 package ui;
 
+import model.UserData;
+import request.LoginRequest;
+
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,15 +15,11 @@ public class Client {
 
     private static final PrintStream OUT = System.out;
     private static final Scanner TERMINAL_READER = new Scanner(System.in);
+    private static String currUser = null;
     private static String authToken = null;
-    private static final List<String> STARTUP_COMMANDS = new ArrayList<>(Arrays.asList("REGISTER", "LOGIN", "QUIT"));
-    private static boolean badCommand = false;
-    private static boolean helpLoop = false;
 
     public static void main(String[] args){
-        while (authToken == null){
-            startupMenu();
-        }
+        startupMenu();
         /*while (authToken != null){
             //code
         }*/
@@ -35,7 +34,7 @@ public class Client {
         OUT.println();
         OUT.print(SET_TEXT_COLOR_WHITE);
 
-        while(true){
+        while(authToken == null){
             OUT.println("Type \"help\" to see your options, or enter your desired action here!:");
 
             String userResponse = TERMINAL_READER.nextLine().toUpperCase();
@@ -45,10 +44,14 @@ public class Client {
                     helpMenuOptions();
                     break;
                 case "REGISTER":
-                    registerInfoSteps();
+                    UserData newUser = registerInfoSteps();
+                    currUser = newUser.username();
+                    //authToken = res.body();
+                    //send off to ServerFacade or ClientCommunicator?? (in one line)
                     break;
                 case "LOGIN":
-                    OUT.println("Login code here!");
+                    loginVerifySteps();
+                    //authToken = res.body();
                     break;
                 case "QUIT":
                     OUT.println("Closing your connection to the Chess Server...");
@@ -58,7 +61,46 @@ public class Client {
                 OUT.println("ERROR! Unknown command: " + "\"" + userResponse + "\"");
             }
         }
+        authorizedMenu();
     }
+
+    public static void authorizedMenu(){
+        OUT.print(SET_TEXT_COLOR_WHITE);
+        OUT.println("***********************************************************************************");
+        OUT.print("Welcome user \"" + currUser + "\"! ");
+        while(authToken != null){
+            OUT.println("What would you like to do today? Type \"help\" to see your available commands!");
+
+            String userResponse = TERMINAL_READER.nextLine().toUpperCase();
+
+            switch(userResponse){
+                case "HELP":
+                    helpAuthorizedOptions();
+                    break;
+                case "LOGOUT":
+                    //perform method
+                    authToken = null;
+                    break;
+                case "CREATE":
+                    //perform method
+                    break;
+                case "LIST":
+                    //perform method
+                    break;
+                case "JOIN":
+                    //perform method
+                    break;
+                case "OBSERVE":
+                    //perform method
+                    break;
+                default:
+                    OUT.println("ERROR! Unknown command: " + "\"" + userResponse + "\"");
+            }
+        }
+        startupMenu();
+    }
+
+
 
 
 
@@ -88,25 +130,48 @@ public class Client {
         OUT.print(SET_TEXT_COLOR_WHITE);
     }
 
-    private static void registerInfoSteps(){
+    private static void helpAuthorizedOptions(){
+        OUT.println("Here are the following available commands: ");
+    }
+
+
+    private static UserData registerInfoSteps(){
         OUT.println("Create your username:");
-        String userResponse = TERMINAL_READER.nextLine();
-        while(userResponse.isEmpty()){
+        String username = TERMINAL_READER.nextLine();
+        while(username.isEmpty()){
             OUT.println("Username may not be blank, please try again: ");
-            userResponse = TERMINAL_READER.nextLine();
+            username = TERMINAL_READER.nextLine();
         }
         OUT.println("Create your password:");
-        userResponse = TERMINAL_READER.nextLine();
-        while(userResponse.isEmpty()){
+        String password = TERMINAL_READER.nextLine();
+        while(password.isEmpty()){
             OUT.println("Password may not be blank, please try again: ");
-            userResponse = TERMINAL_READER.nextLine();
+            password = TERMINAL_READER.nextLine();
         }
         OUT.println("Enter your email:");
-        userResponse = TERMINAL_READER.nextLine();
-        while(userResponse.isEmpty()){
+        String email = TERMINAL_READER.nextLine();
+        while(email.isEmpty()){
             OUT.println("Email may not be blank, please try again:");
-            userResponse = TERMINAL_READER.nextLine();
+            email = TERMINAL_READER.nextLine();
         }
+        return new UserData(username, password, email);
     }
+
+    private static LoginRequest loginVerifySteps(){
+        OUT.println("Enter your username:");
+        String username = TERMINAL_READER.nextLine();
+        while(username.isEmpty()){
+            OUT.println("Username may not be blank, please try again: ");
+            username = TERMINAL_READER.nextLine();
+        }
+        OUT.println("Enter your password:");
+        String password = TERMINAL_READER.nextLine();
+        while(password.isEmpty()){
+            OUT.println("Password may not be blank, please try again: ");
+            password = TERMINAL_READER.nextLine();
+        }
+        return new LoginRequest(username, password);
+    }
+
 
 }
