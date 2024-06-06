@@ -1,15 +1,19 @@
 package ui;
 
 import chess.ChessGame;
+import model.GameData;
 import model.UserData;
 import net.ClientCommunicator;
 import net.ServerFacade;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
+import response.ListGamesResponse;
+import server.SerializerDeserializer;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static ui.ClientMenus.*;
@@ -122,6 +126,16 @@ public class Client {
                     break;
                 case "LIST":
                     //perform method
+                    resultText = ServerFacade.listGames(authToken);
+                    if (resultText.contains("Error")){
+                        OUT.println("Getting a list of games failed!: " + resultText);
+                    }
+                    else{
+                        ArrayList<GameData> listOfGames = new ArrayList<>(SerializerDeserializer.convertFromJSON(resultText, ListGamesResponse.class).games());
+                        for (int rowNum = 1; rowNum <= listOfGames.size(); ++rowNum){
+                            OUT.println(rowNum + ". " + listOfGames.get(rowNum-1));
+                        }
+                    }
                     break;
                 case "JOIN":
                     //temporary

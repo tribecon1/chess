@@ -78,7 +78,7 @@ public class ServerFacade {
         String urlExtension = "game";
         ResponseType responseObject = ClientCommunicator.createHttpGet(authToken, urlExtension);
         if (responseObject instanceof ListGamesResponse){
-            return "KEEP WORKING ON THIS!";
+            return SerializerDeserializer.convertToJSON(responseObject);
         }
         else if (responseObject instanceof ErrorResponse){
             return ((ErrorResponse) responseObject).message();
