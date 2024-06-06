@@ -2,8 +2,10 @@ package ui;
 
 import model.UserData;
 import net.ClientCommunicator;
+import net.ServerFacade;
 import request.LoginRequest;
 
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
@@ -16,13 +18,13 @@ public class Client {
     private static String currUser = null;
     private static String authToken = null;
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         ClientCommunicator clientCommunicator = new ClientCommunicator("http://localhost:8080/");
         startupMenu();
     }
 
 
-    public static void startupMenu(){
+    public static void startupMenu() throws IOException {
         OUT.println("***********************************************************************************");
         OUT.println("♖ Welcome to Bentley's CS 240 Chess Fest! ♜");
         OUT.println("***********************************************************************************");
@@ -31,6 +33,7 @@ public class Client {
 
         while(authToken == null){
             OUT.println("Type \"help\" to see your options, or enter your desired action here!:");
+            OUT.print(">>> ");
 
             String userResponse = TERMINAL_READER.nextLine().toUpperCase();
 
@@ -40,11 +43,18 @@ public class Client {
                     break;
                 case "REGISTER":
                     UserData newUser = registerInfoSteps();
-                    currUser = newUser.username();
-                    //authToken = res.body();
+                    String resultText = ServerFacade.register(newUser);
+                    if (resultText.contains("Error")){
+                        OUT.println("Register failed!: " + resultText);
+                    }
+                    else{
+                        currUser = newUser.username();
+                        authToken = resultText;
+                    }
+                    //authToken = "pass"; //TEST
                     break;
                 case "LOGIN":
-                    loginVerifySteps();
+                    LoginRequest loginRequest = loginVerifySteps();
                     //authToken = res.body();
                     break;
                 case "QUIT":
@@ -58,12 +68,13 @@ public class Client {
         authorizedMenu();
     }
 
-    public static void authorizedMenu(){
+    public static void authorizedMenu() throws IOException {
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.println("***********************************************************************************");
         OUT.print("Welcome user \"" + currUser + "\"! ");
         while(authToken != null){
             OUT.println("What would you like to do today? Type \"help\" to see your available commands!");
+            OUT.print(">>> ");
 
             String userResponse = TERMINAL_READER.nextLine().toUpperCase();
 
@@ -105,27 +116,53 @@ public class Client {
         OUT.print(SET_TEXT_COLOR_ORANGE);
         OUT.print("<USERNAME> <PASSWORD> <EMAIL> ");
         OUT.print(SET_TEXT_COLOR_GREEN);
-        OUT.print("to register a new user!");
-        OUT.println();
+        OUT.println("to register a new user!");
 
         OUT.print(SET_TEXT_COLOR_BLUE);
         OUT.print("   * Login - Provide an existing ");
         OUT.print(SET_TEXT_COLOR_ORANGE);
         OUT.print("<USERNAME> <PASSWORD> ");
         OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.print("to login!");
-        OUT.println();
+        OUT.println("to login!");
 
         OUT.print(SET_TEXT_COLOR_MAGENTA);
         OUT.println("   * Help - List of available commands");
 
         OUT.print(SET_TEXT_COLOR_RED);
         OUT.println("   * Quit your current session");
+        OUT.println();
         OUT.print(SET_TEXT_COLOR_WHITE);
     }
 
     private static void helpAuthorizedOptions(){
         OUT.println("Here are the following available commands: ");
+        OUT.print(SET_TEXT_COLOR_BLUE);
+        OUT.print("   * Create - Provide a ");
+        OUT.print(SET_TEXT_COLOR_ORANGE);
+        OUT.print("<gameName> ");
+        OUT.print(SET_TEXT_COLOR_BLUE);
+        OUT.println("to create a new game of chess!");
+
+        OUT.println("   * List - to list all current chess games!");
+
+        OUT.print("   * Join - Provide a ");
+        OUT.print(SET_TEXT_COLOR_ORANGE);
+        OUT.print("<gameID> [White|Black] ");
+        OUT.print(SET_TEXT_COLOR_BLUE);
+        OUT.println("to join and play in an existing game of chess!");
+
+        OUT.print("   * Observe - Provide a ");
+        OUT.print(SET_TEXT_COLOR_ORANGE);
+        OUT.print("<gameID> ");
+        OUT.print(SET_TEXT_COLOR_BLUE);
+        OUT.println("to watch an active game of chess!");
+
+        OUT.println("   * Logout - When you are finished! ");
+
+        OUT.print(SET_TEXT_COLOR_MAGENTA);
+        OUT.println("   * Help - List of available commands");
+        OUT.println();
+        OUT.print(SET_TEXT_COLOR_WHITE);
     }
 
 
