@@ -4,6 +4,7 @@ package net;
 import model.AuthData;
 import model.UserData;
 import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.LoginRequest;
 import response.CreateGameResponse;
 import response.ErrorResponse;
@@ -79,6 +80,21 @@ public class ServerFacade {
         ResponseType responseObject = ClientCommunicator.createHttpGet(authToken, urlExtension);
         if (responseObject instanceof ListGamesResponse){
             return SerializerDeserializer.convertToJSON(responseObject);
+        }
+        else if (responseObject instanceof ErrorResponse){
+            return ((ErrorResponse) responseObject).message();
+        }
+        else{
+            return "Unknown Error. Please contact us.";
+        }
+    }
+
+    public static String joinGame(JoinGameRequest joinRequest, String authToken) throws IOException {
+        String urlExtension = "game";
+        String joinGameJSON = SerializerDeserializer.convertToJSON(joinRequest);
+        ResponseType responseObject = ClientCommunicator.createHttpPut(joinGameJSON, authToken, urlExtension);
+        if (responseObject == null){
+            return "Successfully joined the game with ID # " + joinRequest.gameID();
         }
         else if (responseObject instanceof ErrorResponse){
             return ((ErrorResponse) responseObject).message();

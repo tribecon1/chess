@@ -100,7 +100,6 @@ public class Client {
                     helpAuthorizedOptions(OUT);
                     break;
                 case "LOGOUT":
-                    //perform method
                     resultText = ServerFacade.logout(authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Logout failed!: " + resultText);
@@ -114,7 +113,6 @@ public class Client {
                     }
                     break;
                 case "CREATE":
-                    //perform method
                     CreateGameRequest newGame = createSteps(OUT, TERMINAL_READER);
                     resultText = ServerFacade.createGame(newGame, authToken);
                     if (resultText.contains("Error")){
