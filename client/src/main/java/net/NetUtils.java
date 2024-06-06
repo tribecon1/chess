@@ -1,5 +1,6 @@
 package net;
 
+import dataaccess.DataAccessException;
 import response.ErrorResponse;
 import server.SerializerDeserializer;
 
@@ -21,14 +22,12 @@ public class NetUtils {
         connection.setReadTimeout(5000);
         connection.setRequestMethod(requestMethod);
         connection.setDoOutput(true);
-        connection.connect();
         return connection;
     }
 
     public static void connectionBodyAdded(String responseBodyJSON, HttpURLConnection givenConnection) throws IOException {
         try(OutputStream requestBody = givenConnection.getOutputStream()) {
-            OutputStreamWriter writer = new OutputStreamWriter(requestBody, StandardCharsets.UTF_8);
-            writer.write(responseBodyJSON);
+            requestBody.write(responseBodyJSON.getBytes(StandardCharsets.UTF_8));
         }
     }
 
@@ -39,11 +38,12 @@ public class NetUtils {
         return SerializerDeserializer.convertFromJSON(responseBodyJSON, objClass);
     }
 
-    public static ErrorResponse errorResponseObject(HttpURLConnection connection){
+    public static ErrorResponse errorResponseObject(HttpURLConnection connection) throws IOException {
         Scanner responseBodyReader = new Scanner(connection.getErrorStream(), StandardCharsets.UTF_8);
         String responseBodyJSON = responseBodyReader.useDelimiter("\\A").next();
         responseBodyReader.close();
-        return SerializerDeserializer.convertFromJSON(responseBodyJSON, ErrorResponse.class);
+        System.out.println(responseBodyJSON);
+        return new ErrorResponse(connection.getResponseCode(), responseBodyJSON);
     }
 
 

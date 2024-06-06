@@ -20,7 +20,6 @@ public class Client {
     private static String authToken = null;
 
     public static void main(String[] args) throws IOException {
-        ClientCommunicator clientCommunicator = new ClientCommunicator("http://localhost:8080/");
         startupMenu();
     }
 

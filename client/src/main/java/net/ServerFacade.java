@@ -12,7 +12,7 @@ import java.io.IOException;
 public class ServerFacade {
 
     public static String register(UserData user) throws IOException {
-        String urlExtension = "/user";
+        String urlExtension = "user";
         String registerJSON = SerializerDeserializer.convertToJSON(user);
         ResponseType responseObject = ClientCommunicator.createHttpPost(registerJSON, null, urlExtension);
         if (responseObject instanceof AuthData){
@@ -22,7 +22,7 @@ public class ServerFacade {
             return ((ErrorResponse) responseObject).message();
         }
         else{
-            return "Unknown error. Please contact us.";
+            return "Unknown Error. Please contact us.";
         }
     }
 
