@@ -1,15 +1,14 @@
 package net;
 
 import model.AuthData;
-import response.ErrorResponse;
+import response.CreateGameResponse;
+import response.ListGamesResponse;
 import response.ResponseType;
-import server.SerializerDeserializer;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
+
+import static net.NetUtils.*;
 
 public class ClientCommunicator {
     private static String baseLink;
@@ -19,14 +18,19 @@ public class ClientCommunicator {
     }
 
     public static ResponseType createHttpPost(String requestBodyJSON, String authToken, String urlPath) throws IOException {
-        HttpURLConnection connection = getHttpURLConnection(urlPath, "POST");
+        HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "POST");
         if (urlPath.equals("/game")){
             connection.addRequestProperty("authorization", authToken);
         }
         connectionBodyAdded(requestBodyJSON, connection);
 
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            return successResponseObject(connection, AuthData.class);
+            if (urlPath.equals("/game")){
+                return successResponseObject(connection, CreateGameResponse.class);
+            }
+            else{
+                return successResponseObject(connection, AuthData.class);
+            }
         }
         else {
             return errorResponseObject(connection);
@@ -35,47 +39,45 @@ public class ClientCommunicator {
 
 
     public static ResponseType createHttpPut(String requestBodyJSON, String authToken, String urlPath) throws IOException {
+        HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "PUT");
+        connection.addRequestProperty("authorization", authToken);
+        connectionBodyAdded(requestBodyJSON, connection);
 
-        return null;
-    }
-
-
-
-
-
-
-    private static HttpURLConnection getHttpURLConnection(String urlPath, String requestMethod) throws IOException {
-        URL url = new URL(baseLink + urlPath);
-
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-        connection.setReadTimeout(5000);
-        connection.setRequestMethod(requestMethod);
-        connection.setDoOutput(true);
-        connection.connect();
-        return connection;
-    }
-
-    private static void connectionBodyAdded(String responseBodyJSON, HttpURLConnection givenConnection) throws IOException {
-        try(OutputStream requestBody = givenConnection.getOutputStream()) {
-            OutputStreamWriter writer = new OutputStreamWriter(requestBody, StandardCharsets.UTF_8);
-            writer.write(responseBodyJSON);
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            return null;
+        }
+        else {
+            return errorResponseObject(connection);
         }
     }
 
-    private static <T> T successResponseObject(HttpURLConnection connection, Class<T> objClass) throws IOException {
-        Scanner responseBodyReader = new Scanner(connection.getInputStream(), StandardCharsets.UTF_8);
-        String responseBodyJSON = responseBodyReader.useDelimiter("\\A").next();
-        responseBodyReader.close();
-        return SerializerDeserializer.convertFromJSON(responseBodyJSON, objClass);
+    public static ResponseType createHttpDelete(String requestBodyJSON, String authToken, String urlPath) throws IOException {
+        HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "DELETE");
+        connection.addRequestProperty("authorization", authToken);
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            return null;
+        }
+        else {
+            return errorResponseObject(connection);
+        }
     }
 
-    private static ErrorResponse errorResponseObject(HttpURLConnection connection){
-        Scanner responseBodyReader = new Scanner(connection.getErrorStream(), StandardCharsets.UTF_8);
-        String responseBodyJSON = responseBodyReader.useDelimiter("\\A").next();
-        responseBodyReader.close();
-        return SerializerDeserializer.convertFromJSON(responseBodyJSON, ErrorResponse.class);
+
+    public static ResponseType createHttpGet(String requestBodyJSON, String authToken, String urlPath) throws IOException {
+        HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "GET");
+        connection.addRequestProperty("authorization", authToken);
+
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            return successResponseObject(connection, ListGamesResponse.class);
+        }
+        else {
+            return errorResponseObject(connection);
+        }
     }
+
+
+
 
 
 }

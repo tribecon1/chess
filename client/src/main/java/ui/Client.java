@@ -44,15 +44,15 @@ public class Client {
                     break;
                 case "REGISTER":
                     UserData newUser = registerInfoSteps();
-                    /*String resultText = ServerFacade.register(newUser);
+                    String resultText = ServerFacade.register(newUser);
                     if (resultText.contains("Error")){
                         OUT.println("Register failed!: " + resultText);
                     }
                     else{
                         currUser = newUser.username();
                         authToken = resultText;
-                    }*/
-                    authToken = "pass"; //TEST
+                    }
+                    //authToken = "pass"; //TEST
                     break;
                 case "LOGIN":
                     LoginRequest loginRequest = loginVerifySteps();
