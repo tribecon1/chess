@@ -41,18 +41,18 @@ public class ChessBoardDrawer {
         drawHeaders(out, ChessGame.TeamColor.WHITE);
         drawBoard(out, currBoard, ChessGame.TeamColor.WHITE);
         drawHeaders(out, ChessGame.TeamColor.WHITE);
-        out.println();
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_DEFAULT_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
+        out.println();
     }
 
     public static void createBoardBlackOrientation(PrintStream out, ChessBoard currBoard) {
         drawHeaders(out, ChessGame.TeamColor.BLACK);
         drawBoard(out, currBoard, ChessGame.TeamColor.BLACK);
         drawHeaders(out, ChessGame.TeamColor.BLACK);
-        out.println();
-        out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_DEFAULT_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
+        out.println();
     }
 
 
@@ -67,7 +67,7 @@ public class ChessBoardDrawer {
             printHeaderText(out, headers[boardCol]);
         }
         out.print(EMPTY);
-        setBlack(out);
+        setTerminalColor(out);
         out.println();
     }
 
@@ -104,7 +104,7 @@ public class ChessBoardDrawer {
                         }
                     }
                     printRowNum(out, rowNum);
-                    setBlack(out); //could be white for other terminal color
+                    setTerminalColor(out); //could be white for other terminal color
                     out.println();
                 }
                 break;
@@ -134,7 +134,7 @@ public class ChessBoardDrawer {
                         }
                     }
                     printRowNum(out, rowNum);
-                    setBlack(out); //could be white for other terminal color
+                    setTerminalColor(out); //could be white for other terminal color
                     out.println();
                 }
         }
@@ -156,8 +156,9 @@ public class ChessBoardDrawer {
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
-    private static void setBlack(PrintStream out) {
-        out.print(SET_BG_COLOR_BLACK);
+    private static void setTerminalColor(PrintStream out) {
+        //out.print(SET_BG_COLOR_BLACK);
+        out.print(SET_DEFAULT_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
     }
 

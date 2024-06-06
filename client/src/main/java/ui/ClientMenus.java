@@ -1,5 +1,6 @@
 package ui;
 
+import model.GameData;
 import model.UserData;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
@@ -149,6 +150,24 @@ public class ClientMenus {
             gameName = TERMINAL_READER.nextLine();
         }
         return new CreateGameRequest(gameName);
+    }
+
+    public static String gameDataInterpreter(GameData gameInList){
+        String clientReadableGame = "Game ID #: " + gameInList.gameID() + " --";
+        if(gameInList.whiteUsername() == null){
+            clientReadableGame += " White Team: <Empty>" + " --";
+        }
+        else{
+            clientReadableGame += " White Team: " + gameInList.whiteUsername() + " --";
+        }
+        if(gameInList.blackUsername() == null){
+            clientReadableGame += " Black Team: <Empty>" + " --";
+        }
+        else{
+            clientReadableGame += " Black Team: " + gameInList.blackUsername() + " //";
+        }
+        clientReadableGame += " Game Name: " + gameInList.gameName() + "\n";
+        return clientReadableGame;
     }
 
 

@@ -93,9 +93,9 @@ public class Client {
             OUT.print(">>> ");
 
             String resultText;
-            String userResponse = TERMINAL_READER.nextLine().toUpperCase();
+            String userResponse = TERMINAL_READER.nextLine();
 
-            switch(userResponse){
+            switch(userResponse.toUpperCase()){
                 case "HELP":
                     helpAuthorizedOptions(OUT);
                     break;
@@ -133,7 +133,7 @@ public class Client {
                     else{
                         ArrayList<GameData> listOfGames = new ArrayList<>(SerializerDeserializer.convertFromJSON(resultText, ListGamesResponse.class).games());
                         for (int rowNum = 1; rowNum <= listOfGames.size(); ++rowNum){
-                            OUT.println(rowNum + ". " + listOfGames.get(rowNum-1));
+                            OUT.println(rowNum + ". " + gameDataInterpreter(listOfGames.get(rowNum-1)));
                         }
                     }
                     break;
