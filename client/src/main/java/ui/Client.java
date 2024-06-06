@@ -104,10 +104,10 @@ public class Client {
                     else{
                         OUT.println(resultText + "\"" + currUser + "\"!");
                         OUT.println("Thank you for joining us! Returning to start menu...");
+                        OUT.println();
                         currUser = null;
                         authToken = null;
                     }
-
                     break;
                 case "CREATE":
                     //perform method
