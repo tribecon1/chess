@@ -1,5 +1,6 @@
 package ui;
 
+import chess.ChessGame;
 import model.UserData;
 import net.ClientCommunicator;
 import net.ServerFacade;
@@ -43,15 +44,15 @@ public class Client {
                     break;
                 case "REGISTER":
                     UserData newUser = registerInfoSteps();
-                    String resultText = ServerFacade.register(newUser);
+                    /*String resultText = ServerFacade.register(newUser);
                     if (resultText.contains("Error")){
                         OUT.println("Register failed!: " + resultText);
                     }
                     else{
                         currUser = newUser.username();
                         authToken = resultText;
-                    }
-                    //authToken = "pass"; //TEST
+                    }*/
+                    authToken = "pass"; //TEST
                     break;
                 case "LOGIN":
                     LoginRequest loginRequest = loginVerifySteps();
@@ -93,10 +94,14 @@ public class Client {
                     //perform method
                     break;
                 case "JOIN":
-                    //perform method
+                    //temporary
+                    ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
+                    ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     break;
                 case "OBSERVE":
-                    //perform method
+                    //temporary
+                    ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
+                    ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     break;
                 default:
                     OUT.println("ERROR! Unknown command: " + "\"" + userResponse + "\"");
@@ -168,18 +173,21 @@ public class Client {
 
     private static UserData registerInfoSteps(){
         OUT.println("Create your username:");
+        OUT.print("> ");
         String username = TERMINAL_READER.nextLine();
         while(username.isEmpty()){
             OUT.println("Username may not be blank, please try again: ");
             username = TERMINAL_READER.nextLine();
         }
         OUT.println("Create your password:");
+        OUT.print("> ");
         String password = TERMINAL_READER.nextLine();
         while(password.isEmpty()){
             OUT.println("Password may not be blank, please try again: ");
             password = TERMINAL_READER.nextLine();
         }
         OUT.println("Enter your email:");
+        OUT.print("> ");
         String email = TERMINAL_READER.nextLine();
         while(email.isEmpty()){
             OUT.println("Email may not be blank, please try again:");
@@ -190,12 +198,14 @@ public class Client {
 
     private static LoginRequest loginVerifySteps(){
         OUT.println("Enter your username:");
+        OUT.print("> ");
         String username = TERMINAL_READER.nextLine();
         while(username.isEmpty()){
             OUT.println("Username may not be blank, please try again: ");
             username = TERMINAL_READER.nextLine();
         }
         OUT.println("Enter your password:");
+        OUT.print("> ");
         String password = TERMINAL_READER.nextLine();
         while(password.isEmpty()){
             OUT.println("Password may not be blank, please try again: ");
