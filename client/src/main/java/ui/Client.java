@@ -4,6 +4,7 @@ import chess.ChessGame;
 import model.UserData;
 import net.ClientCommunicator;
 import net.ServerFacade;
+import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
+import static ui.ClientMenus.*;
 import static ui.EscapeSequences.*;
 
 public class Client {
@@ -19,10 +21,9 @@ public class Client {
     private static final Scanner TERMINAL_READER = new Scanner(System.in);
     private static String currUser = null;
     private static String authToken = null;
-    private static ClientCommunicator clientCommunicator;
 
     public static void main(String[] args) throws IOException {
-        clientCommunicator = new ClientCommunicator("8080");
+        ClientCommunicator clientCommunicator = new ClientCommunicator("8080");
         startupMenu();
     }
 
@@ -42,10 +43,10 @@ public class Client {
 
             switch(userResponse.toUpperCase()){
                 case "HELP":
-                    helpMenuOptions();
+                    helpMenuOptions(OUT);
                     break;
                 case "REGISTER":
-                    UserData newUser = registerInfoSteps();
+                    UserData newUser = registerInfoSteps(OUT, TERMINAL_READER);
                     String resultText = ServerFacade.register(newUser);
                     if (resultText.contains("Error")){
                         OUT.println("Register failed!: " + resultText);
@@ -57,7 +58,7 @@ public class Client {
                     //authToken = "pass"; //TEST
                     break;
                 case "LOGIN":
-                    LoginRequest loginRequest = loginVerifySteps();
+                    LoginRequest loginRequest = loginVerifySteps(OUT, TERMINAL_READER);
                     break;
                 case "QUIT":
                     OUT.println("Closing your connection to the Chess Server...");
@@ -83,7 +84,7 @@ public class Client {
 
             switch(userResponse){
                 case "HELP":
-                    helpAuthorizedOptions();
+                    helpAuthorizedOptions(OUT);
                     break;
                 case "LOGOUT":
                     //perform method
@@ -92,13 +93,21 @@ public class Client {
                     break;
                 case "CREATE":
                     //perform method
+                    CreateGameRequest newGame = createSteps(OUT, TERMINAL_READER);
+                    String resultText = ServerFacade.createGame(newGame, authToken);
+                    if (resultText.contains("Error")){
+                        OUT.println("Register failed!: " + resultText);
+                    }
+                    else{
+                        OUT.println("Your game was created! Its ID # is: " + resultText);
+                    }
                     break;
                 case "LIST":
                     //perform method
                     break;
                 case "JOIN":
                     //temporary
-                    JoinGameRequest newJoinReq = joinSteps();
+                    JoinGameRequest newJoinReq = joinSteps(OUT, TERMINAL_READER);
                     ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
                     ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     break;
@@ -114,128 +123,6 @@ public class Client {
         startupMenu();
     }
 
-
-
-
-
-    private static void helpMenuOptions(){
-        OUT.println("Here are the following commands: ");
-        OUT.print(SET_TEXT_COLOR_GREEN);
-        OUT.print("   * Register - Provide a ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<USERNAME> <PASSWORD> <EMAIL> ");
-        OUT.print(SET_TEXT_COLOR_GREEN);
-        OUT.println("to register a new user!");
-
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.print("   * Login - Provide an existing ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<USERNAME> <PASSWORD> ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.println("to login!");
-
-        OUT.print(SET_TEXT_COLOR_MAGENTA);
-        OUT.println("   * Help - List of available commands");
-
-        OUT.print(SET_TEXT_COLOR_RED);
-        OUT.println("   * Quit your current session");
-        OUT.println();
-        OUT.print(SET_TEXT_COLOR_WHITE);
-    }
-
-    private static void helpAuthorizedOptions(){
-        OUT.println("Here are the following available commands: ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.print("   * Create - Provide a ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<gameName> ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.println("to create a new game of chess!");
-
-        OUT.println("   * List - to list all current chess games!");
-
-        OUT.print("   * Join - Provide a ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<gameID> [White|Black] ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.println("to join and play in an existing game of chess!");
-
-        OUT.print("   * Observe - Provide a ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<gameID> ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.println("to watch an active game of chess!");
-
-        OUT.println("   * Logout - When you are finished! ");
-
-        OUT.print(SET_TEXT_COLOR_MAGENTA);
-        OUT.println("   * Help - List of available commands");
-        OUT.println();
-        OUT.print(SET_TEXT_COLOR_WHITE);
-    }
-
-
-    private static UserData registerInfoSteps(){
-        OUT.println("Create your username:");
-        OUT.print("> ");
-        String username = TERMINAL_READER.nextLine();
-        while(username.isEmpty()){
-            OUT.println("Username may not be blank, please try again: ");
-            username = TERMINAL_READER.nextLine();
-        }
-        OUT.println("Create your password:");
-        OUT.print("> ");
-        String password = TERMINAL_READER.nextLine();
-        while(password.isEmpty()){
-            OUT.println("Password may not be blank, please try again: ");
-            password = TERMINAL_READER.nextLine();
-        }
-        OUT.println("Enter your email:");
-        OUT.print("> ");
-        String email = TERMINAL_READER.nextLine();
-        while(email.isEmpty()){
-            OUT.println("Email may not be blank, please try again:");
-            email = TERMINAL_READER.nextLine();
-        }
-        return new UserData(username, password, email);
-    }
-
-    private static LoginRequest loginVerifySteps(){
-        OUT.println("Enter your username:");
-        OUT.print("> ");
-        String username = TERMINAL_READER.nextLine();
-        while(username.isEmpty()){
-            OUT.println("Username may not be blank, please try again: ");
-            username = TERMINAL_READER.nextLine();
-        }
-        OUT.println("Enter your password:");
-        OUT.print("> ");
-        String password = TERMINAL_READER.nextLine();
-        while(password.isEmpty()){
-            OUT.println("Password may not be blank, please try again: ");
-            password = TERMINAL_READER.nextLine();
-        }
-        return new LoginRequest(username, password);
-    }
-
-    private static JoinGameRequest joinSteps(){
-        OUT.println("Enter the game ID # for the game you want to join and play:");
-        OUT.print("> ");
-        String givenID = TERMINAL_READER.nextLine();
-        while(givenID.isEmpty()){
-            OUT.println("Game ID may not be blank, please try again: ");
-            givenID = TERMINAL_READER.nextLine();
-        }
-        int gameID = Integer.parseInt(givenID);
-        OUT.println("Enter the color for the team you'd like to play as (White/BLack):");
-        OUT.print("> ");
-        String chosenTeam = TERMINAL_READER.nextLine();
-        while(chosenTeam.isEmpty()){
-            OUT.println("Password may not be blank, please try again: ");
-            chosenTeam = TERMINAL_READER.nextLine();
-        }
-        return new JoinGameRequest(chosenTeam, gameID);
-    }
 
 
 }
