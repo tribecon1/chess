@@ -152,6 +152,18 @@ public class ClientMenus {
         return new CreateGameRequest(gameName);
     }
 
+    public static String observeSteps(PrintStream OUT, Scanner TERMINAL_READER){
+        OUT.println("Enter the game ID # for the game you wish to observe:");
+        OUT.print("> ");
+        String givenID = TERMINAL_READER.nextLine();
+        while(givenID.isEmpty()){
+            OUT.println("Game ID may not be blank, please try again: ");
+            OUT.print("> ");
+            givenID = TERMINAL_READER.nextLine();
+        }
+        return givenID;
+    }
+
     public static String gameDataInterpreter(GameData gameInList){
         String clientReadableGame = "Game ID #: " + gameInList.gameID() + " --";
         if(gameInList.whiteUsername() == null){

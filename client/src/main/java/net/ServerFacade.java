@@ -94,7 +94,7 @@ public class ServerFacade {
         String joinGameJSON = SerializerDeserializer.convertToJSON(joinRequest);
         ResponseType responseObject = ClientCommunicator.createHttpPut(joinGameJSON, authToken, urlExtension);
         if (responseObject == null){
-            return "Successfully joined the game with ID # " + joinRequest.gameID();
+            return " successfully joined the game with ID # " + joinRequest.gameID();
         }
         else if (responseObject instanceof ErrorResponse){
             return ((ErrorResponse) responseObject).message();
@@ -104,6 +104,8 @@ public class ServerFacade {
         }
     }
 
-
+    public static String observeGame(String gameID, String authToken) throws IOException {
+        return "Now observing the chess game with ID #: " + gameID;
+    }
 
 }

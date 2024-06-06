@@ -123,7 +123,6 @@ public class Client {
                     }
                     break;
                 case "LIST":
-                    //perform method
                     resultText = ServerFacade.listGames(authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Getting a list of games failed!: " + resultText);
@@ -136,13 +135,26 @@ public class Client {
                     }
                     break;
                 case "JOIN":
-                    //temporary
                     JoinGameRequest newJoinReq = joinSteps(OUT, TERMINAL_READER);
+                    resultText = ServerFacade.joinGame(newJoinReq, authToken);
+                    if (resultText.contains("Error")){
+                        OUT.println("Join failed!: " + resultText);
+                    }
+                    else{
+                        OUT.println("User " + "\"" + currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
+                    }
                     ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
                     ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     break;
                 case "OBSERVE":
-                    //temporary
+                    String givenGameID = observeSteps(OUT, TERMINAL_READER);
+                    resultText = ServerFacade.observeGame(givenGameID, authToken);
+                    if (resultText.contains("Error")){
+                        OUT.println("Join failed!: " + resultText);
+                    }
+                    else{
+                        OUT.println(resultText);
+                    }
                     ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
                     ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     break;
@@ -152,7 +164,6 @@ public class Client {
         }
         startupMenu();
     }
-
 
 
 }
