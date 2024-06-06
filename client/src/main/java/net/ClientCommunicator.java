@@ -68,7 +68,7 @@ public class ClientCommunicator {
     }
 
 
-    public static ResponseType createHttpGet(String requestBodyJSON, String authToken, String urlPath) throws IOException {
+    public static ResponseType createHttpGet(String authToken, String urlPath) throws IOException {
         HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "GET");
         connection.addRequestProperty("authorization", authToken);
 

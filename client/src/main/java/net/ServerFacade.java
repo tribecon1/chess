@@ -7,6 +7,7 @@ import request.CreateGameRequest;
 import request.LoginRequest;
 import response.CreateGameResponse;
 import response.ErrorResponse;
+import response.ListGamesResponse;
 import response.ResponseType;
 import server.SerializerDeserializer;
 
@@ -64,6 +65,20 @@ public class ServerFacade {
         ResponseType responseObject = ClientCommunicator.createHttpDelete(authToken, urlExtension);
         if (responseObject == null){
             return "Successfully logged out user ";
+        }
+        else if (responseObject instanceof ErrorResponse){
+            return ((ErrorResponse) responseObject).message();
+        }
+        else{
+            return "Unknown Error. Please contact us.";
+        }
+    }
+
+    public static String listGames(String authToken) throws IOException {
+        String urlExtension = "game";
+        ResponseType responseObject = ClientCommunicator.createHttpGet(authToken, urlExtension);
+        if (responseObject instanceof ListGamesResponse){
+            return "KEEP WORKING ON THIS!";
         }
         else if (responseObject instanceof ErrorResponse){
             return ((ErrorResponse) responseObject).message();
