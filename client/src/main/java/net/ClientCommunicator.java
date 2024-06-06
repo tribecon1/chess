@@ -11,7 +11,11 @@ import java.net.HttpURLConnection;
 import static net.NetUtils.*;
 
 public class ClientCommunicator {
-    private static String baseLink = "http://localhost:8080/";//DO I NEED A CONSTRUCTOR FOR THIS?
+    private static String baseLink = "http://localhost:";//DO I NEED A CONSTRUCTOR FOR THIS?
+
+    public ClientCommunicator(String givenPort) {
+        baseLink = baseLink + givenPort + "/";
+    }
 
 
     public static ResponseType createHttpPost(String requestBodyJSON, String authToken, String urlPath) throws IOException {

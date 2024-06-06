@@ -2,6 +2,7 @@ package ui;
 
 import chess.ChessGame;
 import model.UserData;
+import net.ClientCommunicator;
 import net.ServerFacade;
 import request.JoinGameRequest;
 import request.LoginRequest;
@@ -18,8 +19,10 @@ public class Client {
     private static final Scanner TERMINAL_READER = new Scanner(System.in);
     private static String currUser = null;
     private static String authToken = null;
+    private static ClientCommunicator clientCommunicator;
 
     public static void main(String[] args) throws IOException {
+        clientCommunicator = new ClientCommunicator("8080");
         startupMenu();
     }
 
