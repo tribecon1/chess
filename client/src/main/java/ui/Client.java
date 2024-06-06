@@ -35,9 +35,9 @@ public class Client {
             OUT.println("Type \"help\" to see your options, or enter your desired action here!:");
             OUT.print(">>> ");
 
-            String userResponse = TERMINAL_READER.nextLine().toUpperCase();
+            String userResponse = TERMINAL_READER.nextLine();
 
-            switch(userResponse){
+            switch(userResponse.toUpperCase()){
                 case "HELP":
                     helpMenuOptions();
                     break;
