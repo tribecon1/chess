@@ -59,6 +59,20 @@ public class ServerFacade {
         }
     }
 
+    public static String logout(String authToken) throws IOException {
+        String urlExtension = "session";
+        ResponseType responseObject = ClientCommunicator.createHttpDelete(authToken, urlExtension);
+        if (responseObject == null){
+            return "Successfully logged out user ";
+        }
+        else if (responseObject instanceof ErrorResponse){
+            return ((ErrorResponse) responseObject).message();
+        }
+        else{
+            return "Unknown Error. Please contact us.";
+        }
+    }
+
 
 
 }

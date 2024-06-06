@@ -88,6 +88,7 @@ public class Client {
             OUT.println("What would you like to do today? Type \"help\" to see your available commands!");
             OUT.print(">>> ");
 
+            String resultText;
             String userResponse = TERMINAL_READER.nextLine().toUpperCase();
 
             switch(userResponse){
@@ -96,13 +97,22 @@ public class Client {
                     break;
                 case "LOGOUT":
                     //perform method
-                    OUT.println("Thank you for joining us! Returning to start menu...");
-                    authToken = null;
+                    resultText = ServerFacade.logout(authToken);
+                    if (resultText.contains("Error")){
+                        OUT.println("Logout failed!: " + resultText);
+                    }
+                    else{
+                        OUT.println(resultText + "\"" + currUser + "\"!");
+                        OUT.println("Thank you for joining us! Returning to start menu...");
+                        currUser = null;
+                        authToken = null;
+                    }
+
                     break;
                 case "CREATE":
                     //perform method
                     CreateGameRequest newGame = createSteps(OUT, TERMINAL_READER);
-                    String resultText = ServerFacade.createGame(newGame, authToken);
+                    resultText = ServerFacade.createGame(newGame, authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Register failed!: " + resultText);
                     }

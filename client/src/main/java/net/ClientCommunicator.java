@@ -54,7 +54,7 @@ public class ClientCommunicator {
         }
     }
 
-    public static ResponseType createHttpDelete(String requestBodyJSON, String authToken, String urlPath) throws IOException {
+    public static ResponseType createHttpDelete(String authToken, String urlPath) throws IOException {
         HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "DELETE");
         connection.addRequestProperty("authorization", authToken);
 

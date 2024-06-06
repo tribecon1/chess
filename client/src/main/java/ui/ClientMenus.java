@@ -75,6 +75,7 @@ public class ClientMenus {
         String username = TERMINAL_READER.nextLine();
         while(username.isEmpty()){
             OUT.println("Username may not be blank, please try again: ");
+            OUT.print("> ");
             username = TERMINAL_READER.nextLine();
         }
         OUT.println("Create your password:");
@@ -82,6 +83,7 @@ public class ClientMenus {
         String password = TERMINAL_READER.nextLine();
         while(password.isEmpty()){
             OUT.println("Password may not be blank, please try again: ");
+            OUT.print("> ");
             password = TERMINAL_READER.nextLine();
         }
         OUT.println("Enter your email:");
@@ -89,6 +91,7 @@ public class ClientMenus {
         String email = TERMINAL_READER.nextLine();
         while(email.isEmpty()){
             OUT.println("Email may not be blank, please try again:");
+            OUT.print("> ");
             email = TERMINAL_READER.nextLine();
         }
         return new UserData(username, password, email);
@@ -100,6 +103,7 @@ public class ClientMenus {
         String username = TERMINAL_READER.nextLine();
         while(username.isEmpty()){
             OUT.println("Username may not be blank, please try again: ");
+            OUT.print("> ");
             username = TERMINAL_READER.nextLine();
         }
         OUT.println("Enter your password:");
@@ -107,6 +111,7 @@ public class ClientMenus {
         String password = TERMINAL_READER.nextLine();
         while(password.isEmpty()){
             OUT.println("Password may not be blank, please try again: ");
+            OUT.print("> ");
             password = TERMINAL_READER.nextLine();
         }
         return new LoginRequest(username, password);
@@ -118,6 +123,7 @@ public class ClientMenus {
         String givenID = TERMINAL_READER.nextLine();
         while(givenID.isEmpty()){
             OUT.println("Game ID may not be blank, please try again: ");
+            OUT.print("> ");
             givenID = TERMINAL_READER.nextLine();
         }
         int gameID = Integer.parseInt(givenID);
@@ -126,6 +132,7 @@ public class ClientMenus {
         String chosenTeam = TERMINAL_READER.nextLine();
         while(chosenTeam.isEmpty()){
             OUT.println("Password may not be blank, please try again: ");
+            OUT.print("> ");
             chosenTeam = TERMINAL_READER.nextLine();
         }
         return new JoinGameRequest(chosenTeam, gameID);
@@ -138,6 +145,7 @@ public class ClientMenus {
         String gameName = TERMINAL_READER.nextLine();
         while(gameName.isEmpty()){
             OUT.println("Game ID may not be blank, please try again: ");
+            OUT.print("> ");
             gameName = TERMINAL_READER.nextLine();
         }
         return new CreateGameRequest(gameName);
