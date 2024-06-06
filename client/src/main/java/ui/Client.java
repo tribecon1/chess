@@ -59,7 +59,6 @@ public class Client {
                         currUser = newUser.username();
                         authToken = resultText;
                     }
-                    //authToken = "pass"; //TEST
                     break;
                 case "LOGIN":
                     LoginRequest loginRequest = loginVerifySteps(OUT, TERMINAL_READER);
@@ -87,7 +86,6 @@ public class Client {
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.println("***********************************************************************************");
         OUT.print("Welcome user \"" + currUser + "\"! ");
-        OUT.println(authToken);
         while(authToken != null){
             OUT.println("What would you like to do today? Type \"help\" to see your available commands!");
             OUT.print(">>> ");
