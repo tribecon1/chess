@@ -127,8 +127,13 @@ public class Client {
                     }
                     else{
                         ArrayList<GameData> listOfGames = new ArrayList<>(SerializerDeserializer.convertFromJSON(resultText, ListGamesResponse.class).games());
-                        for (int rowNum = 1; rowNum <= listOfGames.size(); ++rowNum){
-                            OUT.println(rowNum + ". " + gameDataInterpreter(listOfGames.get(rowNum-1)));
+                        if (listOfGames.isEmpty()){
+                            OUT.println("There are no games created yet!");
+                        }
+                        else{
+                            for (int rowNum = 1; rowNum <= listOfGames.size(); ++rowNum){
+                                OUT.println(rowNum + ". " + gameDataInterpreter(listOfGames.get(rowNum-1)));
+                            }
                         }
                     }
                     break;
