@@ -2,8 +2,8 @@ package ui;
 
 import chess.ChessGame;
 import model.UserData;
-import net.ClientCommunicator;
 import net.ServerFacade;
+import request.JoinGameRequest;
 import request.LoginRequest;
 
 import java.io.IOException;
@@ -55,7 +55,6 @@ public class Client {
                     break;
                 case "LOGIN":
                     LoginRequest loginRequest = loginVerifySteps();
-                    //authToken = res.body();
                     break;
                 case "QUIT":
                     OUT.println("Closing your connection to the Chess Server...");
@@ -72,6 +71,7 @@ public class Client {
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.println("***********************************************************************************");
         OUT.print("Welcome user \"" + currUser + "\"! ");
+        OUT.println(authToken);
         while(authToken != null){
             OUT.println("What would you like to do today? Type \"help\" to see your available commands!");
             OUT.print(">>> ");
@@ -84,6 +84,7 @@ public class Client {
                     break;
                 case "LOGOUT":
                     //perform method
+                    OUT.println("Thank you for joining us! Returning to start menu...");
                     authToken = null;
                     break;
                 case "CREATE":
@@ -94,6 +95,7 @@ public class Client {
                     break;
                 case "JOIN":
                     //temporary
+                    JoinGameRequest newJoinReq = joinSteps();
                     ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
                     ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     break;
@@ -211,6 +213,25 @@ public class Client {
             password = TERMINAL_READER.nextLine();
         }
         return new LoginRequest(username, password);
+    }
+
+    private static JoinGameRequest joinSteps(){
+        OUT.println("Enter the game ID # for the game you want to join and play:");
+        OUT.print("> ");
+        String givenID = TERMINAL_READER.nextLine();
+        while(givenID.isEmpty()){
+            OUT.println("Game ID may not be blank, please try again: ");
+            givenID = TERMINAL_READER.nextLine();
+        }
+        int gameID = Integer.parseInt(givenID);
+        OUT.println("Enter the color for the team you'd like to play as (White/BLack):");
+        OUT.print("> ");
+        String chosenTeam = TERMINAL_READER.nextLine();
+        while(chosenTeam.isEmpty()){
+            OUT.println("Password may not be blank, please try again: ");
+            chosenTeam = TERMINAL_READER.nextLine();
+        }
+        return new JoinGameRequest(chosenTeam, gameID);
     }
 
 
