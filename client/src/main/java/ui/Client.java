@@ -59,6 +59,14 @@ public class Client {
                     break;
                 case "LOGIN":
                     LoginRequest loginRequest = loginVerifySteps(OUT, TERMINAL_READER);
+                    resultText = ServerFacade.login(loginRequest);
+                    if (resultText.contains("Error")){
+                        OUT.println("Register failed!: " + resultText);
+                    }
+                    else{
+                        currUser = loginRequest.username();
+                        authToken = resultText;
+                    }
                     break;
                 case "QUIT":
                     OUT.println("Closing your connection to the Chess Server...");
