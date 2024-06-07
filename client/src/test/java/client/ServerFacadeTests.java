@@ -10,12 +10,12 @@ import dataaccess.dao.sqldao.SqlUserDao;
 import model.UserData;
 import net.ServerFacade;
 import org.junit.jupiter.api.*;
+import request.CreateGameRequest;
 import request.LoginRequest;
 import server.Server;
 import service.SystemService;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class ServerFacadeTests {
@@ -89,7 +89,7 @@ public class ServerFacadeTests {
     @Test
     void loginSuccess() throws Exception {
         var oldAuthToken = serverFacade.register(new UserData("player1", "password", "p1@email.com"));
-        serverFacade.logout(oldAuthToken);
+        serverFacade.logout(oldAuthToken);//needed w/ regards to encrypted passwords
         assert (AUTH_DAO.getDatabaseSize() == 0);
         String newAuthToken = serverFacade.login(new LoginRequest("player1","password"));
         assertTrue(!newAuthToken.contains("Error") && newAuthToken.length() > 10);
@@ -110,6 +110,21 @@ public class ServerFacadeTests {
         assert (AUTH_DAO.getDatabaseSize() == 0);
         String errorText = serverFacade.login(new LoginRequest("nonExistent","futile"));
         assertTrue(errorText.contains("Error: unauthorized"));
+    }
+
+    @Test
+    void createGameSuccess() throws Exception {
+        var authData = AUTH_DAO.createAuth("temp", "authToken");
+        String responseText = serverFacade.createGame(new CreateGameRequest("Brand New Game!"), authData.authToken());
+        assertFalse(responseText.contains("Error"));
+        Assertions.assertDoesNotThrow(() -> Integer.parseInt(responseText));
+    }
+
+    @Test
+    void createGameFailure() throws Exception {
+        String responseText = serverFacade.createGame(new CreateGameRequest("Brand New Game!"), "notRealToken");
+        assertEquals("Error: unauthorized", responseText);
+        Assertions.assertThrows(NumberFormatException.class, () -> Integer.parseInt(responseText));
     }
 
 
