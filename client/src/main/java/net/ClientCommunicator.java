@@ -4,7 +4,6 @@ import model.AuthData;
 import response.CreateGameResponse;
 import response.ListGamesResponse;
 import response.ResponseType;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 
