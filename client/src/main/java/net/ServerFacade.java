@@ -21,7 +21,7 @@ public class ServerFacade {
         this.clientCommunicator = new ClientCommunicator(portNum);
     }
 
-    public static String register(UserData user) throws IOException {
+    public String register(UserData user) throws IOException {
         String urlExtension = "user";
         String registerJSON = SerializerDeserializer.convertToJSON(user);
         ResponseType responseObject = ClientCommunicator.createHttpPost(registerJSON, null, urlExtension);
@@ -36,7 +36,7 @@ public class ServerFacade {
         }
     }
 
-    public static String login(LoginRequest loginRequest) throws IOException {
+    public String login(LoginRequest loginRequest) throws IOException {
         String urlExtension = "session";
         String loginJSON = SerializerDeserializer.convertToJSON(loginRequest);
         ResponseType responseObject = ClientCommunicator.createHttpPost(loginJSON, null, urlExtension);
@@ -51,7 +51,7 @@ public class ServerFacade {
         }
     }
 
-    public static String createGame(CreateGameRequest createGameRequest, String authToken) throws IOException {
+    public String createGame(CreateGameRequest createGameRequest, String authToken) throws IOException {
         String urlExtension = "game";
         String createGameJSON = SerializerDeserializer.convertToJSON(createGameRequest);
         ResponseType responseObject = ClientCommunicator.createHttpPost(createGameJSON, authToken, urlExtension);
@@ -66,7 +66,7 @@ public class ServerFacade {
         }
     }
 
-    public static String logout(String authToken) throws IOException {
+    public String logout(String authToken) throws IOException {
         String urlExtension = "session";
         ResponseType responseObject = ClientCommunicator.createHttpDelete(authToken, urlExtension);
         if (responseObject == null){
@@ -80,7 +80,7 @@ public class ServerFacade {
         }
     }
 
-    public static String listGames(String authToken) throws IOException {
+    public String listGames(String authToken) throws IOException {
         String urlExtension = "game";
         ResponseType responseObject = ClientCommunicator.createHttpGet(authToken, urlExtension);
         if (responseObject instanceof ListGamesResponse){
@@ -94,7 +94,7 @@ public class ServerFacade {
         }
     }
 
-    public static String joinGame(JoinGameRequest joinRequest, String authToken) throws IOException {
+    public String joinGame(JoinGameRequest joinRequest, String authToken) throws IOException {
         String urlExtension = "game";
         String joinGameJSON = SerializerDeserializer.convertToJSON(joinRequest);
         ResponseType responseObject = ClientCommunicator.createHttpPut(joinGameJSON, authToken, urlExtension);
@@ -109,7 +109,7 @@ public class ServerFacade {
         }
     }
 
-    public static String observeGame(String gameID, String authToken) throws IOException {
+    public String observeGame(String gameID, String authToken) throws IOException {
         return "Now observing the chess game with ID #: " + gameID;
     }
 

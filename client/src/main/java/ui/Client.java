@@ -24,9 +24,10 @@ public class Client {
     private static final Scanner TERMINAL_READER = new Scanner(System.in);
     private static String currUser = null;
     private static String authToken = null;
+    private static ServerFacade serverFacade;
 
     public static void main(String[] args) throws IOException {
-        ServerFacade serverFacade = new ServerFacade(8080);
+        serverFacade = new ServerFacade(8080);
         startupMenu();
     }
 
@@ -50,7 +51,7 @@ public class Client {
                     break;
                 case "REGISTER":
                     UserData newUser = registerInfoSteps(OUT, TERMINAL_READER);
-                    String resultText = ServerFacade.register(newUser);
+                    String resultText = serverFacade.register(newUser);
                     if (resultText.contains("Error")){
                         OUT.println("Register failed!: " + resultText);
                     }
@@ -61,7 +62,7 @@ public class Client {
                     break;
                 case "LOGIN":
                     LoginRequest loginRequest = loginVerifySteps(OUT, TERMINAL_READER);
-                    resultText = ServerFacade.login(loginRequest);
+                    resultText = serverFacade.login(loginRequest);
                     if (resultText.contains("Error")){
                         OUT.println("Login failed! -> " + resultText);
                     }
@@ -97,7 +98,7 @@ public class Client {
                     helpAuthorizedOptions(OUT);
                     break;
                 case "LOGOUT":
-                    resultText = ServerFacade.logout(authToken);
+                    resultText = serverFacade.logout(authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Logout failed! -> " + resultText);
                     }
@@ -111,7 +112,7 @@ public class Client {
                     break;
                 case "CREATE":
                     CreateGameRequest newGame = createSteps(OUT, TERMINAL_READER);
-                    resultText = ServerFacade.createGame(newGame, authToken);
+                    resultText = serverFacade.createGame(newGame, authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Register failed! -> " + resultText);
                     }
@@ -120,7 +121,7 @@ public class Client {
                     }
                     break;
                 case "LIST":
-                    resultText = ServerFacade.listGames(authToken);
+                    resultText = serverFacade.listGames(authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Getting a list of games failed! -> " + resultText);
                     }
@@ -139,7 +140,7 @@ public class Client {
                     break;
                 case "JOIN":
                     JoinGameRequest newJoinReq = joinSteps(OUT, TERMINAL_READER);
-                    resultText = ServerFacade.joinGame(newJoinReq, authToken);
+                    resultText = serverFacade.joinGame(newJoinReq, authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Join failed! -> " + resultText);
                     }
@@ -151,7 +152,7 @@ public class Client {
                     break;
                 case "OBSERVE":
                     String givenGameID = observeSteps(OUT, TERMINAL_READER);
-                    resultText = ServerFacade.observeGame(givenGameID, authToken);
+                    resultText = serverFacade.observeGame(givenGameID, authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Join failed! -> " + resultText);
                     }
