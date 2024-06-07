@@ -201,7 +201,7 @@ public class ServerFacadeTests {
     @Test
     void observeGameFailure2() throws Exception {
         var authToken = AUTH_DAO.createAuth("temp", "authToken").authToken();
-        int gameID = GAME_DAO.createGame("newGame!").gameID();
+        GAME_DAO.createGame("newGame!");
         String responseText = serverFacade.observeGame(String.valueOf(24), authToken);
         assertTrue(responseText.contains("Error") && responseText.contains("existing"));
     }

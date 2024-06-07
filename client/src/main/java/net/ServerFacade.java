@@ -111,10 +111,11 @@ public class ServerFacade {
     }
 
     public String observeGame(String gameID, String authToken) throws IOException {
-        if (listGames(authToken).isEmpty()){
+        ListGamesResponse currGameList = SerializerDeserializer.convertFromJSON(listGames(authToken), ListGamesResponse.class);
+        if (currGameList.games().isEmpty()){
             return "Error: The game ID " + gameID + " does not match any existing game!";
         }
-        for (GameData gameData : SerializerDeserializer.convertFromJSON(listGames(authToken), ListGamesResponse.class).games() ){
+        for (GameData gameData : currGameList.games() ){
             if (gameID.equals(String.valueOf(gameData.gameID()))){
                 return "Now observing the chess game with ID #: " + gameID;
             }
