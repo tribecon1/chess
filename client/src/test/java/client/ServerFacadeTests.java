@@ -10,6 +10,7 @@ import dataaccess.dao.sqldao.SqlUserDao;
 import model.UserData;
 import net.ServerFacade;
 import org.junit.jupiter.api.*;
+import request.LoginRequest;
 import server.Server;
 import service.SystemService;
 
@@ -87,8 +88,32 @@ public class ServerFacadeTests {
 
     @Test
     void loginSuccess() throws Exception {
-        registerSuccess();
-
+        var oldAuthToken = serverFacade.register(new UserData("player1", "password", "p1@email.com"));
+        serverFacade.logout(oldAuthToken);
+        assert (AUTH_DAO.getDatabaseSize() == 0);
+        String newAuthToken = serverFacade.login(new LoginRequest("player1","password"));
+        assertTrue(!newAuthToken.contains("Error") && newAuthToken.length() > 10);
     }
+
+    @Test
+    void loginFailure() throws Exception {
+        var oldAuthToken = serverFacade.register(new UserData("player1", "password", "p1@email.com"));
+        serverFacade.logout(oldAuthToken);
+        assert (AUTH_DAO.getDatabaseSize() == 0);
+        String errorText = serverFacade.login(new LoginRequest("player1","wrongpasswordpal!"));
+        assertTrue(errorText.contains("Error: unauthorized"));
+    }
+
+    @Test
+    void loginFailure2() throws Exception {
+        assert (USER_DAO.getDatabaseSize() == 0);
+        assert (AUTH_DAO.getDatabaseSize() == 0);
+        String errorText = serverFacade.login(new LoginRequest("nonExistent","futile"));
+        assertTrue(errorText.contains("Error: unauthorized"));
+    }
+
+
+
+
 
 }
