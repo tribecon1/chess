@@ -154,7 +154,7 @@ public class Client {
                     String givenGameID = observeSteps(OUT, TERMINAL_READER);
                     resultText = serverFacade.observeGame(givenGameID, authToken);
                     if (resultText.contains("Error")){
-                        OUT.println("Join failed! -> " + resultText);
+                        OUT.println("Observe failed! -> " + resultText);
                     }
                     else{
                         OUT.println(resultText);

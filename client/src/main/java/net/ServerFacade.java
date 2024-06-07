@@ -2,6 +2,7 @@ package net;
 
 
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
@@ -110,7 +111,15 @@ public class ServerFacade {
     }
 
     public String observeGame(String gameID, String authToken) throws IOException {
-        return "Now observing the chess game with ID #: " + gameID;
+        if (listGames(authToken).isEmpty()){
+            return "Error: The game ID " + gameID + " does not match any existing game!";
+        }
+        for (GameData gameData : SerializerDeserializer.convertFromJSON(listGames(authToken), ListGamesResponse.class).games() ){
+            if (gameID.equals(String.valueOf(gameData.gameID()))){
+                return "Now observing the chess game with ID #: " + gameID;
+            }
+        }
+        return "Error: The game ID " + gameID + " does not match any existing game!";
     }
 
 }
