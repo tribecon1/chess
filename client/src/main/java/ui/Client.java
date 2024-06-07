@@ -17,6 +17,8 @@ import java.util.Scanner;
 import static ui.ClientMenus.*;
 import static ui.EscapeSequences.*;
 
+import server.SerializerDeserializer;
+
 public class Client {
 
     private static final PrintStream OUT = System.out;

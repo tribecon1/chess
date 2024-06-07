@@ -5,11 +5,11 @@ import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
 import dataaccess.dao.GameDao;
 import model.GameData;
-import server.SerializerDeserializer;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import server.SerializerDeserializer;
 
 public class SqlGameDao implements GameDao {
 

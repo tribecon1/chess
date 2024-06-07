@@ -2,7 +2,6 @@ package net;
 
 
 import response.ErrorResponse;
-import ui.SerializerDeserializer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import server.SerializerDeserializer;
+
 
 public class NetUtils {
 

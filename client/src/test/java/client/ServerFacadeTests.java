@@ -15,9 +15,10 @@ import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
 import response.ListGamesResponse;
-import server.SerializerDeserializer;
 import server.Server;
 import service.SystemService;
+import server.SerializerDeserializer;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
