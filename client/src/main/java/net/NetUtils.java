@@ -1,6 +1,6 @@
 package net;
 
-import dataaccess.DataAccessException;
+
 import response.ErrorResponse;
 import server.SerializerDeserializer;
 
