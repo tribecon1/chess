@@ -12,6 +12,7 @@ import model.UserData;
 import net.ServerFacade;
 import org.junit.jupiter.api.*;
 import request.CreateGameRequest;
+import request.JoinGameRequest;
 import request.LoginRequest;
 import response.ListGamesResponse;
 import server.SerializerDeserializer;
@@ -151,6 +152,33 @@ public class ServerFacadeTests {
         String responseText = serverFacade.listGames("falseAuthToken");
         assertTrue(responseText.contains("Error"));
         Assertions.assertThrows(JsonSyntaxException.class, () -> SerializerDeserializer.convertFromJSON(responseText, ListGamesResponse.class));
+    }
+
+    @Test
+    void joinGameSuccess() throws Exception {
+        var authToken = AUTH_DAO.createAuth("temp", "authToken").authToken();
+        int gameID = GAME_DAO.createGame("newGame!").gameID();
+        String responseText = serverFacade.joinGame(new JoinGameRequest("WHITE", gameID), authToken);
+        assertFalse(responseText.contains("Error"));
+        assertTrue(responseText.contains(String.valueOf(gameID)) && responseText.contains("successfully"));
+    }
+
+    @Test
+    void joinGameFailure() throws Exception {
+        var authToken = AUTH_DAO.createAuth("temp", "authToken").authToken();
+        GAME_DAO.createGame("newGame!");
+        String responseText = serverFacade.joinGame(new JoinGameRequest("WHITE", 502345), authToken);
+        assertEquals("Error: bad request", responseText);
+    }
+
+    @Test
+    void joinGameFailure2() throws Exception {
+        var authToken = AUTH_DAO.createAuth("temp", "authToken").authToken();
+        int gameID = GAME_DAO.createGame("newGame!").gameID();
+        serverFacade.joinGame(new JoinGameRequest("WHITE", gameID), authToken);
+        var secondAuthToken = AUTH_DAO.createAuth("NewGuy", "diffAuth").authToken();
+        String responseText = serverFacade.joinGame(new JoinGameRequest("WHITE", gameID), secondAuthToken);
+        assertEquals("Error: already taken", responseText);
     }
 
 
