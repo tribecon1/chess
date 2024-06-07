@@ -3,7 +3,6 @@ package ui;
 import chess.ChessGame;
 import model.GameData;
 import model.UserData;
-import net.ClientCommunicator;
 import net.ServerFacade;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
@@ -64,7 +63,7 @@ public class Client {
                     LoginRequest loginRequest = loginVerifySteps(OUT, TERMINAL_READER);
                     resultText = ServerFacade.login(loginRequest);
                     if (resultText.contains("Error")){
-                        OUT.println("Register failed!: " + resultText);
+                        OUT.println("Login failed! -> " + resultText);
                     }
                     else{
                         currUser = loginRequest.username();
@@ -76,7 +75,7 @@ public class Client {
                     TERMINAL_READER.close();
                     System.exit(0);
                 default:
-                OUT.println("ERROR! Unknown command: " + "\"" + userResponse + "\"");
+                OUT.println("ERROR! Unknown command -> " + "\"" + userResponse + "\"");
             }
         }
         authorizedMenu();
@@ -100,7 +99,7 @@ public class Client {
                 case "LOGOUT":
                     resultText = ServerFacade.logout(authToken);
                     if (resultText.contains("Error")){
-                        OUT.println("Logout failed!: " + resultText);
+                        OUT.println("Logout failed! -> " + resultText);
                     }
                     else{
                         OUT.println(resultText + "\"" + currUser + "\"!");
@@ -114,7 +113,7 @@ public class Client {
                     CreateGameRequest newGame = createSteps(OUT, TERMINAL_READER);
                     resultText = ServerFacade.createGame(newGame, authToken);
                     if (resultText.contains("Error")){
-                        OUT.println("Register failed!: " + resultText);
+                        OUT.println("Register failed! -> " + resultText);
                     }
                     else{
                         OUT.println("Your game was created! Its ID # is: " + resultText);
@@ -123,7 +122,7 @@ public class Client {
                 case "LIST":
                     resultText = ServerFacade.listGames(authToken);
                     if (resultText.contains("Error")){
-                        OUT.println("Getting a list of games failed!: " + resultText);
+                        OUT.println("Getting a list of games failed! -> " + resultText);
                     }
                     else{
                         ArrayList<GameData> listOfGames = new ArrayList<>(SerializerDeserializer.convertFromJSON(resultText, ListGamesResponse.class).games());
@@ -142,7 +141,7 @@ public class Client {
                     JoinGameRequest newJoinReq = joinSteps(OUT, TERMINAL_READER);
                     resultText = ServerFacade.joinGame(newJoinReq, authToken);
                     if (resultText.contains("Error")){
-                        OUT.println("Join failed!: " + resultText);
+                        OUT.println("Join failed! -> " + resultText);
                     }
                     else{
                         OUT.println("User " + "\"" + currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
@@ -154,7 +153,7 @@ public class Client {
                     String givenGameID = observeSteps(OUT, TERMINAL_READER);
                     resultText = ServerFacade.observeGame(givenGameID, authToken);
                     if (resultText.contains("Error")){
-                        OUT.println("Join failed!: " + resultText);
+                        OUT.println("Join failed! -> " + resultText);
                     }
                     else{
                         OUT.println(resultText);
@@ -163,7 +162,7 @@ public class Client {
                     }
                     break;
                 default:
-                    OUT.println("ERROR! Unknown command: " + "\"" + userResponse + "\"");
+                    OUT.println("ERROR! Unknown command -> " + "\"" + userResponse + "\"");
             }
         }
         startupMenu();

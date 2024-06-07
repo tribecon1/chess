@@ -6,7 +6,6 @@ import server.SerializerDeserializer;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -42,8 +41,7 @@ public class NetUtils {
         Scanner responseBodyReader = new Scanner(connection.getErrorStream(), StandardCharsets.UTF_8);
         String responseBodyJSON = responseBodyReader.useDelimiter("\\A").next();
         responseBodyReader.close();
-        System.out.println(responseBodyJSON);
-        return new ErrorResponse(connection.getResponseCode(), responseBodyJSON);
+        return new ErrorResponse(connection.getResponseCode(), SerializerDeserializer.convertFromJSON(responseBodyJSON, ErrorResponse.class).message());
     }
 
 
