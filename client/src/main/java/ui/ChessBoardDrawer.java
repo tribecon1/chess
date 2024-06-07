@@ -30,22 +30,22 @@ public class ChessBoardDrawer {
         testBoard.makeMove(new ChessMove(new ChessPosition("b2"), new ChessPosition("b4"), null));
         testBoard.makeMove(new ChessMove(new ChessPosition("g8"), new ChessPosition("h6"), null));
 
-        createBoardWhiteOrientation(out, testBoard.getBoard());
+        createBoardWhiteOrientation(out, testBoard);
 
-        createBoardBlackOrientation(out, testBoard.getBoard());
+        createBoardBlackOrientation(out, testBoard);
 
     }
 
-    public static void createBoardWhiteOrientation(PrintStream out, ChessBoard currBoard) {
+    public static void createBoardWhiteOrientation(PrintStream out, ChessGame currGame) {
         drawHeaders(out, ChessGame.TeamColor.WHITE);
-        drawBoard(out, currBoard, ChessGame.TeamColor.WHITE);
+        drawBoard(out, currGame, ChessGame.TeamColor.WHITE);
         drawHeaders(out, ChessGame.TeamColor.WHITE);
         out.print(SET_DEFAULT_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
         out.println();
     }
 
-    public static void createBoardBlackOrientation(PrintStream out, ChessBoard currBoard) {
+    public static void createBoardBlackOrientation(PrintStream out, ChessGame currBoard) {
         drawHeaders(out, ChessGame.TeamColor.BLACK);
         drawBoard(out, currBoard, ChessGame.TeamColor.BLACK);
         drawHeaders(out, ChessGame.TeamColor.BLACK);
@@ -75,7 +75,7 @@ public class ChessBoardDrawer {
         out.print(headerText);
     }
 
-    private static void drawBoard(PrintStream out, ChessBoard currBoard, ChessGame.TeamColor currTeamOrientation) {
+    private static void drawBoard(PrintStream out, ChessGame currGame, ChessGame.TeamColor currTeamOrientation) {
         switch (currTeamOrientation) {
             case WHITE:
                 for (int rowNum = BOARD_DIMENSION_IN_SQUARES; rowNum > 0; --rowNum) {
@@ -88,7 +88,7 @@ public class ChessBoardDrawer {
                             else {
                                 setDarkGreen(out);
                             }
-                            pieceChecker(currBoard, out, rowNum, colNum);
+                            pieceChecker(currGame.getBoard(), out, rowNum, colNum);
                         }
                     }
                     else{
@@ -99,11 +99,11 @@ public class ChessBoardDrawer {
                             else {
                                 setGreen(out);
                             }
-                            pieceChecker(currBoard, out, rowNum, colNum);
+                            pieceChecker(currGame.getBoard(), out, rowNum, colNum);
                         }
                     }
                     printRowNum(out, rowNum);
-                    setTerminalColor(out); //could be white for other terminal color
+                    setTerminalColor(out);
                     out.println();
                 }
                 break;
@@ -118,7 +118,7 @@ public class ChessBoardDrawer {
                             else {
                                 setDarkGreen(out);
                             }
-                            pieceChecker(currBoard, out, rowNum, colNum);
+                            pieceChecker(currGame.getBoard(), out, rowNum, colNum);
                         }
                     }
                     else{
@@ -129,7 +129,7 @@ public class ChessBoardDrawer {
                             else {
                                 setGreen(out);
                             }
-                            pieceChecker(currBoard, out, rowNum, colNum);
+                            pieceChecker(currGame.getBoard(), out, rowNum, colNum);
                         }
                     }
                     printRowNum(out, rowNum);
@@ -178,7 +178,6 @@ public class ChessBoardDrawer {
                 out.print(SET_TEXT_COLOR_BLACK);
                 out.print(ICON_CATALOG.get(potentialPiece.getPieceType()));
             }
-            //out.print(" " + ICON_CATALOG.get(potentialPiece.getPieceType()) + " ");
         }
         else{
             out.print(EMPTY);

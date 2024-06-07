@@ -145,8 +145,8 @@ public class Client {
                     }
                     else{
                         OUT.println("User " + "\"" + currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
-                        ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
-                        ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
+                        ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame());
+                        ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame());
                     }
                     break;
                 case "OBSERVE":
@@ -157,8 +157,8 @@ public class Client {
                     }
                     else{
                         OUT.println(resultText);
-                        ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
-                        ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
+                        ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame());
+                        ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame());
                     }
                     break;
                 default:
