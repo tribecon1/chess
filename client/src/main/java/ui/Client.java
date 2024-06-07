@@ -27,7 +27,7 @@ public class Client {
     private static String authToken = null;
 
     public static void main(String[] args) throws IOException {
-        ClientCommunicator clientCommunicator = new ClientCommunicator("8080");
+        ServerFacade serverFacade = new ServerFacade(8080);
         startupMenu();
     }
 
@@ -132,9 +132,10 @@ public class Client {
                         }
                         else{
                             for (int rowNum = 1; rowNum <= listOfGames.size(); ++rowNum){
-                                OUT.println(rowNum + ". " + gameDataInterpreter(listOfGames.get(rowNum-1)));
+                                OUT.print(rowNum + ". " + gameDataInterpreter(listOfGames.get(rowNum-1)));
                             }
                         }
+                        OUT.println();
                     }
                     break;
                 case "JOIN":
@@ -145,9 +146,9 @@ public class Client {
                     }
                     else{
                         OUT.println("User " + "\"" + currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
+                        ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
+                        ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     }
-                    ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
-                    ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     break;
                 case "OBSERVE":
                     String givenGameID = observeSteps(OUT, TERMINAL_READER);
@@ -157,9 +158,9 @@ public class Client {
                     }
                     else{
                         OUT.println(resultText);
+                        ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
+                        ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     }
-                    ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame().getBoard());
-                    ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame().getBoard());
                     break;
                 default:
                     OUT.println("ERROR! Unknown command: " + "\"" + userResponse + "\"");

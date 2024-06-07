@@ -8,6 +8,7 @@ import dataaccess.dao.sqldao.SqlAuthDao;
 import dataaccess.dao.sqldao.SqlGameDao;
 import dataaccess.dao.sqldao.SqlUserDao;
 import net.ClientCommunicator;
+import net.ServerFacade;
 import org.junit.jupiter.api.*;
 import server.Server;
 import service.SystemService;
@@ -20,7 +21,7 @@ public class ServerFacadeTests {
     private static final AuthDao AUTH_DAO = new SqlAuthDao();
     private static final GameDao GAME_DAO = new SqlGameDao();
     private static final SystemService SYSTEM_SERVICE = new SystemService(GAME_DAO, AUTH_DAO, USER_DAO);
-    private static ClientCommunicator clientCommunicator;
+    private static ServerFacade serverFacade;
 
 
     @BeforeAll
@@ -28,7 +29,7 @@ public class ServerFacadeTests {
         server = new Server();
         var port = server.run(0);
         System.out.println("Started test HTTP server on " + port);
-        clientCommunicator = new ClientCommunicator(String.valueOf(port));
+        serverFacade = new ServerFacade(port);
     }
 
     @AfterAll

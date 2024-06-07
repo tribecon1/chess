@@ -13,7 +13,7 @@ import static net.NetUtils.*;
 public class ClientCommunicator {
     private static String baseLink = "http://localhost:";//DO I NEED A CONSTRUCTOR FOR THIS? Better to create in ServerFacade?
 
-    public ClientCommunicator(String givenPort) {
+    public ClientCommunicator(int givenPort) {
         baseLink = baseLink + givenPort + "/";
     }
 

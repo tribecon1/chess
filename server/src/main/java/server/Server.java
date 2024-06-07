@@ -103,7 +103,6 @@ public class Server {
                 return errorTranslator(res, e);
             }});
         Spark.post("/:givenPath", (req, res) -> {         //POST creating a new game, login, register
-            System.out.print("given path was post method w/ body: " + req.body());
             String givenPath = req.params(":givenPath");
             UserService userService = new UserService(this.userDao, this.authDao); //needed objects throughout this branch
             GameService gameService = new GameService(this.gameDao, this.authDao);

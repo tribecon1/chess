@@ -15,6 +15,11 @@ import server.SerializerDeserializer;
 import java.io.IOException;
 
 public class ServerFacade {
+    ClientCommunicator clientCommunicator;
+
+    public ServerFacade(int portNum){
+        this.clientCommunicator = new ClientCommunicator(portNum);
+    }
 
     public static String register(UserData user) throws IOException {
         String urlExtension = "user";
