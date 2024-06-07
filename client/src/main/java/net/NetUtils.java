@@ -2,7 +2,7 @@ package net;
 
 
 import response.ErrorResponse;
-import server.SerializerDeserializer;
+import ui.SerializerDeserializer;
 
 import java.io.IOException;
 import java.io.OutputStream;

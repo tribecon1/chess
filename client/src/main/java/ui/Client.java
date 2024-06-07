@@ -8,7 +8,6 @@ import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
 import response.ListGamesResponse;
-import server.SerializerDeserializer;
 
 import java.io.IOException;
 import java.io.PrintStream;

@@ -11,7 +11,7 @@ import response.CreateGameResponse;
 import response.ErrorResponse;
 import response.ListGamesResponse;
 import response.ResponseType;
-import server.SerializerDeserializer;
+import ui.SerializerDeserializer;
 
 import java.io.IOException;
 
