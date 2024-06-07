@@ -1,5 +1,6 @@
 package client;
 
+import com.google.gson.JsonSyntaxException;
 import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDao;
 import dataaccess.dao.GameDao;
@@ -12,6 +13,8 @@ import net.ServerFacade;
 import org.junit.jupiter.api.*;
 import request.CreateGameRequest;
 import request.LoginRequest;
+import response.ListGamesResponse;
+import server.SerializerDeserializer;
 import server.Server;
 import service.SystemService;
 
@@ -125,6 +128,29 @@ public class ServerFacadeTests {
         String responseText = serverFacade.createGame(new CreateGameRequest("Brand New Game!"), "notRealToken");
         assertEquals("Error: unauthorized", responseText);
         Assertions.assertThrows(NumberFormatException.class, () -> Integer.parseInt(responseText));
+    }
+
+    @Test
+    void listGamesSuccess() throws Exception {
+        var authData = AUTH_DAO.createAuth("temp", "authToken");
+        GAME_DAO.createGame("Game#1");
+        GAME_DAO.createGame("Game#2");
+        GAME_DAO.createGame("Game#3");
+        String responseText = serverFacade.listGames(authData.authToken());
+        assertFalse(responseText.contains("Error"));
+        Assertions.assertDoesNotThrow(() -> SerializerDeserializer.convertFromJSON(responseText, ListGamesResponse.class));
+        ListGamesResponse returnedList = SerializerDeserializer.convertFromJSON(responseText, ListGamesResponse.class);
+        assert (returnedList.games().size() == 3);
+    }
+
+    @Test
+    void listGamesFailure() throws Exception {
+        GAME_DAO.createGame("Game#1");
+        GAME_DAO.createGame("Game#2");
+        GAME_DAO.createGame("Game#3");
+        String responseText = serverFacade.listGames("falseAuthToken");
+        assertTrue(responseText.contains("Error"));
+        Assertions.assertThrows(JsonSyntaxException.class, () -> SerializerDeserializer.convertFromJSON(responseText, ListGamesResponse.class));
     }
 
 
