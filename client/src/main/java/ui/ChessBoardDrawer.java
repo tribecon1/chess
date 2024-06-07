@@ -11,14 +11,6 @@ import static ui.EscapeSequences.*;
 public class ChessBoardDrawer {
     private static final int BOARD_DIMENSION_IN_SQUARES = 8;
     private static final String EMPTY = "   ";
-    /*private static final HashMap<ChessPiece.PieceType, String> ICON_CATALOG = new HashMap<>() {{
-        put(ChessPiece.PieceType.PAWN, "P");
-        put(ChessPiece.PieceType.ROOK, "R");
-        put(ChessPiece.PieceType.KNIGHT, "N");
-        put(ChessPiece.PieceType.BISHOP, "B");
-        put(ChessPiece.PieceType.QUEEN, "Q");
-        put(ChessPiece.PieceType.KING, "K");
-    }};*/
     private static final HashMap<ChessPiece.PieceType, String> ICON_CATALOG = new HashMap<>() {{
         put(ChessPiece.PieceType.PAWN, BLACK_PAWN);
         put(ChessPiece.PieceType.ROOK, BLACK_ROOK);
@@ -27,7 +19,6 @@ public class ChessBoardDrawer {
         put(ChessPiece.PieceType.QUEEN, BLACK_QUEEN);
         put(ChessPiece.PieceType.KING, BLACK_KING);
     }};
-
 
 
     public static void main(String[] args) throws InvalidMoveException {

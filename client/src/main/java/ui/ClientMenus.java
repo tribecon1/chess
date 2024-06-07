@@ -13,153 +13,153 @@ import static ui.EscapeSequences.*;
 
 public class ClientMenus {
 
-    public static void helpMenuOptions(PrintStream OUT){
-        OUT.println("Here are the following commands: ");
-        OUT.print(SET_TEXT_COLOR_GREEN);
-        OUT.print("   * Register - Provide a ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<USERNAME> <PASSWORD> <EMAIL> ");
-        OUT.print(SET_TEXT_COLOR_GREEN);
-        OUT.println("to register a new user!");
+    public static void helpMenuOptions(PrintStream out){
+        out.println("Here are the following commands: ");
+        out.print(SET_TEXT_COLOR_GREEN);
+        out.print("   * Register - Provide a ");
+        out.print(SET_TEXT_COLOR_ORANGE);
+        out.print("<USERNAME> <PASSWORD> <EMAIL> ");
+        out.print(SET_TEXT_COLOR_GREEN);
+        out.println("to register a new user!");
 
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.print("   * Login - Provide an existing ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<USERNAME> <PASSWORD> ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.println("to login!");
+        out.print(SET_TEXT_COLOR_BLUE);
+        out.print("   * Login - Provide an existing ");
+        out.print(SET_TEXT_COLOR_ORANGE);
+        out.print("<USERNAME> <PASSWORD> ");
+        out.print(SET_TEXT_COLOR_BLUE);
+        out.println("to login!");
 
-        OUT.print(SET_TEXT_COLOR_MAGENTA);
-        OUT.println("   * Help - List of available commands");
+        out.print(SET_TEXT_COLOR_MAGENTA);
+        out.println("   * Help - List of available commands");
 
-        OUT.print(SET_TEXT_COLOR_RED);
-        OUT.println("   * Quit your current session");
-        OUT.println();
-        OUT.print(SET_TEXT_COLOR_WHITE);
+        out.print(SET_TEXT_COLOR_RED);
+        out.println("   * Quit your current session");
+        out.println();
+        out.print(SET_TEXT_COLOR_WHITE);
     }
 
-    public static void helpAuthorizedOptions(PrintStream OUT){
-        OUT.println("Here are the following available commands: ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.print("   * Create - Provide a ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<gameName> ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.println("to create a new game of chess!");
+    public static void helpAuthorizedOptions(PrintStream out){
+        out.println("Here are the following available commands: ");
+        out.print(SET_TEXT_COLOR_BLUE);
+        out.print("   * Create - Provide a ");
+        out.print(SET_TEXT_COLOR_ORANGE);
+        out.print("<gameName> ");
+        out.print(SET_TEXT_COLOR_BLUE);
+        out.println("to create a new game of chess!");
 
-        OUT.println("   * List - to list all current chess games!");
+        out.println("   * List - to list all current chess games!");
 
-        OUT.print("   * Join - Provide a ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<gameID> [White|Black] ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.println("to join and play in an existing game of chess!");
+        out.print("   * Join - Provide a ");
+        out.print(SET_TEXT_COLOR_ORANGE);
+        out.print("<gameID> [White|Black] ");
+        out.print(SET_TEXT_COLOR_BLUE);
+        out.println("to join and play in an existing game of chess!");
 
-        OUT.print("   * Observe - Provide a ");
-        OUT.print(SET_TEXT_COLOR_ORANGE);
-        OUT.print("<gameID> ");
-        OUT.print(SET_TEXT_COLOR_BLUE);
-        OUT.println("to watch an active game of chess!");
+        out.print("   * Observe - Provide a ");
+        out.print(SET_TEXT_COLOR_ORANGE);
+        out.print("<gameID> ");
+        out.print(SET_TEXT_COLOR_BLUE);
+        out.println("to watch an active game of chess!");
 
-        OUT.println("   * Logout - When you are finished! ");
+        out.println("   * Logout - When you are finished! ");
 
-        OUT.print(SET_TEXT_COLOR_MAGENTA);
-        OUT.println("   * Help - List of available commands");
-        OUT.println();
-        OUT.print(SET_TEXT_COLOR_WHITE);
+        out.print(SET_TEXT_COLOR_MAGENTA);
+        out.println("   * Help - List of available commands");
+        out.println();
+        out.print(SET_TEXT_COLOR_WHITE);
     }
 
 
-    public static UserData registerInfoSteps(PrintStream OUT, Scanner TERMINAL_READER){
-        OUT.println("Create your username:");
-        OUT.print("> ");
-        String username = TERMINAL_READER.nextLine();
+    public static UserData registerInfoSteps(PrintStream out, Scanner terminalReader){
+        out.println("Create your username:");
+        out.print("> ");
+        String username = terminalReader.nextLine();
         while(username.isEmpty()){
-            OUT.println("Username may not be blank, please try again: ");
-            OUT.print("> ");
-            username = TERMINAL_READER.nextLine();
+            out.println("Username may not be blank, please try again: ");
+            out.print("> ");
+            username = terminalReader.nextLine();
         }
-        OUT.println("Create your password:");
-        OUT.print("> ");
-        String password = TERMINAL_READER.nextLine();
+        out.println("Create your password:");
+        out.print("> ");
+        String password = terminalReader.nextLine();
         while(password.isEmpty()){
-            OUT.println("Password may not be blank, please try again: ");
-            OUT.print("> ");
-            password = TERMINAL_READER.nextLine();
+            out.println("Password may not be blank, please try again: ");
+            out.print("> ");
+            password = terminalReader.nextLine();
         }
-        OUT.println("Enter your email:");
-        OUT.print("> ");
-        String email = TERMINAL_READER.nextLine();
+        out.println("Enter your email:");
+        out.print("> ");
+        String email = terminalReader.nextLine();
         while(email.isEmpty()){
-            OUT.println("Email may not be blank, please try again:");
-            OUT.print("> ");
-            email = TERMINAL_READER.nextLine();
+            out.println("Email may not be blank, please try again:");
+            out.print("> ");
+            email = terminalReader.nextLine();
         }
         return new UserData(username, password, email);
     }
 
-    public static LoginRequest loginVerifySteps(PrintStream OUT, Scanner TERMINAL_READER){
-        OUT.println("Enter your username:");
-        OUT.print("> ");
-        String username = TERMINAL_READER.nextLine();
+    public static LoginRequest loginVerifySteps(PrintStream out, Scanner terminalReader){
+        out.println("Enter your username:");
+        out.print("> ");
+        String username = terminalReader.nextLine();
         while(username.isEmpty()){
-            OUT.println("Username may not be blank, please try again: ");
-            OUT.print("> ");
-            username = TERMINAL_READER.nextLine();
+            out.println("Username may not be blank, please try again: ");
+            out.print("> ");
+            username = terminalReader.nextLine();
         }
-        OUT.println("Enter your password:");
-        OUT.print("> ");
-        String password = TERMINAL_READER.nextLine();
+        out.println("Enter your password:");
+        out.print("> ");
+        String password = terminalReader.nextLine();
         while(password.isEmpty()){
-            OUT.println("Password may not be blank, please try again: ");
-            OUT.print("> ");
-            password = TERMINAL_READER.nextLine();
+            out.println("Password may not be blank, please try again: ");
+            out.print("> ");
+            password = terminalReader.nextLine();
         }
         return new LoginRequest(username, password);
     }
 
-    public static JoinGameRequest joinSteps(PrintStream OUT, Scanner TERMINAL_READER){
-        OUT.println("Enter the game ID # for the game you want to join and play:");
-        OUT.print("> ");
-        String givenID = TERMINAL_READER.nextLine();
+    public static JoinGameRequest joinSteps(PrintStream out, Scanner terminalReader){
+        out.println("Enter the game ID # for the game you want to join and play:");
+        out.print("> ");
+        String givenID = terminalReader.nextLine();
         while(givenID.isEmpty()){
-            OUT.println("Game ID may not be blank, please try again: ");
-            OUT.print("> ");
-            givenID = TERMINAL_READER.nextLine();
+            out.println("Game ID may not be blank, please try again: ");
+            out.print("> ");
+            givenID = terminalReader.nextLine();
         }
         int gameID = Integer.parseInt(givenID);
-        OUT.println("Enter the color for the team you'd like to play as (White/BLack):");
-        OUT.print("> ");
-        String chosenTeam = TERMINAL_READER.nextLine();
+        out.println("Enter the color for the team you'd like to play as (White/BLack):");
+        out.print("> ");
+        String chosenTeam = terminalReader.nextLine();
         while(chosenTeam.isEmpty()){
-            OUT.println("Password may not be blank, please try again: ");
-            OUT.print("> ");
-            chosenTeam = TERMINAL_READER.nextLine();
+            out.println("Password may not be blank, please try again: ");
+            out.print("> ");
+            chosenTeam = terminalReader.nextLine();
         }
         return new JoinGameRequest(chosenTeam, gameID);
     }
 
-    public static CreateGameRequest createSteps(PrintStream OUT, Scanner TERMINAL_READER){
-        OUT.println("Enter a name for the chess game you'd like to create:");
-        OUT.println("**Note: Creating a game does not automatically join you to that game**");
-        OUT.print("> ");
-        String gameName = TERMINAL_READER.nextLine();
+    public static CreateGameRequest createSteps(PrintStream out, Scanner terminalReader){
+        out.println("Enter a name for the chess game you'd like to create:");
+        out.println("**Note: Creating a game does not automatically join you to that game**");
+        out.print("> ");
+        String gameName = terminalReader.nextLine();
         while(gameName.isEmpty()){
-            OUT.println("Game ID may not be blank, please try again: ");
-            OUT.print("> ");
-            gameName = TERMINAL_READER.nextLine();
+            out.println("Game ID may not be blank, please try again: ");
+            out.print("> ");
+            gameName = terminalReader.nextLine();
         }
         return new CreateGameRequest(gameName);
     }
 
-    public static String observeSteps(PrintStream OUT, Scanner TERMINAL_READER){
-        OUT.println("Enter the game ID # for the game you wish to observe:");
-        OUT.print("> ");
-        String givenID = TERMINAL_READER.nextLine();
+    public static String observeSteps(PrintStream out, Scanner terminalReader){
+        out.println("Enter the game ID # for the game you wish to observe:");
+        out.print("> ");
+        String givenID = terminalReader.nextLine();
         while(givenID.isEmpty()){
-            OUT.println("Game ID may not be blank, please try again: ");
-            OUT.print("> ");
-            givenID = TERMINAL_READER.nextLine();
+            out.println("Game ID may not be blank, please try again: ");
+            out.print("> ");
+            givenID = terminalReader.nextLine();
         }
         return givenID;
     }
