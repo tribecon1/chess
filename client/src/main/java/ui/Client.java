@@ -33,11 +33,11 @@ public class Client {
 
 
     public static void startupMenu() throws IOException {
+        OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.println("***********************************************************************************");
         OUT.println("♖ Welcome to Bentley's CS 240 Chess Fest! ♜");
         OUT.println("***********************************************************************************");
         OUT.println();
-        OUT.print(SET_TEXT_COLOR_WHITE);
 
         while(authToken == null){
             OUT.println("Type \"help\" to see your options, or enter your desired action here!:");
