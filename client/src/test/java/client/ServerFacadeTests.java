@@ -122,7 +122,7 @@ public class ServerFacadeTests {
         var authData = AUTH_DAO.createAuth("temp", "authToken");
         String responseText = serverFacade.createGame(new CreateGameRequest("Brand New Game!"), authData.authToken());
         assertFalse(responseText.contains("Error"));
-        Assertions.assertDoesNotThrow(() -> Integer.parseInt(responseText));
+        assert(responseText.contains("created"));
     }
 
     @Test
@@ -168,8 +168,8 @@ public class ServerFacadeTests {
     void joinGameFailure() throws Exception {
         var authToken = AUTH_DAO.createAuth("temp", "authToken").authToken();
         GAME_DAO.createGame("newGame!");
-        String responseText = serverFacade.joinGame(new JoinGameRequest("WHITE", 502345), authToken);
-        assertEquals("Error: bad request", responseText);
+        String resultText = serverFacade.joinGame(new JoinGameRequest("WHITE", 502345), authToken);
+        assert (resultText.contains("invalid game"));
     }
 
     @Test

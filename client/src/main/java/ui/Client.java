@@ -44,15 +44,15 @@ public class Client {
             OUT.println("Type \"help\" to see your options, or enter your desired action here!:");
             OUT.print(">>> ");
 
+            String resultText;
             String userResponse = TERMINAL_READER.nextLine();
-
             switch(userResponse.toUpperCase()){
                 case "HELP":
                     helpMenuOptions(OUT);
                     break;
                 case "REGISTER":
                     UserData newUser = registerInfoSteps(OUT, TERMINAL_READER);
-                    String resultText = serverFacade.register(newUser);
+                    resultText = serverFacade.register(newUser);
                     if (resultText.contains("Error")){
                         OUT.println("Register failed!: " + resultText);
                     }
@@ -118,7 +118,7 @@ public class Client {
                         OUT.println("Register failed! -> " + resultText);
                     }
                     else{
-                        OUT.println("Your game was created! Its ID # is: " + resultText);
+                        OUT.println(resultText);
                     }
                     break;
                 case "LIST":
@@ -133,7 +133,7 @@ public class Client {
                         }
                         else{
                             for (int rowNum = 1; rowNum <= listOfGames.size(); ++rowNum){
-                                OUT.print(rowNum + ". " + gameDataInterpreter(listOfGames.get(rowNum-1)));
+                                OUT.print(rowNum + "." + gameDataInterpreter(listOfGames.get(rowNum-1)));
                             }
                         }
                         OUT.println();

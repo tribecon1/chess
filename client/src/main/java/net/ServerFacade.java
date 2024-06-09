@@ -15,6 +15,9 @@ import response.ResponseType;
 import server.SerializerDeserializer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class ServerFacade {
     ClientCommunicator clientCommunicator;
@@ -58,7 +61,7 @@ public class ServerFacade {
         String createGameJSON = SerializerDeserializer.convertToJSON(createGameRequest);
         ResponseType responseObject = ClientCommunicator.createHttpPost(createGameJSON, authToken, urlExtension);
         if (responseObject instanceof CreateGameResponse){
-            return String.valueOf( ((CreateGameResponse) responseObject).gameID() );
+            return "Your game was created! Call the \"list\" command to see its number in the list in order to join it!";
         }
         else if (responseObject instanceof ErrorResponse){
             return ((ErrorResponse) responseObject).message();
@@ -98,7 +101,18 @@ public class ServerFacade {
 
     public String joinGame(JoinGameRequest joinRequest, String authToken) throws IOException {
         String urlExtension = "game";
-        String joinGameJSON = SerializerDeserializer.convertToJSON(joinRequest);
+        List<GameData> listOfGames = new ArrayList<>(SerializerDeserializer.convertFromJSON(listGames(authToken), ListGamesResponse.class).games());
+        JoinGameRequest translatedJoinRequest;
+        if (listOfGames.isEmpty()){
+            return "Error: no games currently exist to join";
+        }
+        else if(joinRequest.gameID() > listOfGames.size()){
+            return "Error: invalid game # given, there is no game at the #: " + joinRequest.gameID();
+        }
+        else {
+            translatedJoinRequest = new JoinGameRequest(joinRequest.playerColor(), listOfGames.get(joinRequest.gameID()-1).gameID());
+        }
+        String joinGameJSON = SerializerDeserializer.convertToJSON(translatedJoinRequest);
         ResponseType responseObject = ClientCommunicator.createHttpPut(joinGameJSON, authToken, urlExtension);
         if (responseObject == null){
             return " successfully joined the game with ID # " + joinRequest.gameID();

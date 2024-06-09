@@ -119,11 +119,11 @@ public class ClientMenus {
     }
 
     public static JoinGameRequest joinSteps(PrintStream out, Scanner terminalReader){
-        out.println("Enter the game ID # for the game you want to join and play:");
+        out.println("Enter the # of the game you want to join and play:");
         out.print("> ");
         String givenID = terminalReader.nextLine();
         while(givenID.isEmpty()){
-            out.println("Game ID may not be blank, please try again: ");
+            out.println("Game # may not be blank, please try again: ");
             out.print("> ");
             givenID = terminalReader.nextLine();
         }
@@ -132,7 +132,7 @@ public class ClientMenus {
         out.print("> ");
         String chosenTeam = terminalReader.nextLine();
         while(chosenTeam.isEmpty()){
-            out.println("Password may not be blank, please try again: ");
+            out.println("Team color may not be blank, please try again: ");
             out.print("> ");
             chosenTeam = terminalReader.nextLine();
         }
@@ -145,7 +145,7 @@ public class ClientMenus {
         out.print("> ");
         String gameName = terminalReader.nextLine();
         while(gameName.isEmpty()){
-            out.println("Game ID may not be blank, please try again: ");
+            out.println("The game name may not be blank, please try again: ");
             out.print("> ");
             gameName = terminalReader.nextLine();
         }
@@ -153,11 +153,11 @@ public class ClientMenus {
     }
 
     public static String observeSteps(PrintStream out, Scanner terminalReader){
-        out.println("Enter the game ID # for the game you wish to observe:");
+        out.println("Enter the # of the game you wish to observe:");
         out.print("> ");
         String givenID = terminalReader.nextLine();
         while(givenID.isEmpty()){
-            out.println("Game ID may not be blank, please try again: ");
+            out.println("Game # may not be blank, please try again: ");
             out.print("> ");
             givenID = terminalReader.nextLine();
         }
@@ -165,20 +165,20 @@ public class ClientMenus {
     }
 
     public static String gameDataInterpreter(GameData gameInList){
-        String clientReadableGame = "Game ID #: " + gameInList.gameID() + " --";
+        String clientReadableGame = ""; //= "Game ID #: " + gameInList.gameID() + " --";
         if(gameInList.whiteUsername() == null){
-            clientReadableGame += " White Team: <Empty>" + " --";
+            clientReadableGame += " White Team: <Available>" + " --";
         }
         else{
-            clientReadableGame += " White Team: " + gameInList.whiteUsername() + " --";
+            clientReadableGame += " White Team: \"" + gameInList.whiteUsername() + "\" --";
         }
         if(gameInList.blackUsername() == null){
-            clientReadableGame += " Black Team: <Empty>" + " --";
+            clientReadableGame += " Black Team: <Available>" + " --";
         }
         else{
-            clientReadableGame += " Black Team: " + gameInList.blackUsername() + " //";
+            clientReadableGame += " Black Team: \"" + gameInList.blackUsername() + "\" --";
         }
-        clientReadableGame += " Game Name: " + gameInList.gameName() + "\n";
+        clientReadableGame += " Game Name: \"" + gameInList.gameName() + "\"\n";
         return clientReadableGame;
     }
 
