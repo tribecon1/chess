@@ -28,12 +28,14 @@ public class ChessBoardDrawer {
         out.print(ERASE_SCREEN);
 
         ChessGame testBoard = new ChessGame();
-        testBoard.makeMove(new ChessMove(new ChessPosition("b2"), new ChessPosition("b4"), null));
-        //testBoard.makeMove(new ChessMove(new ChessPosition("g8"), new ChessPosition("h6"), null));
+        testBoard.makeMove(new ChessMove(new ChessPosition("c2"), new ChessPosition("c4"), null));
+        testBoard.makeMove(new ChessMove(new ChessPosition("g8"), new ChessPosition("h6"), null));
+        testBoard.makeMove(new ChessMove(new ChessPosition("d1"), new ChessPosition("c2"), null));
+        testBoard.makeMove(new ChessMove(new ChessPosition("c7"), new ChessPosition("c5"), null));
 
-        createBoardWhiteOrientation(out, testBoard, new ChessPosition("g8"));
+        createBoardWhiteOrientation(out, testBoard, new ChessPosition("c2"));
 
-        createBoardBlackOrientation(out, testBoard, new ChessPosition("g8"));
+        createBoardBlackOrientation(out, testBoard, new ChessPosition("c2"));
 
     }
 
