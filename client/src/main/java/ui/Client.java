@@ -147,6 +147,7 @@ public class Client {
                     }
                     else{
                         OUT.println("User " + "\"" + currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
+                        //do NOT print game immediately after, print after the connect notification is returned
                         switch(newJoinReq.playerColor().toUpperCase()){
                             case "WHITE" -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
                             case "BLACK" -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), null);
