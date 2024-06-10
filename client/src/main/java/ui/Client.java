@@ -18,7 +18,7 @@ import static ui.ClientMenus.*;
 import static ui.EscapeSequences.*;
 
 import server.SerializerDeserializer;
-
+//implement the ServerMessageObserver, pass that in to the serverFacade object
 public class Client {
 
     private static final PrintStream OUT = System.out;

@@ -35,7 +35,7 @@ public class ChessBoardDrawer {
 
         createBoardWhiteOrientation(out, testBoard, new ChessPosition("c2"));
 
-        createBoardBlackOrientation(out, testBoard, new ChessPosition("c2"));
+        createBoardBlackOrientation(out, testBoard, new ChessPosition("h6"));
 
     }
 
@@ -80,7 +80,9 @@ public class ChessBoardDrawer {
 
     private static void drawBoard(PrintStream out, ChessGame currGame, ChessGame.TeamColor currTeamOrientation, ChessPosition legalMovesStart) {
         Collection<ChessMove> validMovesAtPos = currGame.validMoves(legalMovesStart);
-        legalMovesStart = new ChessPosition(legalMovesStart.getRow(), Math.abs(legalMovesStart.getColumn()-9));
+        if (legalMovesStart != null) {
+            legalMovesStart = new ChessPosition(legalMovesStart.getRow(), Math.abs(legalMovesStart.getColumn()-9));
+        }
         switch (currTeamOrientation) {
             case WHITE:
                 for (int rowNum = BOARD_DIMENSION_IN_SQUARES; rowNum > 0; --rowNum) {
@@ -127,7 +129,7 @@ public class ChessBoardDrawer {
         else {
             setLightColorSquare(out, validMovesAtPos, rowNum, colNum);
         }
-        if (legalMovesStart.equals(new ChessPosition(rowNum, colNum))) {
+        if (legalMovesStart!= null && legalMovesStart.equals(new ChessPosition(rowNum, colNum))) {
             setBlue(out);
         }
         pieceChecker(currGame.getBoard(), out, rowNum, colNum);
@@ -140,7 +142,7 @@ public class ChessBoardDrawer {
         else {
             setDarkColorSquare(out, validMovesAtPos, rowNum, colNum);
         }
-        if (legalMovesStart.equals(new ChessPosition(rowNum, colNum))) {
+        if (legalMovesStart!= null && legalMovesStart.equals(new ChessPosition(rowNum, colNum))) {
             setBlue(out);
         }
         pieceChecker(currGame.getBoard(), out, rowNum, colNum);
