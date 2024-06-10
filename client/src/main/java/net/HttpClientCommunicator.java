@@ -9,10 +9,10 @@ import java.net.HttpURLConnection;
 
 import static net.NetUtils.*;
 
-public class ClientCommunicator {
+public class HttpClientCommunicator {
     private static String baseLink = "http://localhost:";//DO I NEED A CONSTRUCTOR FOR THIS? Better to create in ServerFacade?
 
-    public ClientCommunicator(int givenPort) {
+    public HttpClientCommunicator(int givenPort) {
         baseLink = baseLink + givenPort + "/";
     }
 
