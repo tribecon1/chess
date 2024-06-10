@@ -4,6 +4,7 @@ import chess.*;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.HashMap;
 
 import static ui.EscapeSequences.*;
@@ -28,26 +29,26 @@ public class ChessBoardDrawer {
 
         ChessGame testBoard = new ChessGame();
         testBoard.makeMove(new ChessMove(new ChessPosition("b2"), new ChessPosition("b4"), null));
-        testBoard.makeMove(new ChessMove(new ChessPosition("g8"), new ChessPosition("h6"), null));
+        //testBoard.makeMove(new ChessMove(new ChessPosition("g8"), new ChessPosition("h6"), null));
 
-        createBoardWhiteOrientation(out, testBoard);
+        createBoardWhiteOrientation(out, testBoard, new ChessPosition("g8"));
 
-        createBoardBlackOrientation(out, testBoard);
+        createBoardBlackOrientation(out, testBoard, new ChessPosition("g8"));
 
     }
 
-    public static void createBoardWhiteOrientation(PrintStream out, ChessGame currGame) {
+    public static void createBoardWhiteOrientation(PrintStream out, ChessGame currGame, ChessPosition legalMovesStart) {
         drawHeaders(out, ChessGame.TeamColor.WHITE);
-        drawBoard(out, currGame, ChessGame.TeamColor.WHITE);
+        drawBoard(out, currGame, ChessGame.TeamColor.WHITE, legalMovesStart);
         drawHeaders(out, ChessGame.TeamColor.WHITE);
         out.print(SET_DEFAULT_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
         out.println();
     }
 
-    public static void createBoardBlackOrientation(PrintStream out, ChessGame currBoard) {
+    public static void createBoardBlackOrientation(PrintStream out, ChessGame currBoard, ChessPosition legalMovesStart) {
         drawHeaders(out, ChessGame.TeamColor.BLACK);
-        drawBoard(out, currBoard, ChessGame.TeamColor.BLACK);
+        drawBoard(out, currBoard, ChessGame.TeamColor.BLACK, legalMovesStart);
         drawHeaders(out, ChessGame.TeamColor.BLACK);
         out.print(SET_DEFAULT_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
@@ -75,31 +76,21 @@ public class ChessBoardDrawer {
         out.print(headerText);
     }
 
-    private static void drawBoard(PrintStream out, ChessGame currGame, ChessGame.TeamColor currTeamOrientation) {
+    private static void drawBoard(PrintStream out, ChessGame currGame, ChessGame.TeamColor currTeamOrientation, ChessPosition legalMovesStart) {
+        Collection<ChessMove> validMovesAtPos = currGame.validMoves(legalMovesStart);
+        legalMovesStart = new ChessPosition(legalMovesStart.getRow(), Math.abs(legalMovesStart.getColumn()-9));
         switch (currTeamOrientation) {
             case WHITE:
                 for (int rowNum = BOARD_DIMENSION_IN_SQUARES; rowNum > 0; --rowNum) {
                     printRowNum(out, rowNum);
                     if (rowNum % 2 != 0) {
                         for (int colNum = BOARD_DIMENSION_IN_SQUARES; colNum > 0; --colNum) {
-                            if (colNum % 2 != 0) {
-                                setGreen(out);
-                            }
-                            else {
-                                setDarkGreen(out);
-                            }
-                            pieceChecker(currGame.getBoard(), out, rowNum, colNum);
+                            createEvenRowSquare(out, currGame, legalMovesStart, validMovesAtPos, rowNum, colNum);
                         }
                     }
                     else{
                         for (int colNum = BOARD_DIMENSION_IN_SQUARES; colNum > 0; --colNum) {
-                            if (colNum % 2 != 0) {
-                                setDarkGreen(out);
-                            }
-                            else {
-                                setGreen(out);
-                            }
-                            pieceChecker(currGame.getBoard(), out, rowNum, colNum);
+                            createOddRowSquare(out, currGame, legalMovesStart, validMovesAtPos, rowNum, colNum);
                         }
                     }
                     printRowNum(out, rowNum);
@@ -112,30 +103,68 @@ public class ChessBoardDrawer {
                     printRowNum(out, rowNum);
                     if (rowNum % 2 != 0) {
                         for (int colNum = 1; colNum < BOARD_DIMENSION_IN_SQUARES+1; ++colNum) {
-                            if (colNum % 2 != 0) {
-                                setGreen(out);
-                            }
-                            else {
-                                setDarkGreen(out);
-                            }
-                            pieceChecker(currGame.getBoard(), out, rowNum, colNum);
+                            createEvenRowSquare(out, currGame, legalMovesStart, validMovesAtPos, rowNum, colNum);
                         }
                     }
                     else{
                         for (int colNum = 1; colNum < BOARD_DIMENSION_IN_SQUARES+1; ++colNum) {
-                            if (colNum % 2 != 0) {
-                                setDarkGreen(out);
-                            }
-                            else {
-                                setGreen(out);
-                            }
-                            pieceChecker(currGame.getBoard(), out, rowNum, colNum);
+                            createOddRowSquare(out, currGame, legalMovesStart, validMovesAtPos, rowNum, colNum);
                         }
                     }
                     printRowNum(out, rowNum);
-                    setTerminalColor(out); //could be white for other terminal color
+                    setTerminalColor(out);
                     out.println();
                 }
+        }
+    }
+
+    private static void createOddRowSquare(PrintStream out, ChessGame currGame, ChessPosition legalMovesStart, Collection<ChessMove> validMovesAtPos, int rowNum, int colNum) {
+        if (colNum % 2 != 0) {
+            setDarkColorSquare(out, validMovesAtPos, rowNum, colNum);
+        }
+        else {
+            setLightColorSquare(out, validMovesAtPos, rowNum, colNum);
+        }
+        if (legalMovesStart.equals(new ChessPosition(rowNum, colNum))) {
+            setBlue(out);
+        }
+        pieceChecker(currGame.getBoard(), out, rowNum, colNum);
+    }
+
+    private static void createEvenRowSquare(PrintStream out, ChessGame currGame, ChessPosition legalMovesStart, Collection<ChessMove> validMovesAtPos, int rowNum, int colNum) {
+        if (colNum % 2 != 0) {
+            setLightColorSquare(out, validMovesAtPos, rowNum, colNum);
+        }
+        else {
+            setDarkColorSquare(out, validMovesAtPos, rowNum, colNum);
+        }
+        if (legalMovesStart.equals(new ChessPosition(rowNum, colNum))) {
+            setBlue(out);
+        }
+        pieceChecker(currGame.getBoard(), out, rowNum, colNum);
+    }
+
+    private static void setDarkColorSquare(PrintStream out, Collection<ChessMove> validMovesAtPos, int rowNum, int colNum) {
+        setDarkGreen(out);
+        if (validMovesAtPos != null) {
+            for (ChessMove move : validMovesAtPos) {
+                ChessPosition invertedPos = new ChessPosition(move.getEndPosition().getRow(), Math.abs(move.getEndPosition().getColumn()-9));
+                if (invertedPos.equals(new ChessPosition(rowNum, colNum))) {
+                    setDarkYellow(out);
+                }
+            }
+        }
+    }
+
+    private static void setLightColorSquare(PrintStream out, Collection<ChessMove> validMovesAtPos, int rowNum, int colNum) {
+        setGreen(out);
+        if (validMovesAtPos != null) {
+            for (ChessMove move : validMovesAtPos) {
+                ChessPosition invertedPos = new ChessPosition(move.getEndPosition().getRow(), Math.abs(move.getEndPosition().getColumn()-9));
+                if (invertedPos.equals(new ChessPosition(rowNum, colNum))) {
+                    setLightYellow(out);
+                }
+            }
         }
     }
 
@@ -150,13 +179,27 @@ public class ChessBoardDrawer {
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
+    private static void setDarkYellow(PrintStream out) {
+        out.print(SET_BG_COLOR_DARK_YELLOW);
+        out.print(SET_TEXT_COLOR_WHITE);
+    }
+
+    private static void setLightYellow(PrintStream out) {
+        out.print(SET_BG_COLOR_YELLOW);
+        out.print(SET_TEXT_COLOR_WHITE);
+    }
+
     private static void setLightBrown(PrintStream out) {
         out.print(SET_BG_COLOR_LIGHT_BROWN);
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
+    private static void setBlue(PrintStream out) {
+        out.print(SET_BG_COLOR_BLUE);
+        out.print(SET_TEXT_COLOR_WHITE);
+    }
+
     private static void setTerminalColor(PrintStream out) {
-        //out.print(SET_BG_COLOR_BLACK);
         out.print(SET_DEFAULT_BG_COLOR);
         out.print(SET_TEXT_COLOR_WHITE);
     }
