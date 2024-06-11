@@ -17,6 +17,7 @@ import response.*;
 import service.*;
 import spark.*;
 import dataaccess.dao.*;
+import websocket.WebSocketHandler;
 
 import java.util.HashMap;
 
@@ -24,6 +25,8 @@ public class Server {
     private final UserDao userDao;
     private final GameDao gameDao;
     private final AuthDao authDao;
+    private final WebSocketHandler webSocketHandler;
+
 
     private static final HashMap<String, Integer> ERRORCODEMESSAGEMAP = new HashMap<>() {{
         put("Error: bad request", 400);
@@ -38,14 +41,16 @@ public class Server {
         catch (DataAccessException e){
             e.printStackTrace();
         }
-
         //this.userDao = new MemoryUserDao();
         this.userDao = new SqlUserDao();
         //this.gameDao = new MemoryGameDao();
         this.gameDao = new SqlGameDao();
         //this.authDao = new MemoryAuthDao();
         this.authDao = new SqlAuthDao();
+
+        this.webSocketHandler = new WebSocketHandler();
     }
+
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
@@ -54,6 +59,7 @@ public class Server {
 
         // Register your endpoints and handle exceptions here.
         createRoutes();
+        Spark.webSocket("/ws", webSocketHandler);
 
         Spark.awaitInitialization();
         return Spark.port();

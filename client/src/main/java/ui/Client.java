@@ -20,6 +20,9 @@ import static ui.ClientMenus.*;
 import static ui.EscapeSequences.*;
 
 import server.SerializerDeserializer;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 public class Client implements ServerMessageObserver {
@@ -29,16 +32,17 @@ public class Client implements ServerMessageObserver {
     private static String currUser = null;
     private static String authToken = null;
     private static ServerFacade serverFacade;
+    private static boolean forfeit = false;
 
 
     public static void main(String[] args) throws IOException {
         Client currClient = new Client();
         serverFacade = new ServerFacade(8080, currClient);
-        startupMenu();
+        currClient.startupMenu();
     }
 
 
-    public static void startupMenu() throws IOException {
+    public void startupMenu() throws IOException {
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.println("***********************************************************************************");
         OUT.println("♖ Welcome to Bentley's CS 240 Chess Fest! ♜");
@@ -88,7 +92,7 @@ public class Client implements ServerMessageObserver {
         authorizedMenu();
     }
 
-    public static void authorizedMenu() throws IOException {
+    public void authorizedMenu() throws IOException {
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.println("***********************************************************************************");
         OUT.print("Welcome user \"" + currUser + "\"! ");
@@ -179,7 +183,7 @@ public class Client implements ServerMessageObserver {
     }
 
 
-    public static void gameplayMenu(ChessGame.TeamColor clientTeam) throws IOException {
+    public void gameplayMenu(ChessGame.TeamColor clientTeam) throws IOException {
         OUT.print(SET_TEXT_COLOR_WHITE);
         boolean loopVar = true;
         helpGameplayOptions(OUT);
@@ -207,6 +211,7 @@ public class Client implements ServerMessageObserver {
                     break;
                 case "RESIGN":
                     //do code
+                    forfeit = true; //so that no more moves can be made
                     break;
                 case "HIGHLIGHT":
                     String chosenPiecePos = pieceHighlightedMoves(OUT, TERMINAL_READER);
@@ -219,13 +224,18 @@ public class Client implements ServerMessageObserver {
                     OUT.println("ERROR! Unknown command -> " + "\"" + userResponse + "\"");
             }
         }
-        //authorizedMenu();
     }
 
 
     //to be added to!!
     @Override
     public void notify(ServerMessage message) {
-        return;
+        switch (message.getServerMessageType()) {
+            case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage()); //to everyone but root client
+            case ERROR -> displayError(((ErrorMessage) message).getErrorMessage()); //only to root client
+            case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame()); //to all clients
+        }
     }
+
+
 }

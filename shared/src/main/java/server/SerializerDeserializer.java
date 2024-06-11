@@ -5,9 +5,6 @@ import com.google.gson.JsonObject;
 
 public class SerializerDeserializer {
 
-
-    //prep the gson to serialize/deserialize UserCommand and ServerMessage, THEN set the var SERIALIZER equal to it
-
     private static final Gson SERIALIZER = new Gson();
 
     public static String convertToJSON(Object obj){
