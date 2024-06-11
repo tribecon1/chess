@@ -18,6 +18,7 @@ import response.ListGamesResponse;
 import server.Server;
 import service.SystemService;
 import server.SerializerDeserializer;
+import ui.Client;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,8 +38,9 @@ public class ServerFacadeTests {
     public static void init() {
         server = new Server();
         var port = server.run(0);
+        var testClient = new Client();
         System.out.println("Started test HTTP server on " + port);
-        serverFacade = new ServerFacade(port);
+        serverFacade = new ServerFacade(port, testClient);
     }
 
     @AfterAll

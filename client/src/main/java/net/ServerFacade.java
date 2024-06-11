@@ -21,7 +21,7 @@ import java.util.List;
 public class ServerFacade {
     HttpClientCommunicator httpClientCommunicator;
 
-    public ServerFacade(int portNum){
+    public ServerFacade(int portNum, ServerMessageObserver serverMessageObserver){
         this.httpClientCommunicator = new HttpClientCommunicator(portNum);
     }
 
@@ -114,7 +114,7 @@ public class ServerFacade {
         String joinGameJSON = SerializerDeserializer.convertToJSON(translatedJoinRequest);
         ResponseType responseObject = HttpClientCommunicator.createHttpPut(joinGameJSON, authToken, urlExtension);
         if (responseObject == null){
-            return " successfully joined the game with ID # " + joinRequest.gameID();
+            return " successfully joined the game # " + joinRequest.gameID();
         }
         else if (responseObject instanceof ErrorResponse){
             return ((ErrorResponse) responseObject).message();

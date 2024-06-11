@@ -1,9 +1,11 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessPosition;
 import model.GameData;
 import model.UserData;
 import net.ServerFacade;
+import net.ServerMessageObserver;
 import request.CreateGameRequest;
 import request.JoinGameRequest;
 import request.LoginRequest;
@@ -18,8 +20,9 @@ import static ui.ClientMenus.*;
 import static ui.EscapeSequences.*;
 
 import server.SerializerDeserializer;
-//implement the ServerMessageObserver, pass that in to the serverFacade object
-public class Client {
+import websocket.messages.ServerMessage;
+
+public class Client implements ServerMessageObserver {
 
     private static final PrintStream OUT = System.out;
     private static final Scanner TERMINAL_READER = new Scanner(System.in);
@@ -27,8 +30,10 @@ public class Client {
     private static String authToken = null;
     private static ServerFacade serverFacade;
 
+
     public static void main(String[] args) throws IOException {
-        serverFacade = new ServerFacade(8080);
+        Client currClient = new Client();
+        serverFacade = new ServerFacade(8080, currClient);
         startupMenu();
     }
 
@@ -152,6 +157,7 @@ public class Client {
                             case "WHITE" -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
                             case "BLACK" -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), null);
                         }
+                        gameplayMenu(ChessGame.TeamColor.valueOf(newJoinReq.playerColor().toUpperCase()));
                     }
                     break;
                 case "OBSERVE":
@@ -173,4 +179,53 @@ public class Client {
     }
 
 
+    public static void gameplayMenu(ChessGame.TeamColor clientTeam) throws IOException {
+        OUT.print(SET_TEXT_COLOR_WHITE);
+        boolean loopVar = true;
+        helpGameplayOptions(OUT);
+        while(loopVar){
+            OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
+            OUT.print(">>> ");
+            String userResponse = TERMINAL_READER.nextLine();
+            switch(userResponse.toUpperCase()){
+                case "HELP":
+                    helpGameplayOptions(OUT);
+                    break;
+                case "REDRAW":
+                    switch (clientTeam){
+                        case WHITE -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
+                        case BLACK -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), null);
+                    }
+                    break;
+                case "LEAVE":
+                    //do code
+                    OUT.println("Leaving game and returning to menu...");
+                    loopVar = false;
+                    break;
+                case "MOVE":
+                    //do code
+                    break;
+                case "RESIGN":
+                    //do code
+                    break;
+                case "HIGHLIGHT":
+                    String chosenPiecePos = pieceHighlightedMoves(OUT, TERMINAL_READER);
+                    switch (clientTeam){
+                        case WHITE -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), new ChessPosition(chosenPiecePos));
+                        case BLACK -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), new ChessPosition(chosenPiecePos));
+                    }
+                    break;
+                default:
+                    OUT.println("ERROR! Unknown command -> " + "\"" + userResponse + "\"");
+            }
+        }
+        //authorizedMenu();
+    }
+
+
+    //to be added to!!
+    @Override
+    public void notify(ServerMessage message) {
+        return;
+    }
 }

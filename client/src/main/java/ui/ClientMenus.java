@@ -69,6 +69,30 @@ public class ClientMenus {
         out.print(SET_TEXT_COLOR_WHITE);
     }
 
+    public static void helpGameplayOptions(PrintStream out){
+        out.println();
+        out.println("Available commands during gameplay:");
+        out.println("1. Help - Lists the available commands");
+        out.println("2. Redraw - Redraws the board of your current game");
+        out.println("3. Leave - Quits the current game, and your team becomes available to join");
+        out.println("4. Move - Makes a move on a specified chess piece");
+        out.println("5. Resign - Forfeits the game and declares the other team the winner");
+        out.println("6. Highlight - Highlights all the possible legal moves a specified chess piece could make");
+        out.println();
+    }
+
+    public static String pieceHighlightedMoves(PrintStream out, Scanner terminalReader){
+        out.println("Provide the coordinate position (format either \"a4\" or \"A4\") for the piece for which you want to identify legal moves:");
+        out.print("> ");
+        String coordPos = terminalReader.nextLine();
+        while(coordPos.isEmpty()){
+            out.println("Coordinate position may not be blank. Acceptable format is either \"a4\" or \"A4\": ");
+            out.print("> ");
+            coordPos = terminalReader.nextLine();
+        }
+        return coordPos;
+    }
+
 
     public static UserData registerInfoSteps(PrintStream out, Scanner terminalReader){
         out.println("Create your username:");
