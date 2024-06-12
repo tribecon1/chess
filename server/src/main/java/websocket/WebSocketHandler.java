@@ -54,7 +54,6 @@ public class WebSocketHandler {
         }
     }
 
-    //use authToken instead of rootClient username?
     private void broadcast(String authToken, int gameIDKey, ServerMessage message) throws Exception {
         var removeList = new ArrayList<ConnectionContainer>();
         for (var connContainer : clientConnectionsPerGame.get(gameIDKey)) {
@@ -104,21 +103,31 @@ public class WebSocketHandler {
                 teamColor = "an observer";
             }
         }
+        else{
+            send(connection.session(), new ErrorMessage("Error: Invalid game ID chosen"));
+        }
         var message = String.format("User \"" + username + "\" joined this game as " + teamColor);
         var notification = new NotificationMessage(message);
         broadcast(command.getAuthString(), command.getGameID(), notification);
     }
 
     private void makeMove(ConnectionContainer connection, String username, MoveCommand command) throws Exception {
-        return;
+
+        GameData selectedGame = gameDao.getGame(command.getGameID());
+        if (selectedGame != null){
+            return;
+        }
+        else{
+            send(connection.session(), new ErrorMessage("Error: Game is over, no more moves can be made")); //would never make it this far unless the game DID at one point exist, until someone RESIGNS
+        }
     }
 
     private void leaveGame(ConnectionContainer connection, String username, LeaveCommand command) throws Exception {
-        return;
+        return; //removes your connection and your username from the hashmap
     }
 
     private void resign(ConnectionContainer connection, String username, ResignCommand command) throws Exception {
-        return;
+        return; //removes game from the hashmap
     }
 
 
