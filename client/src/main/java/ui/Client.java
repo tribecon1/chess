@@ -42,7 +42,7 @@ public class Client implements ServerMessageObserver {
     }
 
 
-    public void startupMenu() throws IOException {
+    public void startupMenu() throws Exception {
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.println("***********************************************************************************");
         OUT.println("♖ Welcome to Bentley's CS 240 Chess Fest! ♜");
@@ -92,7 +92,7 @@ public class Client implements ServerMessageObserver {
         authorizedMenu();
     }
 
-    public void authorizedMenu() throws IOException {
+    public void authorizedMenu() throws Exception {
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.println("***********************************************************************************");
         OUT.print("Welcome user \"" + currUser + "\"! ");
@@ -157,6 +157,9 @@ public class Client implements ServerMessageObserver {
                     else{
                         OUT.println("User " + "\"" + currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
                         //do NOT print game immediately after, print after the connect notification is returned
+                        WebSocketClient currWSClient = new WebSocketClient(this);
+                        LoadGameMessage joinedGame;
+
                         switch(newJoinReq.playerColor().toUpperCase()){
                             case "WHITE" -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
                             case "BLACK" -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), null);
@@ -231,9 +234,9 @@ public class Client implements ServerMessageObserver {
     @Override
     public void notify(ServerMessage message) {
         switch (message.getServerMessageType()) {
-            case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage()); //to everyone but root client
-            case ERROR -> displayError(((ErrorMessage) message).getErrorMessage()); //only to root client
-            case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame()); //to all clients
+            case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
+            case ERROR -> displayError(((ErrorMessage) message).getErrorMessage());
+            case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame());
         }
     }
 

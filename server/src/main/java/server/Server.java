@@ -48,7 +48,7 @@ public class Server {
         //this.authDao = new MemoryAuthDao();
         this.authDao = new SqlAuthDao();
 
-        this.webSocketHandler = new WebSocketHandler();
+        this.webSocketHandler = new WebSocketHandler(this.authDao);
     }
 
 

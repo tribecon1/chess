@@ -17,7 +17,7 @@ public class HttpClientCommunicator {
     }
 
 
-    public static ResponseType createHttpPost(String requestBodyJSON, String authToken, String urlPath) throws IOException {
+    public ResponseType createHttpPost(String requestBodyJSON, String authToken, String urlPath) throws IOException {
         HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "POST");
         if (urlPath.equals("game")){
             connection.addRequestProperty("authorization", authToken);
@@ -39,7 +39,7 @@ public class HttpClientCommunicator {
     }
 
 
-    public static ResponseType createHttpPut(String requestBodyJSON, String authToken, String urlPath) throws IOException {
+    public ResponseType createHttpPut(String requestBodyJSON, String authToken, String urlPath) throws IOException {
         HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "PUT");
         connection.addRequestProperty("authorization", authToken);
         connectionBodyAdded(requestBodyJSON, connection);
@@ -53,7 +53,7 @@ public class HttpClientCommunicator {
         }
     }
 
-    public static ResponseType createHttpDelete(String authToken, String urlPath) throws IOException {
+    public ResponseType createHttpDelete(String authToken, String urlPath) throws IOException {
         HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "DELETE");
         connection.addRequestProperty("authorization", authToken);
 
@@ -67,7 +67,7 @@ public class HttpClientCommunicator {
     }
 
 
-    public static ResponseType createHttpGet(String authToken, String urlPath) throws IOException {
+    public ResponseType createHttpGet(String authToken, String urlPath) throws IOException {
         HttpURLConnection connection = getHttpURLConnection(baseLink, urlPath, "GET");
         connection.addRequestProperty("authorization", authToken);
 

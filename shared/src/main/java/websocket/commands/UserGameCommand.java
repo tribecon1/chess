@@ -10,8 +10,9 @@ import java.util.Objects;
  */
 public class UserGameCommand {
 
-    public UserGameCommand(String authToken) {
+    public UserGameCommand(String authToken, int gameID) {
         this.authToken = authToken;
+        this.gameID = gameID;
     }
 
     public enum CommandType {
@@ -25,6 +26,8 @@ public class UserGameCommand {
 
     private final String authToken;
 
+    private final int gameID;
+
     public String getAuthString() {
         return authToken;
     }
@@ -33,13 +36,16 @@ public class UserGameCommand {
         return this.commandType;
     }
 
+    public int getGameID() {
+        return this.gameID;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof UserGameCommand))
+        if (!(o instanceof UserGameCommand that))
             return false;
-        UserGameCommand that = (UserGameCommand) o;
         return getCommandType() == that.getCommandType() && Objects.equals(getAuthString(), that.getAuthString());
     }
 

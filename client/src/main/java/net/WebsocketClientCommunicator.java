@@ -1,6 +1,15 @@
 package net;
 
+
 public class WebsocketClientCommunicator {
 
-    //sending out a UserCommandObject, and at some point (?) the ServerResponse will be sent back
+    private ServerMessageObserver serverMessageObserver;
+
+    public WebsocketClientCommunicator(ServerMessageObserver serverMessageObserver) {
+        this.serverMessageObserver = serverMessageObserver;
+    }
+
+
+
+
 }
