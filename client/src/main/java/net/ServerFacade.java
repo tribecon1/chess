@@ -1,6 +1,7 @@
 package net;
 
 
+import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -13,6 +14,9 @@ import response.ListGamesResponse;
 import response.ResponseType;
 
 import server.SerializerDeserializer;
+import ui.Client;
+import ui.WebSocketCommunicator;
+import websocket.commands.ConnectCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,11 +24,11 @@ import java.util.List;
 
 public class ServerFacade {
     private final HttpClientCommunicator httpClientCommunicator;
-    private final WebsocketClientCommunicator websocketClientCommunicator;
+    private final WebSocketCommunicator websocketCommunicator;
 
-    public ServerFacade(int portNum, ServerMessageObserver serverMessageObserver){
+    public ServerFacade(int portNum, ServerMessageObserver serverMessageObserver) throws Exception {
         this.httpClientCommunicator = new HttpClientCommunicator(portNum);
-        this.websocketClientCommunicator = new WebsocketClientCommunicator(serverMessageObserver);
+        this.websocketCommunicator = new WebSocketCommunicator(serverMessageObserver);
     }
 
     public String register(UserData user) throws IOException {
@@ -100,7 +104,7 @@ public class ServerFacade {
         }
     }
 
-    public String joinGame(JoinGameRequest joinRequest, String authToken) throws IOException {
+    public String joinGame(JoinGameRequest joinRequest, String authToken) throws Exception {
         String urlExtension = "game";
         List<GameData> listOfGames = new ArrayList<>(SerializerDeserializer.convertFromJSON(listGames(authToken), ListGamesResponse.class).games());
         JoinGameRequest translatedJoinRequest;
@@ -116,7 +120,7 @@ public class ServerFacade {
         String joinGameJSON = SerializerDeserializer.convertToJSON(translatedJoinRequest);
         ResponseType responseObject = httpClientCommunicator.createHttpPut(joinGameJSON, authToken, urlExtension);
         if (responseObject == null){
-            return " successfully joined the game #" + joinRequest.gameID();
+            return String.valueOf(translatedJoinRequest.gameID());
         }
         else if (responseObject instanceof ErrorResponse){
             return ((ErrorResponse) responseObject).message();
@@ -138,5 +142,15 @@ public class ServerFacade {
         }
         return "Error: The game ID " + gameID + " does not match any existing game!";
     }
+
+     //what to return? connect()
+
+    public void connect(String givenGameID, String authToken) throws Exception {
+        int gameID = Integer.parseInt(givenGameID);
+        websocketCommunicator.send(new ConnectCommand(authToken, gameID));
+    }
+
+     //what to return? leave()
+
 
 }

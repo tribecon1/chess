@@ -29,13 +29,20 @@ public class Client implements ServerMessageObserver {
 
     private static final PrintStream OUT = System.out;
     private static final Scanner TERMINAL_READER = new Scanner(System.in);
-    private static String currUser = null;
-    private static String authToken = null;
+    private String currUser;
+    private String authToken;
+    private ChessGame.TeamColor teamColor;
     private static ServerFacade serverFacade;
     private static boolean forfeit = false;
 
+    public Client(){
+        this.currUser = null;
+        this.authToken = null;
+        this.teamColor = null;
+    }
 
-    public static void main(String[] args) throws IOException {
+
+    public static void main(String[] args) throws Exception {
         Client currClient = new Client();
         serverFacade = new ServerFacade(8080, currClient);
         currClient.startupMenu();
@@ -49,7 +56,7 @@ public class Client implements ServerMessageObserver {
         OUT.println("***********************************************************************************");
         OUT.println();
 
-        while(authToken == null){
+        while(this.authToken == null){
             OUT.println("Type \"help\" to see your options, or enter your desired action here!:");
             OUT.print(">>> ");
 
@@ -66,8 +73,8 @@ public class Client implements ServerMessageObserver {
                         OUT.println("Register failed!: " + resultText);
                     }
                     else{
-                        currUser = newUser.username();
-                        authToken = resultText;
+                        this.currUser = newUser.username();
+                        this.authToken = resultText;
                     }
                     break;
                 case "LOGIN":
@@ -77,8 +84,8 @@ public class Client implements ServerMessageObserver {
                         OUT.println("Login failed! -> " + resultText);
                     }
                     else{
-                        currUser = loginRequest.username();
-                        authToken = resultText;
+                        this.currUser = loginRequest.username();
+                        this.authToken = resultText;
                     }
                     break;
                 case "QUIT":
@@ -95,8 +102,8 @@ public class Client implements ServerMessageObserver {
     public void authorizedMenu() throws Exception {
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.println("***********************************************************************************");
-        OUT.print("Welcome user \"" + currUser + "\"! ");
-        while(authToken != null){
+        OUT.print("Welcome user \"" + this.currUser + "\"! ");
+        while(this.authToken != null){
             OUT.println("What would you like to do today? Type \"help\" to see your available commands!");
             OUT.print(">>> ");
 
@@ -108,21 +115,21 @@ public class Client implements ServerMessageObserver {
                     helpAuthorizedOptions(OUT);
                     break;
                 case "LOGOUT":
-                    resultText = serverFacade.logout(authToken);
+                    resultText = serverFacade.logout(this.authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Logout failed! -> " + resultText);
                     }
                     else{
-                        OUT.println(resultText + "\"" + currUser + "\"!");
+                        OUT.println(resultText + "\"" + this.currUser + "\"!");
                         OUT.println("Thank you for joining us! Returning to start menu...");
                         OUT.println();
-                        currUser = null;
-                        authToken = null;
+                        this.currUser = null;
+                        this.authToken = null;
                     }
                     break;
                 case "CREATE":
                     CreateGameRequest newGame = createSteps(OUT, TERMINAL_READER);
-                    resultText = serverFacade.createGame(newGame, authToken);
+                    resultText = serverFacade.createGame(newGame, this.authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Register failed! -> " + resultText);
                     }
@@ -131,7 +138,7 @@ public class Client implements ServerMessageObserver {
                     }
                     break;
                 case "LIST":
-                    resultText = serverFacade.listGames(authToken);
+                    resultText = serverFacade.listGames(this.authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Getting a list of games failed! -> " + resultText);
                     }
@@ -150,26 +157,25 @@ public class Client implements ServerMessageObserver {
                     break;
                 case "JOIN":
                     JoinGameRequest newJoinReq = joinSteps(OUT, TERMINAL_READER);
-                    resultText = serverFacade.joinGame(newJoinReq, authToken);
+                    resultText = serverFacade.joinGame(newJoinReq, this.authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Join failed! -> " + resultText);
                     }
                     else{
-                        OUT.println("User " + "\"" + currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
-                        //do NOT print game immediately after, print after the connect notification is returned
-                        WebSocketClient currWSClient = new WebSocketClient(this);
-                        LoadGameMessage joinedGame;
-
-                        switch(newJoinReq.playerColor().toUpperCase()){
+                        //OUT.println("User " + "\"" + this.currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
+                        //do NOT print game immediately after, print after the connect notification is returned, COMMENT OUT BELOW
+                        this.teamColor = ChessGame.TeamColor.valueOf(newJoinReq.playerColor().toUpperCase());
+                        serverFacade.connect(resultText, this.authToken);
+                        /*switch(newJoinReq.playerColor().toUpperCase()){
                             case "WHITE" -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
                             case "BLACK" -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), null);
-                        }
-                        gameplayMenu(ChessGame.TeamColor.valueOf(newJoinReq.playerColor().toUpperCase()));
+                        }*/
+                        gameplayMenu();
                     }
                     break;
                 case "OBSERVE":
                     String givenGameID = observeSteps(OUT, TERMINAL_READER);
-                    resultText = serverFacade.observeGame(givenGameID, authToken);
+                    resultText = serverFacade.observeGame(givenGameID, this.authToken);
                     if (resultText.contains("Error")){
                         OUT.println("Observe failed! -> " + resultText);
                     }
@@ -186,11 +192,11 @@ public class Client implements ServerMessageObserver {
     }
 
 
-    public void gameplayMenu(ChessGame.TeamColor clientTeam) throws IOException {
+    public void gameplayMenu() {
         OUT.print(SET_TEXT_COLOR_WHITE);
-        boolean loopVar = true;
+        boolean gameInSession = true; //to be replaced with forfeit?
         helpGameplayOptions(OUT);
-        while(loopVar){
+        while(gameInSession){
             OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
             OUT.print(">>> ");
             String userResponse = TERMINAL_READER.nextLine();
@@ -199,7 +205,7 @@ public class Client implements ServerMessageObserver {
                     helpGameplayOptions(OUT);
                     break;
                 case "REDRAW":
-                    switch (clientTeam){
+                    switch (this.teamColor){
                         case WHITE -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
                         case BLACK -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), null);
                     }
@@ -207,7 +213,7 @@ public class Client implements ServerMessageObserver {
                 case "LEAVE":
                     //do code
                     OUT.println("Leaving game and returning to menu...");
-                    loopVar = false;
+                    gameInSession = false;
                     break;
                 case "MOVE":
                     //do code
@@ -218,7 +224,7 @@ public class Client implements ServerMessageObserver {
                     break;
                 case "HIGHLIGHT":
                     String chosenPiecePos = pieceHighlightedMoves(OUT, TERMINAL_READER);
-                    switch (clientTeam){
+                    switch (this.teamColor){
                         case WHITE -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), new ChessPosition(chosenPiecePos));
                         case BLACK -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), new ChessPosition(chosenPiecePos));
                     }
@@ -232,11 +238,35 @@ public class Client implements ServerMessageObserver {
 
     //to be added to!!
     @Override
-    public void notify(ServerMessage message) {
+    public void notify(String jsonServerMessage) {
+
+        ServerMessage message = SerializerDeserializer.convertFromJSON(jsonServerMessage, ServerMessage.class);
+
         switch (message.getServerMessageType()) {
-            case NOTIFICATION -> displayNotification(((NotificationMessage) message).getMessage());
-            case ERROR -> displayError(((ErrorMessage) message).getErrorMessage());
-            case LOAD_GAME -> loadGame(((LoadGameMessage) message).getGame());
+            case NOTIFICATION -> displayNotification(SerializerDeserializer.convertFromJSON(jsonServerMessage, NotificationMessage.class).getMessage());
+            case ERROR -> displayError(SerializerDeserializer.convertFromJSON(jsonServerMessage, ErrorMessage.class).getErrorMessage());
+            case LOAD_GAME -> loadGame(SerializerDeserializer.convertFromJSON(jsonServerMessage, LoadGameMessage.class).getGame());
+        }
+    }
+
+    public void displayNotification(String message) {
+        OUT.print(SET_BG_COLOR_BLUE);
+        OUT.print(SET_TEXT_COLOR_WHITE);
+        OUT.print(message);
+    }
+
+    public void displayError(String message) {
+        OUT.print(SET_BG_COLOR_RED);
+        OUT.print(SET_TEXT_COLOR_WHITE);
+        OUT.print(message);
+    }
+
+    public void loadGame(String givenGameJson) {
+        if (this.teamColor.equals(ChessGame.TeamColor.BLACK)){
+            ChessBoardDrawer.createBoardBlackOrientation(OUT, SerializerDeserializer.convertFromJSON(givenGameJson, ChessGame.class), null);
+        }
+        else{ //White team OR observer
+            ChessBoardDrawer.createBoardWhiteOrientation(OUT, SerializerDeserializer.convertFromJSON(givenGameJson, ChessGame.class), null);
         }
     }
 

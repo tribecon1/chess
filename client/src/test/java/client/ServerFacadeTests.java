@@ -35,7 +35,7 @@ public class ServerFacadeTests {
 
 
     @BeforeAll
-    public static void init() {
+    public static void init() throws Exception {
         server = new Server();
         var port = server.run(0);
         var testClient = new Client();
