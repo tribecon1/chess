@@ -2,7 +2,6 @@ package websocket;
 
 
 import chess.ChessGame;
-import chess.ChessPiece;
 import chess.InvalidMoveException;
 import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDao;
@@ -94,7 +93,7 @@ public class WebSocketHandler {
             thisGameClients.add(connection);
             clientConnectionsPerGame.put(command.getGameID(), thisGameClients);
         }
-        String teamColor = "";
+        String teamColor;
         GameData selectedGame = gameDao.getGame(command.getGameID());
         if (selectedGame != null) {
             if (selectedGame.whiteUsername().equals(username)) {
