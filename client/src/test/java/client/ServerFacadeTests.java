@@ -191,14 +191,14 @@ public class ServerFacadeTests {
         int gameID = GAME_DAO.createGame("newGame!").gameID();
         String responseText = serverFacade.observeGame(String.valueOf(gameID), authToken);
         assertFalse(responseText.contains("Error"));
-        assertTrue(responseText.contains(String.valueOf(gameID)) && responseText.contains("observing"));
+        assertEquals(String.valueOf(gameID), responseText);
     }
 
     @Test
     void observeGameFailure() throws Exception {
         var authToken = AUTH_DAO.createAuth("temp", "authToken").authToken();
         String responseText = serverFacade.observeGame(String.valueOf(40024), authToken);
-        assertTrue(responseText.contains("Error") && responseText.contains("existing"));
+        assertTrue(responseText.contains("Error") && responseText.contains("exist"));
     }
 
     @Test
@@ -206,7 +206,7 @@ public class ServerFacadeTests {
         var authToken = AUTH_DAO.createAuth("temp", "authToken").authToken();
         GAME_DAO.createGame("newGame!");
         String responseText = serverFacade.observeGame(String.valueOf(24), authToken);
-        assertTrue(responseText.contains("Error") && responseText.contains("existing"));
+        assertTrue(responseText.contains("Error") && responseText.contains("exist"));
     }
 
 }

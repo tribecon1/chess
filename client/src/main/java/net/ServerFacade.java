@@ -141,7 +141,7 @@ public class ServerFacade {
             return "Error: The game ID " + gameID + " does not match any existing game!";
         }
         else {
-            return String.valueOf(listOfGames.get(Integer.parseInt(gameID)).gameID());
+            return String.valueOf(listOfGames.get(Integer.parseInt(gameID)-1).gameID());
         }
     }
 
