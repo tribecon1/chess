@@ -272,6 +272,7 @@ public class Client implements ServerMessageObserver {
         OUT.print(message);
         OUT.println(SET_DEFAULT_BG_COLOR);
         OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
+        OUT.print(SET_TEXT_COLOR_WHITE);
     }
 
     public void loadGame(String givenGameJson) {

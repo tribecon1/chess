@@ -133,19 +133,17 @@ public class ServerFacade {
     }
 
     public String observeGame(String gameID, String authToken) throws IOException {
-        ListGamesResponse currGameList = SerializerDeserializer.convertFromJSON(listGames(authToken), ListGamesResponse.class);
-        if (currGameList.games().isEmpty()){
+        List<GameData> listOfGames = new ArrayList<>(SerializerDeserializer.convertFromJSON(listGames(authToken), ListGamesResponse.class).games());
+        if (listOfGames.isEmpty()){
+            return "Error: no games currently exist to join";
+        }
+        else if(Integer.parseInt(gameID) > listOfGames.size()){
             return "Error: The game ID " + gameID + " does not match any existing game!";
         }
-        for (GameData gameData : currGameList.games() ){
-            if (gameID.equals(String.valueOf(gameData.gameID()))){
-                return "Now observing the chess game with ID #: " + gameID;
-            }
+        else {
+            return String.valueOf(listOfGames.get(Integer.parseInt(gameID)).gameID());
         }
-        return "Error: The game ID " + gameID + " does not match any existing game!";
     }
-
-     //what to return? connect()
 
     public void connect(int currGameID, String authToken) throws Exception {
         websocketCommunicator.send(new ConnectCommand(authToken, currGameID));
