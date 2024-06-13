@@ -177,11 +177,11 @@ public class WebSocketHandler {
         //removes your connection and your username from the hashmap
         GameData currGame = gameDao.getGame(command.getGameID());
         if (currGame != null){
-            if (currGame.whiteUsername().equals(username)) {
+            if (currGame.whiteUsername()!= null && currGame.whiteUsername().equals(username)) {
                 gameDao.updateGame(currGame, new GameData(currGame.gameID(), null, currGame.blackUsername(), currGame.gameName(), currGame.game()));
                 broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username + " left the game playing as White"));
             }
-            else if (currGame.blackUsername().equals(username)) {
+            else if (currGame.blackUsername()!= null && currGame.blackUsername().equals(username)) {
                 gameDao.updateGame(currGame, new GameData(currGame.gameID(), currGame.whiteUsername(), null, currGame.gameName(), currGame.game()));
                 broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username + " left the game playing as Black"));
             }
@@ -204,6 +204,9 @@ public class WebSocketHandler {
         GameData currGame = gameDao.getGame(command.getGameID());
         if (!currGame.whiteUsername().equals(username) && !currGame.blackUsername().equals(username)) {
             send(connection.session(), new ErrorMessage("Error: Observers cannot resign from a game. Use \"leave\" command to exit the game"));
+        }
+        else if(currGame.game().isGameOver()){
+            send(connection.session(), new ErrorMessage("Error: the game is already over, no way to resign again"));
         }
         else{
             currGame.game().setGameOver(true);
