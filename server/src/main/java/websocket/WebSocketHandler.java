@@ -113,28 +113,30 @@ public class WebSocketHandler {
         }
         var message = String.format("User \"" + username + "\" joined this game as " + teamColor);
         var notification = new NotificationMessage(message);
-        send(connection.session(), new LoadGameMessage(SerializerDeserializer.convertToJSON(gameDao.getGame(command.getGameID()))));
+        send(connection.session(), new LoadGameMessage(SerializerDeserializer.convertToJSON(gameDao.getGame(command.getGameID()).game()) ) );
         broadcast(command.getAuthString(), command.getGameID(), notification);
     }
 
     private void makeMove(ConnectionContainer connection, String username, MoveCommand command) throws Exception {
-        //I won't ever allow an observer to have access to make move once they've entered observe mode
         GameData selectedGame = gameDao.getGame(command.getGameID());
         if (selectedGame != null){
-            if (selectedGame.game().gameOver){
+            if (selectedGame.game().isGameOver()){
                 send(connection.session(), new ErrorMessage("Error: Game is over, no more moves can be made")); //after a player RESIGNS or Checkmate is achieved
             }
             else if (selectedGame.whiteUsername().equals(username) && selectedGame.game().getTeamTurn() != ChessGame.TeamColor.WHITE ||
                     selectedGame.blackUsername().equals(username) && selectedGame.game().getTeamTurn() != ChessGame.TeamColor.BLACK ) {
                 send(connection.session(), new ErrorMessage("Error: Not your turn to make a move"));
             }
+            else if (!selectedGame.whiteUsername().equals(username) && !selectedGame.blackUsername().equals(username)) {
+                send(connection.session(), new ErrorMessage("Error: You are only allowed to observe the game"));
+            }
             else {
                 try{
                     selectedGame.game().makeMove(command.getMove());
-                    sendToAllClients(connection.session(), command, new LoadGameMessage(SerializerDeserializer.convertToJSON(selectedGame))); //more needed below on describing move?
+                    sendToAllClients(connection.session(), command, new LoadGameMessage(SerializerDeserializer.convertToJSON(selectedGame.game()))); //more needed below on describing move?
                     broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username+" moved their "+selectedGame.game().getBoard().getPiece(command.getMove().getEndPosition()) ));
                     if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE) && selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
-                        selectedGame.game().setGameOver();
+                        selectedGame.game().setGameOver(true);
                         sendToAllClients(connection.session(), command, new NotificationMessage("Both teams are in Stalemate! Game over, it's a draw!"));
                     }
                     gameDao.updateGame(selectedGame, selectedGame); //in case stalemate changes it one last time after move
@@ -204,14 +206,15 @@ public class WebSocketHandler {
             send(connection.session(), new ErrorMessage("Error: Observers cannot resign from a game. Use \"leave\" command to exit the game"));
         }
         else{
-            currGame.game().gameOver = true;
-            gameDao.updateGame(currGame, currGame); //would this work since I need to put it back in the SQL database?
+            currGame.game().setGameOver(true);
+
+            gameDao.updateGame(currGame, currGame); //Why is this not updating gameIsOver when I put it back in the SQL database?
             NotificationMessage resignNotification;
             if (currGame.whiteUsername().equals(username)) {
-                resignNotification = new NotificationMessage(username + " resigned the game as White, making " + currGame.blackUsername() + "the winner! Game over!");
+                resignNotification = new NotificationMessage(username + " resigned the game as White, making " + currGame.blackUsername() + " the winner! Game over!");
             }
             else{
-                resignNotification = new NotificationMessage(username + " resigned the game as Black, making " + currGame.whiteUsername() + "the winner! Game over!");
+                resignNotification = new NotificationMessage(username + " resigned the game as Black, making " + currGame.whiteUsername() + " the winner! Game over!");
             }
             sendToAllClients(connection.session(), command, resignNotification);
         }

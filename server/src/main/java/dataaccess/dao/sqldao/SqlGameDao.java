@@ -49,7 +49,8 @@ public class SqlGameDao implements GameDao {
                 ps.setInt(1, gameID);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()){
-                    ChessGame currChessGame = SerializerDeserializer.convertFromJSON(rs.getString("game"), ChessGame.class);
+                    String tester = rs.getString("game");
+                    ChessGame currChessGame = SerializerDeserializer.convertFromJSON(tester, ChessGame.class);
                     return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), currChessGame);
                 }
                 else{
@@ -89,13 +90,14 @@ public class SqlGameDao implements GameDao {
     @Override
     public void updateGame(GameData currGame, GameData updatedGame) throws DataAccessException {
         Connection conn;
+        String gameJsonString = SerializerDeserializer.convertToJSON(updatedGame.game());
         try (Connection autoCloseC = DatabaseManager.getConnection()){
             conn = autoCloseC;
             String sql = "UPDATE game " + "SET whiteUsername = ?, blackUsername = ?, game = ? " + "WHERE gameID = ?";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, updatedGame.whiteUsername());
                 ps.setString(2, updatedGame.blackUsername());
-                ps.setString(3, SerializerDeserializer.convertToJSON(updatedGame));
+                ps.setString(3, gameJsonString);
                 ps.setInt(4, currGame.gameID());
                 ps.executeUpdate();
             }

@@ -11,7 +11,6 @@ import request.JoinGameRequest;
 import request.LoginRequest;
 import response.ListGamesResponse;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -26,7 +25,7 @@ import websocket.messages.NotificationMessage;
 import websocket.messages.ServerMessage;
 
 public class Client implements ServerMessageObserver {
-
+    //create static lock obj.
     private static final PrintStream OUT = System.out;
     private static final Scanner TERMINAL_READER = new Scanner(System.in);
     private String currUser;

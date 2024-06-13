@@ -14,7 +14,7 @@ public class ChessGame {
     private ChessBoard board;
     private ChessPosition wKingPos;
     private ChessPosition bKingPos;
-    public boolean gameOver;
+    private boolean gameOver;
 
     //Castling
     private boolean wKingHasMoved;
@@ -48,7 +48,7 @@ public class ChessGame {
         this.thisTeamsTurn = TeamColor.WHITE; //White always starts in Chess
         wKingPos = new ChessPosition(1,5); //default Kings' positions in a game
         bKingPos = new ChessPosition(8,5);
-        gameOver = false;
+        this.gameOver = false;
 
         //VARIABLES for Castling
         initCastlingVariables();
@@ -485,7 +485,11 @@ public class ChessGame {
         return this.board;
     }
 
-    public void setGameOver(){
-        this.gameOver = true;
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
     }
 }
