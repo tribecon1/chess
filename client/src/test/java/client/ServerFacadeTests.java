@@ -163,7 +163,7 @@ public class ServerFacadeTests {
         int gameID = GAME_DAO.createGame("newGame!").gameID();
         String responseText = serverFacade.joinGame(new JoinGameRequest("WHITE", gameID), authToken);
         assertFalse(responseText.contains("Error"));
-        assertTrue(responseText.contains(String.valueOf(gameID)) && responseText.contains("successfully"));
+        assertEquals(String.valueOf(gameID), responseText);
     }
 
     @Test

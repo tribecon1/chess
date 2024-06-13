@@ -1,7 +1,6 @@
 package net;
 
 
-import chess.ChessGame;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -14,7 +13,6 @@ import response.ListGamesResponse;
 import response.ResponseType;
 
 import server.SerializerDeserializer;
-import ui.Client;
 import ui.WebSocketCommunicator;
 import websocket.commands.ConnectCommand;
 
@@ -28,7 +26,7 @@ public class ServerFacade {
 
     public ServerFacade(int portNum, ServerMessageObserver serverMessageObserver) throws Exception {
         this.httpClientCommunicator = new HttpClientCommunicator(portNum);
-        this.websocketCommunicator = new WebSocketCommunicator(serverMessageObserver);
+        this.websocketCommunicator = new WebSocketCommunicator(serverMessageObserver, portNum);
     }
 
     public String register(UserData user) throws IOException {
@@ -145,9 +143,8 @@ public class ServerFacade {
 
      //what to return? connect()
 
-    public void connect(String givenGameID, String authToken) throws Exception {
-        int gameID = Integer.parseInt(givenGameID);
-        websocketCommunicator.send(new ConnectCommand(authToken, gameID));
+    public void connect(int currGameID, String authToken) throws Exception {
+        websocketCommunicator.send(new ConnectCommand(authToken, currGameID));
     }
 
      //what to return? leave()

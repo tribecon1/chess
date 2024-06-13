@@ -14,8 +14,8 @@ public class ChessGame {
     private ChessBoard board;
     private ChessPosition wKingPos;
     private ChessPosition bKingPos;
+    public boolean gameOver;
 
-    //EXTRA CREDIT VARIABLES
     //Castling
     private boolean wKingHasMoved;
     private boolean lWRookHasMoved;
@@ -48,16 +48,15 @@ public class ChessGame {
         this.thisTeamsTurn = TeamColor.WHITE; //White always starts in Chess
         wKingPos = new ChessPosition(1,5); //default Kings' positions in a game
         bKingPos = new ChessPosition(8,5);
+        gameOver = false;
 
-        //EXTRA CREDIT VARIABLES for Castling
+        //VARIABLES for Castling
         initCastlingVariables();
 
-        //EXTRA CREDIT VARIABLES for En Passant
+        //VARIABLES for En Passant
         blackPawnForWhiteEnPassant = null;
         whitePawnForBlackEnPassant = null;
-
         doubleMoveJustMade = false;
-
         whiteEnPassantMove = null; //testing
         blackEnPassantMove = null;
     }
@@ -438,6 +437,7 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)){
+            gameOver = true;
             return noValidMoves(teamColor);
         }
         else{

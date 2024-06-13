@@ -1,6 +1,6 @@
 package websocket;
 
-import dataaccess.DataAccessException;
+
 import dataaccess.dao.AuthDao;
 import dataaccess.dao.GameDao;
 import model.GameData;
@@ -79,6 +79,11 @@ public class WebSocketHandler {
         session.getRemote().sendString(SerializerDeserializer.convertToJSON(message));
     }
 
+    public void sendToAllClients(Session session, UserGameCommand givenCommand, ServerMessage message) throws Exception {
+        send(session, message);
+        broadcast(givenCommand.getAuthString(), givenCommand.getGameID(), message);
+    }
+
 
     private void connect(ConnectionContainer connection, String username, ConnectCommand command) throws Exception {
         if (clientConnectionsPerGame.containsKey(command.getGameID())) {
@@ -123,11 +128,50 @@ public class WebSocketHandler {
     }
 
     private void leaveGame(ConnectionContainer connection, String username, LeaveCommand command) throws Exception {
-        return; //removes your connection and your username from the hashmap
+        //removes your connection and your username from the hashmap
+        GameData currGame = gameDao.getGame(command.getGameID());
+        if (currGame != null){
+            if (currGame.whiteUsername().equals(username)) {
+                gameDao.updateGame(currGame, new GameData(currGame.gameID(), null, currGame.blackUsername(), currGame.gameName(), currGame.game()));
+                broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username + " left the game playing as White"));
+            }
+            else if (currGame.blackUsername().equals(username)) {
+                gameDao.updateGame(currGame, new GameData(currGame.gameID(), currGame.whiteUsername(), null, currGame.gameName(), currGame.game()));
+                broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username + " left the game playing as Black"));
+            }
+            else{
+                broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username + " stopped observing the game"));
+            }
+            for (ConnectionContainer connContainer : clientConnectionsPerGame.get(command.getGameID())) {
+                if (connContainer.authToken().equals(command.getAuthString())) {
+                    connContainer.session().close();
+                    clientConnectionsPerGame.get(command.getGameID()).remove(connContainer);
+                }
+            }
+        }
+        else{
+            send(connection.session(), new ErrorMessage("Error: Invalid game ID chosen")); //this could never happen though
+        }
     }
 
     private void resign(ConnectionContainer connection, String username, ResignCommand command) throws Exception {
-        return; //removes game from the hashmap
+        GameData currGame = gameDao.getGame(command.getGameID());
+        if (!currGame.whiteUsername().equals(username) && !currGame.blackUsername().equals(username)) {
+            send(connection.session(), new ErrorMessage("Error: Observers cannot resign from a game. Use \"leave\" command to exit the game"));
+        }
+        else{
+            currGame.game().gameOver = true;
+            gameDao.updateGame(currGame, currGame); //would this work since I need to put it back in the SQL database?
+            NotificationMessage resignNotification;
+            if (currGame.whiteUsername().equals(username)) {
+                resignNotification = new NotificationMessage(username + " resigned the game as White, making " + currGame.blackUsername() + "the winner! Game over!");
+            }
+            else{
+                resignNotification = new NotificationMessage(username + " resigned the game as Black, making " + currGame.whiteUsername() + "the winner! Game over!");
+            }
+            sendToAllClients(connection.session(), command, resignNotification);
+        }
+
     }
 
 

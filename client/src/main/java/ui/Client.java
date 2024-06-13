@@ -32,13 +32,14 @@ public class Client implements ServerMessageObserver {
     private String currUser;
     private String authToken;
     private ChessGame.TeamColor teamColor;
+    private int gameID;
     private static ServerFacade serverFacade;
-    private static boolean forfeit = false;
 
     public Client(){
         this.currUser = null;
         this.authToken = null;
         this.teamColor = null;
+        this.gameID = 0; //use this to loop the gameplay menu
     }
 
 
@@ -165,7 +166,8 @@ public class Client implements ServerMessageObserver {
                         //OUT.println("User " + "\"" + this.currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
                         //do NOT print game immediately after, print after the connect notification is returned, COMMENT OUT BELOW
                         this.teamColor = ChessGame.TeamColor.valueOf(newJoinReq.playerColor().toUpperCase());
-                        serverFacade.connect(resultText, this.authToken);
+                        this.gameID = Integer.parseInt(resultText);
+                        serverFacade.connect(this.gameID, this.authToken);
                         /*switch(newJoinReq.playerColor().toUpperCase()){
                             case "WHITE" -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
                             case "BLACK" -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), null);
@@ -194,9 +196,9 @@ public class Client implements ServerMessageObserver {
 
     public void gameplayMenu() {
         OUT.print(SET_TEXT_COLOR_WHITE);
-        boolean gameInSession = true; //to be replaced with forfeit?
+        //boolean gameInSession = true; //to be replaced with forfeit?
         helpGameplayOptions(OUT);
-        while(gameInSession){
+        while(this.gameID != 0){
             OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
             OUT.print(">>> ");
             String userResponse = TERMINAL_READER.nextLine();
@@ -212,15 +214,15 @@ public class Client implements ServerMessageObserver {
                     break;
                 case "LEAVE":
                     //do code
+                    this.gameID = 0;
                     OUT.println("Leaving game and returning to menu...");
-                    gameInSession = false;
+                    //gameInSession = false;
                     break;
                 case "MOVE":
                     //do code
                     break;
                 case "RESIGN":
                     //do code
-                    forfeit = true; //so that no more moves can be made
                     break;
                 case "HIGHLIGHT":
                     String chosenPiecePos = pieceHighlightedMoves(OUT, TERMINAL_READER);
