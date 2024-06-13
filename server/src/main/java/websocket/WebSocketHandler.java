@@ -4,6 +4,7 @@ package websocket;
 import chess.ChessGame;
 import chess.ChessPiece;
 import chess.InvalidMoveException;
+import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDao;
 import dataaccess.dao.GameDao;
 import model.GameData;
@@ -120,47 +121,50 @@ public class WebSocketHandler {
     }
 
     private void makeMove(ConnectionContainer connection, String username, MoveCommand command) throws Exception {
-
+        //I won't ever allow an observer to have access to make move once they've entered observe mode
         GameData selectedGame = gameDao.getGame(command.getGameID());
         if (selectedGame != null){
-            ChessPiece pieceToBeMoved = selectedGame.game().getBoard().getPiece(command.getMove().getStartPosition());
             if (selectedGame.game().gameOver){
                 send(connection.session(), new ErrorMessage("Error: Game is over, no more moves can be made")); //after a player RESIGNS or Checkmate is achieved
             }
-            //PUT TURN CHECK HERE
-            try{
-                //make move();
-                selectedGame.game().makeMove(command.getMove());
-                gameDao.updateGame(selectedGame, selectedGame);
+            else if (selectedGame.whiteUsername().equals(username) && selectedGame.game().getTeamTurn() != ChessGame.TeamColor.WHITE ||
+                    selectedGame.blackUsername().equals(username) && selectedGame.game().getTeamTurn() != ChessGame.TeamColor.BLACK ) {
+                send(connection.session(), new ErrorMessage("Error: Not your turn to make a move"));
             }
-            catch (InvalidMoveException e){
+            try{
+                selectedGame.game().makeMove(command.getMove());
+                sendToAllClients(connection.session(), command, new LoadGameMessage(SerializerDeserializer.convertToJSON(selectedGame))); //more needed below on describing move?
+                sendToAllClients(connection.session(), command, new NotificationMessage(username+" moved their "+selectedGame.game().getBoard().getPiece(command.getMove().getEndPosition()) ));
+                if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE) && selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
+                    selectedGame.game().setGameOver();
+                    sendToAllClients(connection.session(), command, new NotificationMessage("Both teams are in Stalemate! Game over, it's a draw!"));
+                }
+                gameDao.updateGame(selectedGame, selectedGame); //in case stalemate changes it one last time after move
+            }
+            catch (InvalidMoveException | DataAccessException e){
                 send(connection.session(), new ErrorMessage(e.getMessage()));
             }
-
-            else if (selectedGame.whiteUsername().equals(username) && selectedGame.game().getTeamTurn() != ChessGame.TeamColor.WHITE) {
-                send(connection.session(), new ErrorMessage("Error: Not your turn to make a move, it is Black's turn"));
-                else if (pieceToBeMoved.getTeamColor() != ChessGame.TeamColor.WHITE){
-                    send(connection.session(), new ErrorMessage("Error: That piece belongs to Black's team"));
+            if (selectedGame.whiteUsername().equals(username)){
+                if (selectedGame.game().isInCheck(ChessGame.TeamColor.BLACK)){
+                    sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Check!"));
+                }
+                else if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.BLACK)){
+                    sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Checkmate! Game over, White Team wins!"));
+                }
+                else if (selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
+                    sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Stalemate! It has no available moves, so White Team's turn again!"));
                 }
             }
-            else if (selectedGame.blackUsername().equals(username)) {
-                if (selectedGame.game().getTeamTurn() != ChessGame.TeamColor.BLACK){
-                    send(connection.session(), new ErrorMessage("Error: Not your turn to make a move, it is White's turn"));
+            else {
+                if (selectedGame.game().isInCheck(ChessGame.TeamColor.WHITE)){
+                    sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Check!"));
                 }
-                else if(pieceToBeMoved.getTeamColor() != ChessGame.TeamColor.BLACK){
-                    send(connection.session(), new ErrorMessage("Error: That piece belongs to White's team"));
+                else if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.WHITE)){
+                    sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Checkmate! Game over, Black Team wins!"));
                 }
-            }
-            else if (!selectedGame.game().validMoves(command.getMove().getStartPosition()).contains(command.getMove())){
-                send(connection.session(), new ErrorMessage("Error: Move is not valid, try using the \"Highlight\" command to see what your legal moves are"));
-            }
-            else{
-                selectedGame.game().makeMove(command.getMove());
-                gameDao.updateGame(selectedGame, selectedGame);
-                if (selectedGame.game().isInCheck()){
-
+                else if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE)){
+                    sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Stalemate! It has no available moves, so Black Team's turn again!"));
                 }
-                else if ()
             }
         }
         else{
@@ -214,7 +218,6 @@ public class WebSocketHandler {
         }
 
     }
-
 
 
 

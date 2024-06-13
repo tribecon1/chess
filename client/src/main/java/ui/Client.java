@@ -32,6 +32,7 @@ public class Client implements ServerMessageObserver {
     private String currUser;
     private String authToken;
     private ChessGame.TeamColor teamColor;
+    private ChessGame currGame;
     private int gameID;
     private static ServerFacade serverFacade;
 
@@ -39,6 +40,7 @@ public class Client implements ServerMessageObserver {
         this.currUser = null;
         this.authToken = null;
         this.teamColor = null;
+        this.currGame = null;
         this.gameID = 0; //use this to loop the gameplay menu
     }
 
@@ -217,13 +219,14 @@ public class Client implements ServerMessageObserver {
                     break;
                 case "REDRAW":
                     switch (this.teamColor){
-                        case WHITE -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
-                        case BLACK -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), null);
+                        case WHITE -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, this.currGame, null);
+                        case BLACK -> ChessBoardDrawer.createBoardBlackOrientation(OUT, this.currGame, null);
                     }
                     break;
                 case "LEAVE":
                     //do code
                     this.gameID = 0;
+                    this.currGame = null;
                     OUT.println("Leaving game and returning to menu...");
                     //gameInSession = false;
                     break;
@@ -273,11 +276,13 @@ public class Client implements ServerMessageObserver {
     }
 
     public void loadGame(String givenGameJson) {
+        ChessGame receivedGame = SerializerDeserializer.convertFromJSON(givenGameJson, ChessGame.class);
+        this.currGame = receivedGame;
         if (this.teamColor.equals(ChessGame.TeamColor.BLACK)){
-            ChessBoardDrawer.createBoardBlackOrientation(OUT, SerializerDeserializer.convertFromJSON(givenGameJson, ChessGame.class), null);
+            ChessBoardDrawer.createBoardBlackOrientation(OUT, receivedGame, null);
         }
         else{ //White team OR observer
-            ChessBoardDrawer.createBoardWhiteOrientation(OUT, SerializerDeserializer.convertFromJSON(givenGameJson, ChessGame.class), null);
+            ChessBoardDrawer.createBoardWhiteOrientation(OUT, receivedGame, null);
         }
     }
 
