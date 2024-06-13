@@ -133,7 +133,7 @@ public class Client implements ServerMessageObserver {
                     CreateGameRequest newGame = createSteps(OUT, TERMINAL_READER);
                     resultText = serverFacade.createGame(newGame, this.authToken);
                     if (resultText.contains("Error")){
-                        OUT.println("Register failed! -> " + resultText);
+                        OUT.println("Create game failed! -> " + resultText);
                     }
                     else{
                         OUT.println(resultText);
@@ -189,11 +189,13 @@ public class Client implements ServerMessageObserver {
                             OUT.println("Enjoy watching the game! Type \"leave\" when you want to leave the game and return to the menu!");
                             OUT.print(">>> ");
                             String observerResponse = TERMINAL_READER.nextLine();
-                            if (!observerResponse.equalsIgnoreCase("LEAVE")){
+                            if (observerResponse.equalsIgnoreCase("LEAVE")){
+                                serverFacade.leave(this.gameID, this.authToken);
+                            }
+                            else{
                                 OUT.println("ERROR! Unknown command -> " + "\"" + observerResponse + "\"");
                             }
                         }
-                        //ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
                     }
                     break;
                 default:
@@ -204,7 +206,7 @@ public class Client implements ServerMessageObserver {
     }
 
 
-    public void gameplayMenu() {
+    public void gameplayMenu() throws Exception {
         OUT.print(SET_TEXT_COLOR_WHITE);
         //boolean gameInSession = true; //to be replaced with forfeit?
         helpGameplayOptions(OUT);
@@ -224,10 +226,10 @@ public class Client implements ServerMessageObserver {
                     break;
                 case "LEAVE":
                     //do code
-                    this.gameID = 0;
-                    this.currGame = null;
+                    serverFacade.leave(this.gameID, this.authToken);
                     OUT.println("Leaving game and returning to menu...");
-                    //gameInSession = false;
+                    this.currGame = null;
+                    this.gameID = 0;
                     break;
                 case "MOVE":
                     //do code

@@ -15,6 +15,8 @@ import response.ResponseType;
 import server.SerializerDeserializer;
 import ui.WebSocketCommunicator;
 import websocket.commands.ConnectCommand;
+import websocket.commands.LeaveCommand;
+import websocket.commands.MoveCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -147,7 +149,13 @@ public class ServerFacade {
         websocketCommunicator.send(new ConnectCommand(authToken, currGameID));
     }
 
-     //what to return? leave()
+    public void leave(int currGameID, String authToken) throws Exception {
+        websocketCommunicator.send(new LeaveCommand(authToken, currGameID));
+    }
+
+    public void move(int currGameID, String authToken) throws Exception {
+        websocketCommunicator.send(new MoveCommand(authToken, currGameID, ));
+    }
 
 
 }
