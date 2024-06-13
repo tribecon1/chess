@@ -2,18 +2,15 @@ package ui;
 
 import net.ServerMessageObserver;
 import server.SerializerDeserializer;
-import websocket.commands.ConnectCommand;
-import websocket.commands.LeaveCommand;
-import websocket.commands.MoveCommand;
 import websocket.commands.UserGameCommand;
-import websocket.messages.ServerMessage;
+
 
 import javax.websocket.*;
 import java.net.URI;
 
 public class WebSocketCommunicator extends Endpoint {
 
-    private Session session;
+    private final Session session;
 
     public WebSocketCommunicator(ServerMessageObserver rootClient, int givenPort) throws Exception {
         URI uri = new URI("ws://localhost:"+givenPort+"/ws");

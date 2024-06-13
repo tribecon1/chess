@@ -18,6 +18,7 @@ import ui.WebSocketCommunicator;
 import websocket.commands.ConnectCommand;
 import websocket.commands.LeaveCommand;
 import websocket.commands.MoveCommand;
+import websocket.commands.ResignCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -156,6 +157,10 @@ public class ServerFacade {
 
     public void move(int currGameID, String authToken, ChessMove desiredMove) throws Exception {
         websocketCommunicator.send(new MoveCommand(authToken, currGameID, desiredMove));
+    }
+
+    public void resign(int currGameID, String authToken) throws Exception {
+        websocketCommunicator.send(new ResignCommand(authToken, currGameID));
     }
 
 

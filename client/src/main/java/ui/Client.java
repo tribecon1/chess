@@ -209,7 +209,6 @@ public class Client implements ServerMessageObserver {
 
     public void gameplayMenu() throws Exception {
         OUT.print(SET_TEXT_COLOR_WHITE);
-        //boolean gameInSession = true; //to be replaced with forfeit?
         helpGameplayOptions(OUT);
         while(this.gameID != 0){
             OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
@@ -226,19 +225,17 @@ public class Client implements ServerMessageObserver {
                     }
                     break;
                 case "LEAVE":
-                    //do code
                     serverFacade.leave(this.gameID, this.authToken);
                     OUT.println("Leaving game and returning to menu...");
                     this.currGame = null;
                     this.gameID = 0;
                     break;
                 case "MOVE":
-                    //do code
-                    ChessMove desiredMove = makeMoveSteps(OUT, TERMINAL_READER);
+                    ChessMove desiredMove = makeMoveSteps(OUT, TERMINAL_READER); //BE WARY OF HOW THIS MENU WORKS
                     serverFacade.move(this.gameID,this.authToken, desiredMove);
                     break;
                 case "RESIGN":
-                    //do code
+                    serverFacade.resign(this.gameID, this.authToken);
                     break;
                 case "HIGHLIGHT":
                     String chosenPiecePos = pieceHighlightedMoves(OUT, TERMINAL_READER);
@@ -253,8 +250,6 @@ public class Client implements ServerMessageObserver {
         }
     }
 
-
-    //to be added to!!
     @Override
     public void notify(String jsonServerMessage) {
 
