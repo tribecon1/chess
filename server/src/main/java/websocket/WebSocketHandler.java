@@ -43,7 +43,6 @@ public class WebSocketHandler {
             String authToken = command.getAuthString();
             String username = authDao.getAuth(authToken).username();
 
-            clientConnectionsPerGame.get(command.getGameID()).add(new ConnectionContainer(command.getAuthString(), session));
 
             switch (command.getCommandType()) {
                 case CONNECT -> connect(new ConnectionContainer(authToken, session), username, SerializerDeserializer.convertFromJSON(userMessage, ConnectCommand.class));
@@ -62,10 +61,7 @@ public class WebSocketHandler {
         var removeList = new ArrayList<ConnectionContainer>();
         for (var connContainer : clientConnectionsPerGame.get(gameIDKey)) {
             if (connContainer.session().isOpen()) {
-                if (message instanceof LoadGameMessage){
-                    send(connContainer.session(), message);
-                }
-                else if (!authToken.equals(connContainer.authToken())) { //only possible to be a NotificationMessage
+                if (!authToken.equals(connContainer.authToken())) { //only possible to be a NotificationMessage
                     send(connContainer.session(), message);
                 }
             }
@@ -97,7 +93,6 @@ public class WebSocketHandler {
             HashSet<ConnectionContainer> thisGameClients = new HashSet<>();
             thisGameClients.add(connection);
             clientConnectionsPerGame.put(command.getGameID(), thisGameClients);
-            return;
         }
         String teamColor = "";
         GameData selectedGame = gameDao.getGame(command.getGameID());
@@ -114,9 +109,11 @@ public class WebSocketHandler {
         }
         else{
             send(connection.session(), new ErrorMessage("Error: Invalid game ID chosen"));
+            return;
         }
         var message = String.format("User \"" + username + "\" joined this game as " + teamColor);
         var notification = new NotificationMessage(message);
+        send(connection.session(), new LoadGameMessage(SerializerDeserializer.convertToJSON(gameDao.getGame(command.getGameID()))));
         broadcast(command.getAuthString(), command.getGameID(), notification);
     }
 
@@ -131,39 +128,41 @@ public class WebSocketHandler {
                     selectedGame.blackUsername().equals(username) && selectedGame.game().getTeamTurn() != ChessGame.TeamColor.BLACK ) {
                 send(connection.session(), new ErrorMessage("Error: Not your turn to make a move"));
             }
-            try{
-                selectedGame.game().makeMove(command.getMove());
-                sendToAllClients(connection.session(), command, new LoadGameMessage(SerializerDeserializer.convertToJSON(selectedGame))); //more needed below on describing move?
-                sendToAllClients(connection.session(), command, new NotificationMessage(username+" moved their "+selectedGame.game().getBoard().getPiece(command.getMove().getEndPosition()) ));
-                if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE) && selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
-                    selectedGame.game().setGameOver();
-                    sendToAllClients(connection.session(), command, new NotificationMessage("Both teams are in Stalemate! Game over, it's a draw!"));
-                }
-                gameDao.updateGame(selectedGame, selectedGame); //in case stalemate changes it one last time after move
-            }
-            catch (InvalidMoveException | DataAccessException e){
-                send(connection.session(), new ErrorMessage(e.getMessage()));
-            }
-            if (selectedGame.whiteUsername().equals(username)){
-                if (selectedGame.game().isInCheck(ChessGame.TeamColor.BLACK)){
-                    sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Check!"));
-                }
-                else if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.BLACK)){
-                    sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Checkmate! Game over, White Team wins!"));
-                }
-                else if (selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
-                    sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Stalemate! It has no available moves, so White Team's turn again!"));
-                }
-            }
             else {
-                if (selectedGame.game().isInCheck(ChessGame.TeamColor.WHITE)){
-                    sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Check!"));
+                try{
+                    selectedGame.game().makeMove(command.getMove());
+                    sendToAllClients(connection.session(), command, new LoadGameMessage(SerializerDeserializer.convertToJSON(selectedGame))); //more needed below on describing move?
+                    broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username+" moved their "+selectedGame.game().getBoard().getPiece(command.getMove().getEndPosition()) ));
+                    if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE) && selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
+                        selectedGame.game().setGameOver();
+                        sendToAllClients(connection.session(), command, new NotificationMessage("Both teams are in Stalemate! Game over, it's a draw!"));
+                    }
+                    gameDao.updateGame(selectedGame, selectedGame); //in case stalemate changes it one last time after move
                 }
-                else if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.WHITE)){
-                    sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Checkmate! Game over, Black Team wins!"));
+                catch (InvalidMoveException | DataAccessException e){
+                    send(connection.session(), new ErrorMessage(e.getMessage()));
                 }
-                else if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE)){
-                    sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Stalemate! It has no available moves, so Black Team's turn again!"));
+                if (selectedGame.whiteUsername().equals(username)){
+                    if (selectedGame.game().isInCheck(ChessGame.TeamColor.BLACK)){
+                        sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Check!"));
+                    }
+                    else if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.BLACK)){
+                        sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Checkmate! Game over, White Team wins!"));
+                    }
+                    else if (selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
+                        sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Stalemate! It has no available moves, so White Team's turn again!"));
+                    }
+                }
+                else {
+                    if (selectedGame.game().isInCheck(ChessGame.TeamColor.WHITE)){
+                        sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Check!"));
+                    }
+                    else if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.WHITE)){
+                        sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Checkmate! Game over, Black Team wins!"));
+                    }
+                    else if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE)){
+                        sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Stalemate! It has no available moves, so Black Team's turn again!"));
+                    }
                 }
             }
         }
