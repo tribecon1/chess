@@ -1,6 +1,7 @@
 package ui;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import chess.ChessPosition;
 import model.GameData;
 import model.UserData;
@@ -233,6 +234,8 @@ public class Client implements ServerMessageObserver {
                     break;
                 case "MOVE":
                     //do code
+                    ChessMove desiredMove = makeMoveSteps(OUT, TERMINAL_READER);
+                    serverFacade.move(this.gameID,this.authToken, desiredMove);
                     break;
                 case "RESIGN":
                     //do code

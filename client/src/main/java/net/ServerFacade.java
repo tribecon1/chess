@@ -1,6 +1,7 @@
 package net;
 
 
+import chess.ChessMove;
 import model.AuthData;
 import model.GameData;
 import model.UserData;
@@ -153,8 +154,8 @@ public class ServerFacade {
         websocketCommunicator.send(new LeaveCommand(authToken, currGameID));
     }
 
-    public void move(int currGameID, String authToken) throws Exception {
-        websocketCommunicator.send(new MoveCommand(authToken, currGameID, ));
+    public void move(int currGameID, String authToken, ChessMove desiredMove) throws Exception {
+        websocketCommunicator.send(new MoveCommand(authToken, currGameID, desiredMove));
     }
 
 
