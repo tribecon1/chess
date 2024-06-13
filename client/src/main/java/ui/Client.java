@@ -165,15 +165,9 @@ public class Client implements ServerMessageObserver {
                         OUT.println("Join failed! -> " + resultText);
                     }
                     else{
-                        //OUT.println("User " + "\"" + this.currUser + "\"" + resultText + ", playing as " + newJoinReq.playerColor() + " team!");
-                        //do NOT print game immediately after, print after the connect notification is returned, COMMENT OUT BELOW
                         this.teamColor = ChessGame.TeamColor.valueOf(newJoinReq.playerColor().toUpperCase());
                         this.gameID = Integer.parseInt(resultText);
                         serverFacade.connect(this.gameID, this.authToken);
-                        /*switch(newJoinReq.playerColor().toUpperCase()){
-                            case "WHITE" -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
-                            case "BLACK" -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), null);
-                        }*/
                         gameplayMenu();
                     }
                     break;
@@ -184,7 +178,6 @@ public class Client implements ServerMessageObserver {
                         OUT.println("Observe failed! -> " + resultText);
                     }
                     else{
-                        //OUT.println(resultText);
                         OUT.println("Enjoy watching the game! Type \"leave\" when you want to leave the game and return to the menu!");
                         serverFacade.connect(this.gameID, this.authToken);
                         while(this.gameID != 0){
@@ -214,6 +207,7 @@ public class Client implements ServerMessageObserver {
             OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
             OUT.print(">>> ");
             String userResponse = TERMINAL_READER.nextLine();
+            OUT.println();
             switch(userResponse.toUpperCase()){
                 case "HELP":
                     helpGameplayOptions(OUT);
@@ -272,6 +266,7 @@ public class Client implements ServerMessageObserver {
         OUT.print(SET_BG_COLOR_RED);
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.print(message);
+        OUT.print(SET_DEFAULT_BG_COLOR);
     }
 
     public void loadGame(String givenGameJson) {

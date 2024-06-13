@@ -98,10 +98,10 @@ public class WebSocketHandler {
         String teamColor;
         GameData selectedGame = gameDao.getGame(command.getGameID());
         if (selectedGame != null) {
-            if (selectedGame.whiteUsername().equals(username)) {
+            if (selectedGame.whiteUsername()!= null && selectedGame.whiteUsername().equals(username)) {
                 teamColor = "White";
             }
-            else if (selectedGame.blackUsername().equals(username)) {
+            else if (selectedGame.blackUsername() != null && selectedGame.blackUsername().equals(username)) {
                 teamColor = "Black";
             }
             else{

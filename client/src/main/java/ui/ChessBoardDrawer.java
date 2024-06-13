@@ -40,6 +40,7 @@ public class ChessBoardDrawer {
     }
 
     public static void createBoardWhiteOrientation(PrintStream out, ChessGame currGame, ChessPosition legalMovesStart) {
+        out.println();
         drawHeaders(out, ChessGame.TeamColor.WHITE);
         drawBoard(out, currGame, ChessGame.TeamColor.WHITE, legalMovesStart);
         drawHeaders(out, ChessGame.TeamColor.WHITE);
@@ -49,6 +50,7 @@ public class ChessBoardDrawer {
     }
 
     public static void createBoardBlackOrientation(PrintStream out, ChessGame currBoard, ChessPosition legalMovesStart) {
+        out.println();
         drawHeaders(out, ChessGame.TeamColor.BLACK);
         drawBoard(out, currBoard, ChessGame.TeamColor.BLACK, legalMovesStart);
         drawHeaders(out, ChessGame.TeamColor.BLACK);
