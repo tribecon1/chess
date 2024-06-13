@@ -1,6 +1,9 @@
 package websocket;
 
 
+import chess.ChessGame;
+import chess.ChessPiece;
+import chess.InvalidMoveException;
 import dataaccess.dao.AuthDao;
 import dataaccess.dao.GameDao;
 import model.GameData;
@@ -120,10 +123,48 @@ public class WebSocketHandler {
 
         GameData selectedGame = gameDao.getGame(command.getGameID());
         if (selectedGame != null){
-            return;
+            ChessPiece pieceToBeMoved = selectedGame.game().getBoard().getPiece(command.getMove().getStartPosition());
+            if (selectedGame.game().gameOver){
+                send(connection.session(), new ErrorMessage("Error: Game is over, no more moves can be made")); //after a player RESIGNS or Checkmate is achieved
+            }
+            //PUT TURN CHECK HERE
+            try{
+                //make move();
+                selectedGame.game().makeMove(command.getMove());
+                gameDao.updateGame(selectedGame, selectedGame);
+            }
+            catch (InvalidMoveException e){
+                send(connection.session(), new ErrorMessage(e.getMessage()));
+            }
+
+            else if (selectedGame.whiteUsername().equals(username) && selectedGame.game().getTeamTurn() != ChessGame.TeamColor.WHITE) {
+                send(connection.session(), new ErrorMessage("Error: Not your turn to make a move, it is Black's turn"));
+                else if (pieceToBeMoved.getTeamColor() != ChessGame.TeamColor.WHITE){
+                    send(connection.session(), new ErrorMessage("Error: That piece belongs to Black's team"));
+                }
+            }
+            else if (selectedGame.blackUsername().equals(username)) {
+                if (selectedGame.game().getTeamTurn() != ChessGame.TeamColor.BLACK){
+                    send(connection.session(), new ErrorMessage("Error: Not your turn to make a move, it is White's turn"));
+                }
+                else if(pieceToBeMoved.getTeamColor() != ChessGame.TeamColor.BLACK){
+                    send(connection.session(), new ErrorMessage("Error: That piece belongs to White's team"));
+                }
+            }
+            else if (!selectedGame.game().validMoves(command.getMove().getStartPosition()).contains(command.getMove())){
+                send(connection.session(), new ErrorMessage("Error: Move is not valid, try using the \"Highlight\" command to see what your legal moves are"));
+            }
+            else{
+                selectedGame.game().makeMove(command.getMove());
+                gameDao.updateGame(selectedGame, selectedGame);
+                if (selectedGame.game().isInCheck()){
+
+                }
+                else if ()
+            }
         }
         else{
-            send(connection.session(), new ErrorMessage("Error: Game is over, no more moves can be made")); //would never make it this far unless the game DID at one point exist, until someone RESIGNS
+            send(connection.session(), new ErrorMessage("Error: Game does not exist"));
         }
     }
 

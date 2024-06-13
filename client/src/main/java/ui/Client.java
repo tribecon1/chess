@@ -182,8 +182,17 @@ public class Client implements ServerMessageObserver {
                         OUT.println("Observe failed! -> " + resultText);
                     }
                     else{
-                        OUT.println(resultText);
-                        ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
+                        //OUT.println(resultText);
+                        serverFacade.connect(this.gameID, this.authToken);
+                        while(this.gameID != 0){
+                            OUT.println("Enjoy watching the game! Type \"leave\" when you want to leave the game and return to the menu!");
+                            OUT.print(">>> ");
+                            String observerResponse = TERMINAL_READER.nextLine();
+                            if (!observerResponse.equalsIgnoreCase("LEAVE")){
+                                OUT.println("ERROR! Unknown command -> " + "\"" + observerResponse + "\"");
+                            }
+                        }
+                        //ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), null);
                     }
                     break;
                 default:

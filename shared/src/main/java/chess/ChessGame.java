@@ -276,11 +276,23 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         ChessPiece pieceBeingMoved = this.board.getPiece(move.getStartPosition());
         Collection<ChessMove> currValidMoves = validMoves(move.getStartPosition());
-        if(board.getPiece(move.getStartPosition()) == null ||
+        /*if(board.getPiece(move.getStartPosition()) == null ||
                 currValidMoves.isEmpty() ||
                 !currValidMoves.contains(move) ||
                 board.getPiece(move.getStartPosition()).getTeamColor() != thisTeamsTurn){
             throw new InvalidMoveException();
+        }*/
+        if(board.getPiece(move.getStartPosition()) == null){
+            throw new InvalidMoveException("Error: there is no piece at that position to move");
+        }
+        else if(currValidMoves.isEmpty()){
+            throw new InvalidMoveException("Error: there are no legal moves possible with this piece");
+        }
+        else if(!currValidMoves.contains(move)){
+            throw new InvalidMoveException("Error: the attempted move is not a legal move for this piece");
+        }
+        else if(board.getPiece(move.getStartPosition()).getTeamColor() != thisTeamsTurn){
+            throw new InvalidMoveException("Error: it is not your team's turn to move");
         }
         else { //all test cases passed, a move now will be made
             if(pieceBeingMoved.getPieceType() == ChessPiece.PieceType.KING){
