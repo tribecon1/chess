@@ -124,6 +124,9 @@ public class WebSocketHandler {
             if (selectedGame.game().isGameOver()){
                 send(connection.session(), new ErrorMessage("Error: Game is over, no more moves can be made")); //after a player RESIGNS or Checkmate is achieved
             }
+            else if(selectedGame.blackUsername() == null || selectedGame.whiteUsername() == null){
+                send(connection.session(), new ErrorMessage("Error: Must have a team to play against before making a move"));
+            }
             else if (selectedGame.whiteUsername().equals(username) && selectedGame.game().getTeamTurn() != ChessGame.TeamColor.WHITE ||
                     selectedGame.blackUsername().equals(username) && selectedGame.game().getTeamTurn() != ChessGame.TeamColor.BLACK ) {
                 send(connection.session(), new ErrorMessage("Error: Not your turn to make a move"));

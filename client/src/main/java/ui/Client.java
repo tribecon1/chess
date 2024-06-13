@@ -194,6 +194,7 @@ public class Client implements ServerMessageObserver {
                     }
                     break;
                 default:
+                    OUT.print(SET_TEXT_COLOR_WHITE);
                     OUT.println("ERROR! Unknown command -> " + "\"" + userResponse + "\"");
             }
         }
@@ -240,6 +241,7 @@ public class Client implements ServerMessageObserver {
                     }
                     break;
                 default:
+                    OUT.print(SET_TEXT_COLOR_WHITE);
                     OUT.println("ERROR! Unknown command -> " + "\"" + userResponse + "\"");
             }
         }

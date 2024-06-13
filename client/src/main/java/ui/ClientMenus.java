@@ -237,7 +237,7 @@ public class ClientMenus {
     }
 
     public static String gameDataInterpreter(GameData gameInList){
-        String clientReadableGame = "Game Name: \"" + gameInList.gameName() + " --"; //= "Game ID #: " + gameInList.gameID() + " --";
+        String clientReadableGame = "Game Name: \"" + gameInList.gameName() + "\" --"; //= "Game ID #: " + gameInList.gameID() + " --";
         if(gameInList.whiteUsername() == null){
             clientReadableGame += " White Team: <Available>" + " --";
         }
@@ -245,7 +245,7 @@ public class ClientMenus {
             clientReadableGame += " White Team: \"" + gameInList.whiteUsername() + "\" --";
         }
         if(gameInList.blackUsername() == null){
-            clientReadableGame += " Black Team: <Available>" + "\"\n";
+            clientReadableGame += " Black Team: <Available>" + "\n";
         }
         else{
             clientReadableGame += " Black Team: \"" + gameInList.blackUsername() + "\"\n";
