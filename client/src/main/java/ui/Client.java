@@ -182,7 +182,7 @@ public class Client implements ServerMessageObserver {
                         OUT.println("Enjoy watching the game! Type \"leave\" when you want to leave the game and return to the menu!");
                         serverFacade.connect(this.gameID, this.authToken);
                         while(this.gameID != 0){
-                            OUT.print(">>> ");
+//                            OUT.print(">>> ");
                             String observerResponse = TERMINAL_READER.nextLine();
                             if (observerResponse.equalsIgnoreCase("LEAVE")){
                                 serverFacade.leave(this.gameID, this.authToken);
@@ -206,8 +206,8 @@ public class Client implements ServerMessageObserver {
         OUT.print(SET_TEXT_COLOR_WHITE);
         helpGameplayOptions(OUT);
         while(this.gameID != 0){
-            OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
-            OUT.print(">>> ");
+            //OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
+//            OUT.print(">>> ");
             String userResponse = TERMINAL_READER.nextLine();
             OUT.println();
             switch(userResponse.toUpperCase()){
@@ -222,6 +222,7 @@ public class Client implements ServerMessageObserver {
                     break;
                 case "LEAVE":
                     serverFacade.leave(this.gameID, this.authToken);
+                    OUT.print(SET_TEXT_COLOR_WHITE);
                     OUT.println("Leaving game and returning to menu...");
                     this.currGame = null;
                     this.gameID = 0;
@@ -269,7 +270,8 @@ public class Client implements ServerMessageObserver {
         OUT.print(SET_BG_COLOR_RED);
         OUT.print(SET_TEXT_COLOR_WHITE);
         OUT.print(message);
-        OUT.print(SET_DEFAULT_BG_COLOR);
+        OUT.println(SET_DEFAULT_BG_COLOR);
+        OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
     }
 
     public void loadGame(String givenGameJson) {
@@ -281,6 +283,7 @@ public class Client implements ServerMessageObserver {
         else{ //White team OR observer
             ChessBoardDrawer.createBoardWhiteOrientation(OUT, receivedGame, null);
         }
+        OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
     }
 
 
