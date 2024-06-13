@@ -2,6 +2,8 @@ package websocket;
 
 
 import chess.ChessGame;
+import chess.ChessMove;
+import chess.ChessPiece;
 import chess.InvalidMoveException;
 import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDao;
@@ -128,6 +130,11 @@ public class WebSocketHandler {
             }
             else if (!selectedGame.whiteUsername().equals(username) && !selectedGame.blackUsername().equals(username)) {
                 send(connection.session(), new ErrorMessage("Error: You are only allowed to observe the game"));
+            }
+            else if(selectedGame.game().getBoard().getPiece(command.getMove().getStartPosition()).getPieceType().equals(ChessPiece.PieceType.PAWN)) {
+                if ((command.getMove().getEndPosition().getRow() == 8 || command.getMove().getEndPosition().getRow() == 1) && command.getMove().getPromotionPiece() == null){
+                    send(connection.session(), new ErrorMessage("Error: You must declare the type of piece you want to promote your pawn to at the other end of the board"));
+                }
             }
             else {
                 try{

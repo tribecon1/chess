@@ -1,5 +1,9 @@
 package ui;
 
+import chess.ChessMove;
+import chess.ChessPiece;
+import chess.ChessPosition;
+import chess.PawnMoveCalculator;
 import model.GameData;
 import model.UserData;
 import request.CreateGameRequest;
@@ -7,6 +11,7 @@ import request.JoinGameRequest;
 import request.LoginRequest;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -186,6 +191,36 @@ public class ClientMenus {
             givenID = terminalReader.nextLine();
         }
         return givenID;
+    }
+
+    public static ChessMove makeMoveSteps(PrintStream out, Scanner terminalReader){
+        out.println("Enter the coordinates of the piece you want to move [Format it as \"a4\" or \"A4\"]:");
+        out.print("> ");
+        String startPos = terminalReader.nextLine();
+        while(startPos.isEmpty()){
+            out.println("The chess piece's position may not be blank, please try again: ");
+            out.print("> ");
+            startPos = terminalReader.nextLine();
+        }
+        out.println("Enter the coordinates of where you want to move the piece to [Format it as \"a4\" or \"A4\"]:");
+        out.print("> ");
+        String endPos = terminalReader.nextLine();
+        while(endPos.isEmpty()){
+            out.println("The move's end position may not be blank, please try again: ");
+            out.print("> ");
+            endPos = terminalReader.nextLine();
+        }
+        out.println("If you're moving a pawn to the opposite side of your board, you must promote it to a new piece type!");
+        out.println("Your piece promotion options are the following: [Queen, Bishop, Knight, Rook]");
+        out.println("*If you are not making such a move, type \"none\"");
+        out.print("> ");
+        String piecePromotion = terminalReader.nextLine();
+        while(!Arrays.asList(PawnMoveCalculator.POSSIBLE_PROMOTION).contains(ChessPiece.PieceType.valueOf(piecePromotion)) || !piecePromotion.equals("none") ){
+            out.println("Either choose one of the promotion options if you're moving a pawn to the end of the board, or type \"none\": ");
+            out.print("> ");
+            piecePromotion = terminalReader.nextLine();
+        }
+        return new ChessMove(new ChessPosition(startPos), new ChessPosition(endPos), ChessPiece.PieceType.valueOf(piecePromotion));
     }
 
     public static String gameDataInterpreter(GameData gameInList){

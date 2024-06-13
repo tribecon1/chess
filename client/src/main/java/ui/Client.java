@@ -184,9 +184,9 @@ public class Client implements ServerMessageObserver {
                     }
                     else{
                         //OUT.println(resultText);
+                        OUT.println("Enjoy watching the game! Type \"leave\" when you want to leave the game and return to the menu!");
                         serverFacade.connect(this.gameID, this.authToken);
                         while(this.gameID != 0){
-                            OUT.println("Enjoy watching the game! Type \"leave\" when you want to leave the game and return to the menu!");
                             OUT.print(">>> ");
                             String observerResponse = TERMINAL_READER.nextLine();
                             if (observerResponse.equalsIgnoreCase("LEAVE")){
