@@ -228,7 +228,12 @@ public class ClientMenus {
             out.print("> ");
             piecePromotion = terminalReader.nextLine();
         }
-        return new ChessMove(new ChessPosition(startPos), new ChessPosition(endPos), ChessPiece.PieceType.valueOf(piecePromotion));
+        if (piecePromotion.equalsIgnoreCase("NONE")){
+            return new ChessMove(new ChessPosition(startPos), new ChessPosition(endPos), null);
+        }
+        else{
+            return new ChessMove(new ChessPosition(startPos), new ChessPosition(endPos), ChessPiece.PieceType.valueOf(piecePromotion));
+        }
     }
 
     public static String gameDataInterpreter(GameData gameInList){
