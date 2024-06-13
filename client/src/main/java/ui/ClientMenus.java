@@ -11,7 +11,9 @@ import request.JoinGameRequest;
 import request.LoginRequest;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
@@ -215,7 +217,11 @@ public class ClientMenus {
         out.println("*If you are not making such a move, type \"none\"");
         out.print("> ");
         String piecePromotion = terminalReader.nextLine();
-        while(!Arrays.asList(PawnMoveCalculator.POSSIBLE_PROMOTION).contains(ChessPiece.PieceType.valueOf(piecePromotion)) || !piecePromotion.equals("none") ){
+        ArrayList<String> stringPromotions = new ArrayList<>();
+        for (ChessPiece.PieceType promotionPiece : PawnMoveCalculator.POSSIBLE_PROMOTION){
+            stringPromotions.add(promotionPiece.toString());
+        }
+        while(!stringPromotions.contains(piecePromotion.toUpperCase()) || !piecePromotion.equalsIgnoreCase("NONE") ){
             out.println("Either choose one of the promotion options if you're moving a pawn to the end of the board, or type \"none\": ");
             out.print("> ");
             piecePromotion = terminalReader.nextLine();
