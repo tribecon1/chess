@@ -223,7 +223,7 @@ public class ClientMenus {
         out.println("*If you are not making such a move, type \"none\"");
         out.print("> ");
         String piecePromotion = terminalReader.nextLine();
-        while(!STRING_PROMOTIONS.contains(piecePromotion.toUpperCase()) || !piecePromotion.equalsIgnoreCase("NONE") ){
+        while(!STRING_PROMOTIONS.contains(piecePromotion.toUpperCase()) && !piecePromotion.equalsIgnoreCase("NONE") ){
             out.println("Either choose one of the promotion options if you're moving a pawn to the end of the board, or type \"none\": ");
             out.print("> ");
             piecePromotion = terminalReader.nextLine();
