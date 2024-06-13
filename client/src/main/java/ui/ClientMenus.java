@@ -3,7 +3,6 @@ package ui;
 import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
-import chess.PawnMoveCalculator;
 import model.GameData;
 import model.UserData;
 import request.CreateGameRequest;
@@ -12,13 +11,20 @@ import request.LoginRequest;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
 public class ClientMenus {
+
+    private static final List<String> STRING_PROMOTIONS = new ArrayList<String>() {{
+        add("QUEEN");
+        add("BISHOP");
+        add("KNIGHT");
+        add("ROOK");
+    }};
+
 
     public static void helpMenuOptions(PrintStream out){
         out.println("Here are the following commands: ");
@@ -217,11 +223,7 @@ public class ClientMenus {
         out.println("*If you are not making such a move, type \"none\"");
         out.print("> ");
         String piecePromotion = terminalReader.nextLine();
-        ArrayList<String> stringPromotions = new ArrayList<>();
-        for (ChessPiece.PieceType promotionPiece : PawnMoveCalculator.POSSIBLE_PROMOTION){
-            stringPromotions.add(promotionPiece.toString());
-        }
-        while(!stringPromotions.contains(piecePromotion.toUpperCase()) || !piecePromotion.equalsIgnoreCase("NONE") ){
+        while(!STRING_PROMOTIONS.contains(piecePromotion.toUpperCase()) || !piecePromotion.equalsIgnoreCase("NONE") ){
             out.println("Either choose one of the promotion options if you're moving a pawn to the end of the board, or type \"none\": ");
             out.print("> ");
             piecePromotion = terminalReader.nextLine();

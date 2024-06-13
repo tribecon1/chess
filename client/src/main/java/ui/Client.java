@@ -151,6 +151,7 @@ public class Client implements ServerMessageObserver {
                             OUT.println("There are no games created yet!");
                         }
                         else{
+                            OUT.println();
                             for (int rowNum = 1; rowNum <= listOfGames.size(); ++rowNum){
                                 OUT.print(rowNum + "." + gameDataInterpreter(listOfGames.get(rowNum-1)));
                             }
