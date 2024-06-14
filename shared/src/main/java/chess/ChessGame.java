@@ -224,7 +224,6 @@ public class ChessGame {
                     }
                     validMoves = possibleMovesTEMPLATE;
                     kingsFinder(this.board);//to set it back to original board
-
                     //Castling code
                     if (currPiece.getPieceType() == ChessPiece.PieceType.KING){
                         castlingMoves(currPiece, startPosition, validMoves);
@@ -479,8 +478,7 @@ public class ChessGame {
     public void setBoard(ChessBoard board) {
         this.board = board;
         kingsFinder(this.board);
-        //EXTRA CREDIT VARIABLES for Castling being reset for testing purposes
-        initCastlingVariables();
+        initCastlingVariables(); //EXTRA CREDIT VARIABLES for Castling being reset for testing purposes
     }
 
     /**
@@ -495,7 +493,6 @@ public class ChessGame {
     public boolean isGameOver() {
         return gameOver;
     }
-
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
