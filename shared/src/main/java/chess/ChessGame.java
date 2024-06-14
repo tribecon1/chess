@@ -279,6 +279,9 @@ public class ChessGame {
         if(board.getPiece(move.getStartPosition()) == null){
             throw new InvalidMoveException("Error: there is no piece at that position to move");
         }
+        else if(this.isGameOver()){
+            throw new InvalidMoveException("Error: game over is already over!");
+        }
         else if(currValidMoves.isEmpty()){
             throw new InvalidMoveException("Error: there are no legal moves possible with this piece");
         }
@@ -287,6 +290,9 @@ public class ChessGame {
         }
         else if(board.getPiece(move.getStartPosition()).getTeamColor() != thisTeamsTurn){
             throw new InvalidMoveException("Error: it is not your team's turn to move");
+        }
+        else if (board.getPiece(move.getStartPosition()).getPieceType().equals(ChessPiece.PieceType.PAWN) && (move.getEndPosition().getRow() == 8 || move.getEndPosition().getRow() == 1) && move.getPromotionPiece() == null){
+            throw new InvalidMoveException("Error: you must choose a promotion type for your pawn to move it to this position");
         }
         else { //all test cases passed, a move now will be made
             if(pieceBeingMoved.getPieceType() == ChessPiece.PieceType.KING){
@@ -444,7 +450,8 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)){
             if (noValidMoves(teamColor)){
-                return gameOver = true;
+                setGameOver(true);
+                return true;
             }
         }
         return false;

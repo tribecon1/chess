@@ -265,7 +265,7 @@ public class Client implements ServerMessageObserver {
     public void displayNotification(String message) {
         OUT.print(SET_BG_COLOR_BLUE);
         OUT.print(SET_TEXT_COLOR_WHITE);
-        OUT.println(message);
+        OUT.print(message);
         OUT.println(SET_DEFAULT_BG_COLOR);
         OUT.print(SET_TEXT_COLOR_WHITE);
     }

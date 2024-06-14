@@ -134,15 +134,11 @@ public class WebSocketHandler {
             else if (!selectedGame.whiteUsername().equals(username) && !selectedGame.blackUsername().equals(username)) {
                 send(connection.session(), new ErrorMessage("Error: You are only allowed to observe the game"));
             }
-            else if(selectedGame.game().getBoard().getPiece(command.getMove().getStartPosition()).getPieceType().equals(ChessPiece.PieceType.PAWN) &&
-                    (command.getMove().getEndPosition().getRow() == 8 || command.getMove().getEndPosition().getRow() == 1) && command.getMove().getPromotionPiece() == null) {
-                send(connection.session(), new ErrorMessage("Error: You must declare the type of piece you want to promote your pawn to at the other end of the board"));
-            }
             else {
                 try{
                     selectedGame.game().makeMove(command.getMove());
                     sendToAllClients(connection.session(), command, new LoadGameMessage(SerializerDeserializer.convertToJSON(selectedGame.game()))); //more needed below on describing move?
-                    broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username+" moved their "+selectedGame.game().getBoard().getPiece(command.getMove().getEndPosition()).getPieceType() ));
+                    broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username+" moved from "+command.getMove().getStartPosition() +" to " + command.getMove().getEndPosition() ));
                     if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE) && selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
                         selectedGame.game().setGameOver(true);
                         sendToAllClients(connection.session(), command, new NotificationMessage("Both teams are in Stalemate! Game over, it's a draw!"));
@@ -153,22 +149,22 @@ public class WebSocketHandler {
                     send(connection.session(), new ErrorMessage(e.getMessage()));
                 }
                 if (selectedGame.whiteUsername().equals(username)){
-                    if (selectedGame.game().isInCheck(ChessGame.TeamColor.BLACK)){
-                        sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Check!"));
-                    }
-                    else if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.BLACK)){
+                    if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.BLACK)){
                         sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Checkmate! Game over, White Team wins!"));
+                    }
+                    else if (selectedGame.game().isInCheck(ChessGame.TeamColor.BLACK)){
+                        sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Check!"));
                     }
                     else if (selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
                         sendToAllClients(connection.session(), command, new NotificationMessage("Black Team is in Stalemate! It has no available moves, so White Team's turn again!"));
                     }
                 }
                 else {
-                    if (selectedGame.game().isInCheck(ChessGame.TeamColor.WHITE)){
-                        sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Check!"));
-                    }
-                    else if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.WHITE)){
+                    if (selectedGame.game().isInCheckmate(ChessGame.TeamColor.WHITE)){
                         sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Checkmate! Game over, Black Team wins!"));
+                    }
+                    else if (selectedGame.game().isInCheck(ChessGame.TeamColor.WHITE)){
+                        sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Check!"));
                     }
                     else if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE)){
                         sendToAllClients(connection.session(), command, new NotificationMessage("White Team is in Stalemate! It has no available moves, so Black Team's turn again!"));
@@ -198,7 +194,6 @@ public class WebSocketHandler {
             }
             for (ConnectionContainer connContainer : clientConnectionsPerGame.get(command.getGameID())) {
                 if (connContainer.authToken().equals(command.getAuthString())) {
-                    connContainer.session().close();
                     clientConnectionsPerGame.get(command.getGameID()).remove(connContainer);
                 }
             }
@@ -232,6 +227,9 @@ public class WebSocketHandler {
 
     }
 
+    public void closeAllConnections(){
+        for (HashSet )
+    }
 
 
 }
