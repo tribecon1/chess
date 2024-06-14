@@ -2,8 +2,6 @@ package websocket;
 
 
 import chess.ChessGame;
-import chess.ChessMove;
-import chess.ChessPiece;
 import chess.InvalidMoveException;
 import dataaccess.DataAccessException;
 import dataaccess.dao.AuthDao;
@@ -228,7 +226,13 @@ public class WebSocketHandler {
     }
 
     public void closeAllConnections(){
-        for (HashSet )
+        for (HashSet<ConnectionContainer> containerSet : clientConnectionsPerGame.values()) {
+            for (ConnectionContainer connection : containerSet) {
+                connection.session().close();
+            }
+            containerSet.clear();
+        }
+        clientConnectionsPerGame.clear();
     }
 
 
