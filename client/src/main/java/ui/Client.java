@@ -186,6 +186,7 @@ public class Client implements ServerMessageObserver {
                             String observerResponse = TERMINAL_READER.nextLine();
                             if (observerResponse.equalsIgnoreCase("LEAVE")){
                                 serverFacade.leave(this.gameID, this.authToken);
+                                this.gameID = 0;
                             }
                             else{
                                 OUT.println("ERROR! Unknown command -> " + "\"" + observerResponse + "\"");
@@ -280,11 +281,11 @@ public class Client implements ServerMessageObserver {
     public void loadGame(String givenGameJson) {
         ChessGame receivedGame = SerializerDeserializer.convertFromJSON(givenGameJson, ChessGame.class);
         this.currGame = receivedGame;
-        if (this.teamColor.equals(ChessGame.TeamColor.BLACK)){
-            ChessBoardDrawer.createBoardBlackOrientation(OUT, receivedGame, null);
+        if (this.teamColor == null || this.teamColor.equals(ChessGame.TeamColor.WHITE)){
+            ChessBoardDrawer.createBoardWhiteOrientation(OUT, receivedGame, null);
         }
         else{ //White team OR observer
-            ChessBoardDrawer.createBoardWhiteOrientation(OUT, receivedGame, null);
+            ChessBoardDrawer.createBoardBlackOrientation(OUT, receivedGame, null);
         }
         OUT.print("What would you like to do? (Type \"help\" to see your available commands!)");
         OUT.println(SET_DEFAULT_BG_COLOR);
