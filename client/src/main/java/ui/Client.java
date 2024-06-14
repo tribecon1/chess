@@ -180,9 +180,9 @@ public class Client implements ServerMessageObserver {
                     }
                     else{
                         OUT.println("Enjoy watching the game! Type \"leave\" when you want to leave the game and return to the menu!");
+                        this.gameID = Integer.parseInt(resultText);
                         serverFacade.connect(this.gameID, this.authToken);
                         while(this.gameID != 0){
-//                            OUT.print(">>> ");
                             String observerResponse = TERMINAL_READER.nextLine();
                             if (observerResponse.equalsIgnoreCase("LEAVE")){
                                 serverFacade.leave(this.gameID, this.authToken);
@@ -263,7 +263,9 @@ public class Client implements ServerMessageObserver {
     public void displayNotification(String message) {
         OUT.print(SET_BG_COLOR_BLUE);
         OUT.print(SET_TEXT_COLOR_WHITE);
-        OUT.print(message);
+        OUT.println(message);
+        OUT.println(SET_DEFAULT_BG_COLOR);
+        OUT.print(SET_TEXT_COLOR_WHITE);
     }
 
     public void displayError(String message) {
@@ -284,7 +286,9 @@ public class Client implements ServerMessageObserver {
         else{ //White team OR observer
             ChessBoardDrawer.createBoardWhiteOrientation(OUT, receivedGame, null);
         }
-        OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
+        OUT.print("What would you like to do? (Type \"help\" to see your available commands!)");
+        OUT.println(SET_DEFAULT_BG_COLOR);
+        OUT.print(SET_TEXT_COLOR_WHITE);
     }
 
 
