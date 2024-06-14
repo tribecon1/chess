@@ -134,16 +134,15 @@ public class WebSocketHandler {
             else if (!selectedGame.whiteUsername().equals(username) && !selectedGame.blackUsername().equals(username)) {
                 send(connection.session(), new ErrorMessage("Error: You are only allowed to observe the game"));
             }
-            else if(selectedGame.game().getBoard().getPiece(command.getMove().getStartPosition()).getPieceType().equals(ChessPiece.PieceType.PAWN)) {
-                if ((command.getMove().getEndPosition().getRow() == 8 || command.getMove().getEndPosition().getRow() == 1) && command.getMove().getPromotionPiece() == null){
-                    send(connection.session(), new ErrorMessage("Error: You must declare the type of piece you want to promote your pawn to at the other end of the board"));
-                }
+            else if(selectedGame.game().getBoard().getPiece(command.getMove().getStartPosition()).getPieceType().equals(ChessPiece.PieceType.PAWN) &&
+                    (command.getMove().getEndPosition().getRow() == 8 || command.getMove().getEndPosition().getRow() == 1) && command.getMove().getPromotionPiece() == null) {
+                send(connection.session(), new ErrorMessage("Error: You must declare the type of piece you want to promote your pawn to at the other end of the board"));
             }
             else {
                 try{
                     selectedGame.game().makeMove(command.getMove());
                     sendToAllClients(connection.session(), command, new LoadGameMessage(SerializerDeserializer.convertToJSON(selectedGame.game()))); //more needed below on describing move?
-                    broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username+" moved their "+selectedGame.game().getBoard().getPiece(command.getMove().getEndPosition()) ));
+                    broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username+" moved their "+selectedGame.game().getBoard().getPiece(command.getMove().getEndPosition()).getPieceType() ));
                     if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE) && selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
                         selectedGame.game().setGameOver(true);
                         sendToAllClients(connection.session(), command, new NotificationMessage("Both teams are in Stalemate! Game over, it's a draw!"));

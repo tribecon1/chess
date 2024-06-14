@@ -238,13 +238,14 @@ public class Client implements ServerMessageObserver {
                 case "HIGHLIGHT":
                     String chosenPiecePos = pieceHighlightedMoves(OUT, TERMINAL_READER);
                     switch (this.teamColor){
-                        case WHITE -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, new ChessGame(), new ChessPosition(chosenPiecePos));
-                        case BLACK -> ChessBoardDrawer.createBoardBlackOrientation(OUT, new ChessGame(), new ChessPosition(chosenPiecePos));
+                        case WHITE -> ChessBoardDrawer.createBoardWhiteOrientation(OUT, this.currGame, new ChessPosition(chosenPiecePos));
+                        case BLACK -> ChessBoardDrawer.createBoardBlackOrientation(OUT, this.currGame, new ChessPosition(chosenPiecePos));
                     }
                     break;
                 default:
                     OUT.print(SET_TEXT_COLOR_WHITE);
                     OUT.println("ERROR! Unknown command -> " + "\"" + userResponse + "\"");
+                    OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
             }
         }
     }
@@ -281,7 +282,11 @@ public class Client implements ServerMessageObserver {
     public void loadGame(String givenGameJson) {
         ChessGame receivedGame = SerializerDeserializer.convertFromJSON(givenGameJson, ChessGame.class);
         this.currGame = receivedGame;
-        if (this.teamColor == null || this.teamColor.equals(ChessGame.TeamColor.WHITE)){
+        if (this.teamColor == null){
+            ChessBoardDrawer.createBoardWhiteOrientation(OUT, receivedGame, null);
+            return;
+        }
+        else if(this.teamColor.equals(ChessGame.TeamColor.WHITE)){
             ChessBoardDrawer.createBoardWhiteOrientation(OUT, receivedGame, null);
         }
         else{ //White team OR observer
