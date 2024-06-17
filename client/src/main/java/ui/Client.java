@@ -153,7 +153,7 @@ public class Client implements ServerMessageObserver {
                         else{
                             OUT.println();
                             for (int rowNum = 1; rowNum <= listOfGames.size(); ++rowNum){
-                                OUT.print(rowNum + "." + gameDataInterpreter(listOfGames.get(rowNum-1)));
+                                OUT.print(rowNum + "." + gameDataInterpreter(OUT, listOfGames.get(rowNum-1)));
                             }
                         }
                         OUT.println();

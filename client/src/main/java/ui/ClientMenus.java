@@ -236,19 +236,19 @@ public class ClientMenus {
         }
     }
 
-    public static String gameDataInterpreter(GameData gameInList){
-        String clientReadableGame = "Game Name: \"" + gameInList.gameName() + "\" --"; //= "Game ID #: " + gameInList.gameID() + " --";
+    public static String gameDataInterpreter(PrintStream out, GameData gameInList){
+        String clientReadableGame = "Game Name: " +SET_TEXT_COLOR_MAGENTA+ gameInList.gameName() +SET_TEXT_COLOR_WHITE+ " --";
         if(gameInList.whiteUsername() == null){
-            clientReadableGame += " White Team: <Available>" + " --";
+            clientReadableGame += " White Team: "+SET_TEXT_COLOR_GREEN+"<Available>" +SET_TEXT_COLOR_WHITE+ " --";
         }
         else{
-            clientReadableGame += " White Team: \"" + gameInList.whiteUsername() + "\" --";
+            clientReadableGame += " White Team: " +SET_TEXT_COLOR_BLUE+ gameInList.whiteUsername() +SET_TEXT_COLOR_WHITE+ " --";
         }
         if(gameInList.blackUsername() == null){
-            clientReadableGame += " Black Team: <Available>" + "\n";
+            clientReadableGame += " Black Team: "+SET_TEXT_COLOR_GREEN+"<Available>" +SET_TEXT_COLOR_WHITE+ "\n";
         }
         else{
-            clientReadableGame += " Black Team: \"" + gameInList.blackUsername() + "\"\n";
+            clientReadableGame += " Black Team: " +SET_TEXT_COLOR_BLUE+ gameInList.blackUsername() +SET_TEXT_COLOR_WHITE+ "\n";
         }
         return clientReadableGame;
     }
