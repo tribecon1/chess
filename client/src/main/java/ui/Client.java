@@ -96,7 +96,7 @@ public class Client implements ServerMessageObserver {
                     TERMINAL_READER.close();
                     System.exit(0);
                 default:
-                OUT.println("ERROR! Unknown command -> " + "\"" + userResponse + "\"");
+                    OUT.println("ERROR! Unknown command -> " + "\"" + userResponse + "\"");
             }
         }
         authorizedMenu();
