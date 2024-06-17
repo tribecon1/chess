@@ -49,9 +49,9 @@ public class SqlGameDao implements GameDao {
                 ps.setInt(1, gameID);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()){
-                    String tester = rs.getString("game");
-                    ChessGame currChessGame = SerializerDeserializer.convertFromJSON(tester, ChessGame.class);
-                    return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), currChessGame);
+                    //String tester = rs.getString("game");
+                    //ChessGame currChessGame = SerializerDeserializer.convertFromJSON(tester, ChessGame.class);
+                    return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), SerializerDeserializer.convertFromJSON(rs.getString("game"), ChessGame.class));
                 }
                 else{
                     return null;
@@ -132,5 +132,21 @@ public class SqlGameDao implements GameDao {
     @Override
     public int getDatabaseSize() throws DataAccessException {
         return DatabaseManager.getRowCount("game");
+    }
+
+    @Override
+    public void deleteGame(int gameID) throws DataAccessException {
+        Connection conn;
+        try (Connection autoCloseC = DatabaseManager.getConnection()){
+            conn = autoCloseC;
+            String query = "DELETE FROM game WHERE gameID = ?";
+            try (PreparedStatement ps = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setInt(1, gameID);
+                ps.executeUpdate();
+            }
+        }
+        catch (SQLException e) {
+            throw new DataAccessException(String.format("Database Error: %s", e.getMessage()));
+        }
     }
 }

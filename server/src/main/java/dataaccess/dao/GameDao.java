@@ -20,4 +20,6 @@ public interface GameDao {
     boolean getGameByName(String gameName) throws DataAccessException;
 
     int getDatabaseSize() throws DataAccessException;
+
+    void deleteGame(int gameID) throws DataAccessException;
 }

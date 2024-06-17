@@ -69,4 +69,9 @@ public class MemoryGameDao implements GameDao {
     public int getDatabaseSize(){
         return gameDataList.size();
     }
+
+    @Override
+    public void deleteGame(int gameID) {
+        gameDataList.removeIf(game -> game.gameID() == gameID);
+    }
 }

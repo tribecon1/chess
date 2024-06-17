@@ -190,7 +190,11 @@ public class WebSocketHandler {
             else{
                 broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username + " stopped observing the game"));
             }
+            GameData updatedGame = gameDao.getGame(command.getGameID());
             clientConnectionsPerGame.get(command.getGameID()).removeIf(connContainer -> connContainer.authToken().equals(command.getAuthString()));
+            if(clientConnectionsPerGame.get(command.getGameID()).isEmpty() && updatedGame.game().isGameOver()){
+                gameDao.deleteGame(command.getGameID());
+            }
         }
         else{
             send(connection.session(), new ErrorMessage("Error: Invalid game ID chosen"));
