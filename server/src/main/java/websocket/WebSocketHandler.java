@@ -136,7 +136,7 @@ public class WebSocketHandler {
                 try{
                     selectedGame.game().makeMove(command.getMove());
                     sendToAllClients(connection.session(), command, new LoadGameMessage(SerializerDeserializer.convertToJSON(selectedGame.game()))); //more needed below on describing move?
-                    broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username+" moved their " + selectedGame.game().getBoard().getPiece(command.getMove().getStartPosition()) + " from "+command.getMove().getStartPosition() +" to " + command.getMove().getEndPosition() ));
+                    broadcast(command.getAuthString(), command.getGameID(), new NotificationMessage(username+" moved their " + selectedGame.game().getBoard().getPiece(command.getMove().getEndPosition()).getPieceType() + " from "+command.getMove().getStartPosition() +" to " + command.getMove().getEndPosition() ));
                     if (selectedGame.game().isInStalemate(ChessGame.TeamColor.WHITE) && selectedGame.game().isInStalemate(ChessGame.TeamColor.BLACK)){
                         selectedGame.game().setGameOver(true);
                         sendToAllClients(connection.session(), command, new NotificationMessage("Both teams are in Stalemate! Game over, it's a draw!"));
