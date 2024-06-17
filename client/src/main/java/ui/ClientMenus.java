@@ -18,7 +18,7 @@ import static ui.EscapeSequences.*;
 
 public class ClientMenus {
 
-    private static final List<String> STRING_PROMOTIONS = new ArrayList<String>() {{
+    private static final List<String> STRING_PROMOTIONS = new ArrayList<>() {{
         add("QUEEN");
         add("BISHOP");
         add("KNIGHT");
@@ -205,16 +205,16 @@ public class ClientMenus {
         out.println("Enter the coordinates of the piece you want to move [Format it as \"a4\" or \"A4\"]:");
         out.print("> ");
         String startPos = terminalReader.nextLine();
-        while(startPos.isEmpty()){
-            out.println("The chess piece's position may not be blank, please try again: ");
+        while(startPos.isEmpty() || startPos.length() > 2 || Character.toUpperCase(startPos.charAt(0)) > 'H' || Integer.parseInt(startPos.substring(1)) > 8 ){
+            out.println("The chess piece's position may not be blank or invalid, please try again: ");
             out.print("> ");
             startPos = terminalReader.nextLine();
         }
         out.println("Enter the coordinates of where you want to move the piece to [Format it as \"a4\" or \"A4\"]:");
         out.print("> ");
         String endPos = terminalReader.nextLine();
-        while(endPos.isEmpty()){
-            out.println("The move's end position may not be blank, please try again: ");
+        while(endPos.isEmpty() || endPos.length() > 2 || Character.toUpperCase(endPos.charAt(0)) > 'H' || Integer.parseInt(endPos.substring(1)) > 8 ){
+            out.println("The chess piece's position may not be blank or invalid, please try again: ");
             out.print("> ");
             endPos = terminalReader.nextLine();
         }
