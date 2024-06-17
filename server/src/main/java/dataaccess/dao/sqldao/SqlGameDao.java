@@ -49,8 +49,6 @@ public class SqlGameDao implements GameDao {
                 ps.setInt(1, gameID);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()){
-                    //String tester = rs.getString("game");
-                    //ChessGame currChessGame = SerializerDeserializer.convertFromJSON(tester, ChessGame.class);
                     return new GameData(rs.getInt("gameID"), rs.getString("whiteUsername"), rs.getString("blackUsername"), rs.getString("gameName"), SerializerDeserializer.convertFromJSON(rs.getString("game"), ChessGame.class));
                 }
                 else{
