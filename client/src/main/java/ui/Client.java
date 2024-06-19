@@ -207,8 +207,6 @@ public class Client implements ServerMessageObserver {
         OUT.print(SET_TEXT_COLOR_WHITE);
         helpGameplayOptions(OUT);
         while(this.gameID != 0){
-            //OUT.println("What would you like to do? (Type \"help\" to see your available commands!)");
-//            OUT.print(">>> ");
             String userResponse = TERMINAL_READER.nextLine();
             OUT.println();
             switch(userResponse.toUpperCase()){
